@@ -12,46 +12,30 @@
     android:gravity="center"
     tools:context=".activity.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Clipcon"
-        android:textSize="40sp"
-        android:id="@+id/textView" />
-
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email.."
-        android:maxLines="1"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password.."
-        android:inputType="textPassword"
-        android:maxLines="1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clipcon"
+            android:textSize="40dp"/>
 
+        <Button
+            android:id="@+id/main_create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create"/>
 
+        <Button
+            android:id="@+id/main_join"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Join"/>
 
-    <Button
-        android:id="@+id/loginBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login"/>
-
-    <Button
-        android:id="@+id/googleBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Google Login"/>
-
-    <Button
-        android:id="@+id/signupBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SignUp"/>
-
-
-
+    </LinearLayout>
+    
 </LinearLayout>

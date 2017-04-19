@@ -48,10 +48,6 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.group_contacts:
-                Toast.makeText(getApplicationContext(), "주소록으로 이동 (아이콘 바꾸기)", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), ContactsActivity.class));
-                return true;
 
             case R.id.group_settings:
                 Toast.makeText(getApplicationContext(), "설정으로 이동", Toast.LENGTH_SHORT).show();

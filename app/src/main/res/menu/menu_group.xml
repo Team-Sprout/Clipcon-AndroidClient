@@ -6,14 +6,8 @@
     tools:context=".activity.GroupActivity">
 
     <item
-        android:id="@+id/group_contacts"
-        android:icon="@drawable/btn_title_filter_n"
-        android:title="action_filter"
-        app:showAsAction="always"/>
-
-    <item
         android:id="@+id/group_settings"
-        android:icon="@drawable/btn_title_setting_n"
+        android:icon="@drawable/ic_settings_white_24dp"
         android:title="actions_settings"
         app:showAsAction="always"/>
 

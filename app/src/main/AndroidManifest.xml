@@ -17,11 +17,7 @@
         </activity>
 
         <activity android:name=".activity.GroupActivity"/>
-        <activity android:name=".activity.SignupActivity"/>
-        <activity android:name=".activity.GoogleActivity"/>
-        <activity android:name=".activity.ContactsActivity"/>
         <activity android:name=".activity.SettingsActivity"/>
-        <activity android:name=".activity.EntryActivity"/>
 
         <service android:name=".service.MyService"/>
         <service android:name=".service.TopService"/>

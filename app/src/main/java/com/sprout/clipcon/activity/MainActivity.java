@@ -16,32 +16,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button loginBtn = (Button) findViewById(R.id.loginBtn);
-        Button signupBtn = (Button) findViewById(R.id.signupBtn);
-        Button googleBtn = (Button) findViewById(R.id.googleBtn);
+        Button createBtn = (Button)findViewById(R.id.main_create);
+        Button joinBtn = (Button)findViewById(R.id.main_join);
 
-
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+        createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), EntryActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), GroupActivity.class));
             }
         });
 
-        signupBtn.setOnClickListener(new View.OnClickListener() {
+        joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        googleBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), GoogleActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), GroupActivity.class));
             }
         });
 
