@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.GroupActivity">
+
+    <item
+        android:id="@+id/group_contacts"
+        android:icon="@drawable/btn_title_filter_n"
+        android:title="action_filter"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/group_settings"
+        android:icon="@drawable/btn_title_setting_n"
+        android:title="actions_settings"
+        app:showAsAction="always"/>
+
+
+</menu>
