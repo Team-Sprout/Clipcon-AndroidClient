@@ -27,6 +27,8 @@ public class MyService extends Service {
         super.onCreate();
     }
 
+
+    //// TODO: 2017. 4. 20. have to check whether it is called or not
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -38,6 +40,7 @@ public class MyService extends Service {
         }
     }
 
+    // add listener
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -47,6 +50,7 @@ public class MyService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    // listener for clipbaord changing
     private ClipboardManager.OnPrimaryClipChangedListener changedListener = new ClipboardManager.OnPrimaryClipChangedListener() {
         @Override
         public void onPrimaryClipChanged() {
@@ -63,6 +67,7 @@ public class MyService extends Service {
         }
     };
 
+    // handler to control Top button only to show 5 seconds
     private void showTopButton() {
         startService(new Intent(getApplicationContext(), TopService.class));
 

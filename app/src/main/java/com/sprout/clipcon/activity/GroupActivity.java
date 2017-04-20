@@ -39,12 +39,14 @@ public class GroupActivity extends AppCompatActivity {
         checkStart();
     }
 
+    // create menu in Toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_group, menu);
         return true;
     }
 
+    // event when settings icon pressed in Toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -60,6 +62,7 @@ public class GroupActivity extends AppCompatActivity {
         }
     }
 
+    // back button control
     @Override
     public void onBackPressed() {
 
@@ -80,6 +83,7 @@ public class GroupActivity extends AppCompatActivity {
                 .show();
     }
 
+    // start MyService.class to float always on Top Button when clipbard changed
     public void checkStart() {
         Intent intent = new Intent(getApplicationContext(), MyService.class);
         startService(intent);
@@ -89,6 +93,7 @@ public class GroupActivity extends AppCompatActivity {
         toast.show();
     }
 
+    // make Toolbar, Tablayout, ViewPager
     private void initLayout() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.group_toolbar);
@@ -123,6 +128,7 @@ public class GroupActivity extends AppCompatActivity {
         });
     }
 
+    // adapter for ViewPager to create two view (INFO, HISTORY)
     public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
         private final int TAB_COUNT = 2;

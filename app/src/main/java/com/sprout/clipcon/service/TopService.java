@@ -31,7 +31,7 @@ public class TopService extends Service {
 
         System.out.println(" 에러 테스트 1 ");
 
-        // top_view 레이아웃을 생성하여 뷰 출력.
+        // create <top_view> layout on Top
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         m_View = mInflater.inflate(R.layout.top_button, null);
         m_View.setOnTouchListener(onTouchListener);
@@ -58,12 +58,11 @@ public class TopService extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        // 생성 된 레이아웃 제거.
+        // delete layout
         m_WindowManager.removeView(m_View);
         m_WindowManager = null;
     }
 
-    // 터치 이벤트.
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -82,6 +81,7 @@ public class TopService extends Service {
         }
     };
 
+    // event occurs when Top button pressed after clipboard changing
     public void onImageBtnTest(View v) {
         Toast.makeText(getApplicationContext(), "top Image button pressed", Toast.LENGTH_SHORT).show();
 

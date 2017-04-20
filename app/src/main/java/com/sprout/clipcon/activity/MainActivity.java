@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         Button createBtn = (Button)findViewById(R.id.main_create);
         Button joinBtn = (Button)findViewById(R.id.main_join);
 
+        // create group
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // join group
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
