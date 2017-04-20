@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
@@ -33,8 +32,6 @@ public class TopService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        System.out.println(" 에러 테스트 1 ");
-
         // create <top_view> layout on Top
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         m_View = mInflater.inflate(R.layout.top_button, null);
@@ -46,16 +43,13 @@ public class TopService extends Service {
                 WindowManager.LayoutParams.TYPE_TOAST,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        m_Params.gravity = Gravity.LEFT | Gravity.TOP;
+        m_Params.gravity = Gravity.RIGHT | Gravity.BOTTOM;
         m_Params.horizontalMargin = 0.1f;
         m_Params.verticalMargin = 0.05f;
-
-        System.out.println(" 에러 테스트 2 ");
 
         m_WindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         m_WindowManager.addView(m_View, m_Params);
 
-        System.out.println(" 에러 테스트 3 ");
     }
 
     @Override
