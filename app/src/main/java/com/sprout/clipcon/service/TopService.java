@@ -1,6 +1,9 @@
 package com.sprout.clipcon.service;
 
 import android.app.Service;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
@@ -83,7 +87,24 @@ public class TopService extends Service {
 
     // event occurs when Top button pressed after clipboard changing
     public void onImageBtnTest(View v) {
-        Toast.makeText(getApplicationContext(), "top Image button pressed", Toast.LENGTH_SHORT).show();
+
+        ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if(!cm.hasPrimaryClip()) {
+            Toast.makeText(this, "empty", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
+            String temp = cm.getPrimaryClipDescription().getMimeType(0);
+
+            Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
+        }
+
+//        ClipData clip = cm.getPrimaryClip();
+//        ClipData.Item item = clip.getItemAt(0);
+//        TextView pasteText = (TextView) findViewById(R.id.pasteText);
+//        pasteText.setText(item.getText());
 
     }
 }

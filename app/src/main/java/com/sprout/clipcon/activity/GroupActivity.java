@@ -97,7 +97,7 @@ public class GroupActivity extends AppCompatActivity {
     private void initLayout() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.group_toolbar);
-        toolbar.setTitle("그룹화면");
+        toolbar.setTitle("Clipcon");
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);

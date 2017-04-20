@@ -22,19 +22,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Clipcon"
-            android:textSize="40dp"/>
+            android:textSize="40dp"
+            android:layout_marginBottom="40dp"/>
 
         <Button
             android:id="@+id/main_create"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create"/>
+            android:background="@color/colorAccent"
+            android:textColor="#ffffff"
+            android:text="Create"
+            android:layout_marginBottom="10dp"/>
 
         <Button
             android:id="@+id/main_join"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Join"/>
+            android:background="@color/colorAccent"
+            android:textColor="#ffffff"
+            android:text="Join"
+            android:layout_marginBottom="10dp"/>
 
     </LinearLayout>
 
