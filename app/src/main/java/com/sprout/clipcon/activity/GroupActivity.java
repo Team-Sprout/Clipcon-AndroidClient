@@ -1,6 +1,9 @@
 package com.sprout.clipcon.activity;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,6 +40,7 @@ public class GroupActivity extends AppCompatActivity {
 
         initLayout();
         checkStart();
+        setImageClip();
     }
 
     // create menu in Toolbar
@@ -156,5 +160,26 @@ public class GroupActivity extends AppCompatActivity {
         public int getCount() {
             return TAB_COUNT;
         }
+    }
+
+    public void setImageClip() {
+        //// TODO: 2017. 4. 21. add logic to get image Uri
+
+        //1. 웹상에서 이미지 공유를 하는 경우
+        //2. 디바이스 로컬에서 이미지 공유를 하는 경우
+
+        //웹 상의 이미지를 공유했을 때 웹에 있는 이미지 Uri를 Clipboard에 넣기
+        //or 로컬에 있는 이미지를 공우했을 때 Uri를 Clipboard에 넣기
+
+        //Clipboard에 들어오면 변화감지
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+
+        Uri testUri = shareIntent.getData();
+
+        System.out.println("Test ================" + testUri);
+//        shareIntent.setType("image/jpg");
+//
+//        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
     }
 }
