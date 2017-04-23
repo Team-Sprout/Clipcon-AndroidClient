@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sprout.clipcon">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,16 +16,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
 
+        <activity android:name=".activity.GroupActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
+                <!--<data android:mimeType="text/plain" />-->
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.GroupActivity"/>
         <activity android:name=".activity.SettingsActivity"/>
 
         <service android:name=".service.MyService"/>

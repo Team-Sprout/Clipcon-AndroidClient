@@ -81,6 +81,4 @@ public class MyService extends Service {
         };
         handler.sendEmptyMessageDelayed(0, 5000);
     }
-
-
 }

@@ -93,12 +93,10 @@ public class TopService extends Service {
             String temp = cm.getPrimaryClipDescription().getMimeType(0);
 
             Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
+        }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
+//            String temp = cm.getPrimaryClipDescription().getMimeType(0);
+
+            Toast.makeText(this, "Uri", Toast.LENGTH_SHORT).show();
         }
-
-//        ClipData clip = cm.getPrimaryClip();
-//        ClipData.Item item = clip.getItemAt(0);
-//        TextView pasteText = (TextView) findViewById(R.id.pasteText);
-//        pasteText.setText(item.getText());
-
     }
 }

@@ -1,9 +1,7 @@
 package com.sprout.clipcon.activity;
 
-import android.content.ClipboardManager;
-import android.content.Context;
+
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +25,7 @@ import com.sprout.clipcon.fragment.InfoFragment;
 import com.sprout.clipcon.service.MyService;
 
 
+
 /**
  * Created by Yongwon on 2017. 4. 17..
  */
@@ -40,6 +39,10 @@ public class GroupActivity extends AppCompatActivity {
 
         initLayout();
         checkStart();
+
+        System.out.println(" &&&&&&&&&&&&&&&&&&&&&&&&&&& Test 1 ###########################");
+
+
     }
 
     // create menu in Toolbar
@@ -58,7 +61,6 @@ public class GroupActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "설정으로 이동", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 return true;
-
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -160,5 +162,4 @@ public class GroupActivity extends AppCompatActivity {
             return TAB_COUNT;
         }
     }
-
 }
