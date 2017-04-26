@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ public class TopService extends Service {
     private View m_View;
     private WindowManager m_WindowManager;
     private WindowManager.LayoutParams  m_Params;
+
+    private static Uri uri;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -95,8 +98,12 @@ public class TopService extends Service {
             Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
         }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
 //            String temp = cm.getPrimaryClipDescription().getMimeType(0);
-
-            Toast.makeText(this, "Uri", Toast.LENGTH_SHORT).show();
+            System.out.println(uri);
+            Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void setUri(Uri tempUri) {
+        uri = tempUri;
     }
 }

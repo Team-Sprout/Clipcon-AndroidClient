@@ -88,6 +88,14 @@ public class GroupActivity extends AppCompatActivity {
                 .show();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("onDestroy called =============");
+        Intent intent = new Intent(getApplicationContext(), MyService.class);
+        stopService(intent);
+    }
+
     // start MyService.class to float always on Top Button when clipbard changed
     public void checkStart() {
         Intent intent = new Intent(getApplicationContext(), MyService.class);
