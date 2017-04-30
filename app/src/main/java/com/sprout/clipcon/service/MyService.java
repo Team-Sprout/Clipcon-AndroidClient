@@ -3,7 +3,6 @@ package com.sprout.clipcon.service;
 import android.app.Service;
 import android.content.ClipboardManager;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -33,8 +32,6 @@ public class MyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        System.out.println("is it called ??? ");
 
         if (mClipboardManager != null) {
             mClipboardManager.removePrimaryClipChangedListener(changedListener);

@@ -25,7 +25,6 @@ import com.sprout.clipcon.fragment.InfoFragment;
 import com.sprout.clipcon.service.MyService;
 
 
-
 /**
  * Created by Yongwon on 2017. 4. 17..
  */
@@ -34,15 +33,47 @@ public class GroupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+        System.out.println("GroupActivity === onCreate called =============");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_activity);
 
         initLayout();
         checkStart();
 
-        System.out.println(" &&&&&&&&&&&&&&&&&&&&&&&&&&& Test 1 ###########################");
+    }
 
+    @Override
+    protected void onStart() {
+        System.out.println("GroupActivity === onStart called =============");
+        super.onStart();
 
+    }
+
+    @Override
+    protected void onResume() {
+        System.out.println("GroupActivity === onResume called =============");
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        System.out.println("GroupActivity === onPause called =============");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        System.out.println("GroupActivity === onStop called =============");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("GroupActivity === onDestroy called =============");
+        Intent intent = new Intent(getApplicationContext(), MyService.class);
+        stopService(intent);
     }
 
     // create menu in Toolbar
@@ -88,13 +119,6 @@ public class GroupActivity extends AppCompatActivity {
                 .show();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        System.out.println("onDestroy called =============");
-        Intent intent = new Intent(getApplicationContext(), MyService.class);
-        stopService(intent);
-    }
 
     // start MyService.class to float always on Top Button when clipbard changed
     public void checkStart() {

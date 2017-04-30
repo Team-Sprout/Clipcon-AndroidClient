@@ -1,7 +1,6 @@
 package com.sprout.clipcon.service;
 
 import android.app.Service;
-import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -97,13 +96,8 @@ public class TopService extends Service {
 
             Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
         }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
-//            String temp = cm.getPrimaryClipDescription().getMimeType(0);
             System.out.println(uri);
             Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public static void setUri(Uri tempUri) {
-        uri = tempUri;
     }
 }
