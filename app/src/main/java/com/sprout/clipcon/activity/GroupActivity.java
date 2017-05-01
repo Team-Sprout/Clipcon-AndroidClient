@@ -44,31 +44,6 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        System.out.println("GroupActivity === onStart called =============");
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onResume() {
-        System.out.println("GroupActivity === onResume called =============");
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        System.out.println("GroupActivity === onPause called =============");
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        System.out.println("GroupActivity === onStop called =============");
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         System.out.println("GroupActivity === onDestroy called =============");

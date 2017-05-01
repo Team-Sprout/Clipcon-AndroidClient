@@ -45,6 +45,11 @@ public class MyService extends Service {
         mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         mClipboardManager.addPrimaryClipChangedListener(changedListener);
 
+        String action = intent.getAction();
+        if(Intent.ACTION_SEND.equals(action)){
+            System.out.println("adfsafadf");
+        }
+
         return super.onStartCommand(intent, flags, startId);
     }
 
