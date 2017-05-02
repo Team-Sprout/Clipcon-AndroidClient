@@ -105,7 +105,13 @@ public class TopService extends Service {
             Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
         }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
             System.out.println("Image");
-//            Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
+
+            //// TODO: 2017. 5. 2. should change Uri data to image File
+            ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
+            uri = item.getUri();
+            System.out.println(uri);
+
+            Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
         }
     }
 }
