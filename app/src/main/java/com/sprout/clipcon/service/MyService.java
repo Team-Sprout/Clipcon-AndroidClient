@@ -28,7 +28,6 @@ public class MyService extends Service {
     }
 
 
-    //// TODO: 2017. 4. 20. have to check whether it is called or not
     @Override
     public void onDestroy() {
         super.onDestroy();

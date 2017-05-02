@@ -1,6 +1,7 @@
 package com.sprout.clipcon.service;
 
 import android.app.Service;
+import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -84,6 +85,8 @@ public class TopService extends Service {
     // event occurs when Top button pressed after clipboard changing
     public void onImageBtnTest(View v) {
 
+        System.out.println("Button Pressed");
+
         ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
 
         if(!cm.hasPrimaryClip()) {
@@ -91,13 +94,18 @@ public class TopService extends Service {
             return;
         }
 
+        //// TODO: 2017. 5. 2. upload date to server for each dataType
         if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
             String temp = cm.getPrimaryClipDescription().getMimeType(0);
 
+            ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
+            System.out.println(item.getText());
+
+            System.out.println("Text");
             Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
         }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
-            System.out.println(uri);
-            Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
+            System.out.println("Image");
+//            Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
         }
     }
 }
