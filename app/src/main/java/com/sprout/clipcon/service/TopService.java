@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 
-
 public class TopService extends Service {
     private View m_View;
     private WindowManager m_WindowManager;
@@ -94,14 +93,15 @@ public class TopService extends Service {
             return;
         }
 
-        //// TODO: 2017. 5. 2. upload date to server for each dataType
+        //// TODO: 2017. 5. 2. upload date to server for each dataType at this part
         if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
+            System.out.println("Text");
             String temp = cm.getPrimaryClipDescription().getMimeType(0);
 
             ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
-            System.out.println(item.getText());
+            String textData = item.getText().toString();
+            System.out.println(textData);
 
-            System.out.println("Text");
             Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
         }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
             System.out.println("Image");
@@ -111,6 +111,7 @@ public class TopService extends Service {
             uri = item.getUri();
             System.out.println(uri);
 
+            System.out.println(" Bitmap to File Test 333 ");
             Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
         }
     }
