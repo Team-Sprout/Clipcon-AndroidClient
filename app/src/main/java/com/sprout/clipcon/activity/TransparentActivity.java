@@ -27,6 +27,7 @@ import java.io.IOException;
 public class TransparentActivity extends Activity{
 
     private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+    Uri uri;
 
     //ask user about permission to save image into basic gallery apps.
     @Override
@@ -35,12 +36,10 @@ public class TransparentActivity extends Activity{
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-
                 } else {
 
                     // permission denied, boo! Disable the
@@ -65,58 +64,71 @@ public class TransparentActivity extends Activity{
         if(Intent.ACTION_SEND.equals(action)){
 
             System.out.println("********* ACTION_SEND called *********");
-            Uri uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+
+            String subject1 = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+            String subject2 = getIntent().getStringExtra(Intent.EXTRA_HTML_TEXT);
+            System.out.println("urlFromWeb1 = " +subject1);
+            System.out.println("urlFromWeb2 = " +subject2);
+
+
+
+            uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
             System.out.println("Uri는 "+ uri);
+
+
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//
+//                // Should we show an explanation?
+//                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//
+//                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+//                    // Show an expanation to the user *asynchronously* -- don't block
+//                    // this thread waiting for the user's response! After the user
+//                    // sees the explanation, try again to request the permission.
+//                } else {
+//
+//                    // No explanation needed, we can request the permission.
+//                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+//
+//                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+//                    // app-defined int constant. The callback method gets the
+//                    // result of the request.
+//                }
+//            }else {
+//                bitmapToImage();
+//
+//            }
 
             // insert image uri to clipboard
             ClipData clip = ClipData.newRawUri("test", uri);
             ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
             cm.setPrimaryClip(clip);
-
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-                // Should we show an explanation?
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-                    // Show an expanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-
-                } else {
-
-                    // No explanation needed, we can request the permission.
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-                }
-            }
-
-            //// TODO: 2017. 5. 3. have to check where the Image saved (Internal Path)
-            // save shared Image
-            try {
-                Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-
-                File file = new File("test.png");
-                FileOutputStream fos = openFileOutput("test.png", 0);
-
-                MediaStore.Images.Media.insertImage(getContentResolver(), bm, "test.png", "testCheck");
-
-                System.out.println(file);
-                System.out.println("File Test ========== ");
-
-                bm.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                fos.flush();
-                fos.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         finish();
         System.out.println("투명액티비티 종료");
     }
+
+//    public void bitmapToImage() {
+//        //// TODO: 2017. 5. 3. have to check where the Image saved (Internal Path)
+//        // save shared Image
+//        try {
+//            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//
+////            MediaStore.Images.Media.insertImage(getContentResolver(), bm, "test.png", "testCheck");
+//
+//            File file = new File("test.png");
+//
+//            FileOutputStream fos = openFileOutput("test.png", 0);
+//
+//            bm.compress(Bitmap.CompressFormat.PNG, 100, fos);
+//
+//            System.out.println("PNG TEST ======== " + bm.compress(Bitmap.CompressFormat.PNG, 100, fos));
+//            fos.flush();
+//            fos.close();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
