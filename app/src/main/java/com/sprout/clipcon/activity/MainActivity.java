@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // 연결
         Button createBtn = (Button)findViewById(R.id.main_create);
         Button joinBtn = (Button)findViewById(R.id.main_join);
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         new MaterialDialog.Builder(this)
                 .title("그룹명을 입력하세요")
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                .positiveText("생성")
+                .positiveText("생성") // 연결 // 그룹 생성 요청
                 .input("Group 1", "Group 1", false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
