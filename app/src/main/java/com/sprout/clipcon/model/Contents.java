@@ -1,16 +1,5 @@
 package com.sprout.clipcon.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
 public class Contents {
 	public static String TYPE_STRING = "STRING";
 	public static String TYPE_IMAGE = "IMAGE";
@@ -29,6 +18,54 @@ public class Contents {
 		this.contentsPKName = contentsPKName;
 		this.uploadUserName = uploadUserName;
 		this.uploadTime = uploadTime;
+		this.contentsValue = contentsValue;
+	}
+
+	public String getContentsType() {
+		return contentsType;
+	}
+
+	public void setContentsType(String contentsType) {
+		this.contentsType = contentsType;
+	}
+
+	public long getContentsSize() {
+		return contentsSize;
+	}
+
+	public void setContentsSize(long contentsSize) {
+		this.contentsSize = contentsSize;
+	}
+
+	public String getContentsPKName() {
+		return contentsPKName;
+	}
+
+	public void setContentsPKName(String contentsPKName) {
+		this.contentsPKName = contentsPKName;
+	}
+
+	public String getUploadUserName() {
+		return uploadUserName;
+	}
+
+	public void setUploadUserName(String uploadUserName) {
+		this.uploadUserName = uploadUserName;
+	}
+
+	public String getUploadTime() {
+		return uploadTime;
+	}
+
+	public void setUploadTime(String uploadTime) {
+		this.uploadTime = uploadTime;
+	}
+
+	public String getContentsValue() {
+		return contentsValue;
+	}
+
+	public void setContentsValue(String contentsValue) {
 		this.contentsValue = contentsValue;
 	}
 }

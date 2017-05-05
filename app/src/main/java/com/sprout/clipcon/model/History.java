@@ -20,8 +20,6 @@ public class History {
     public Contents getContentsByPK(String contentsPKName) {
         return contentsMap.get(contentsPKName);
     }
-
 //    private String dataSender;
 //    private String description;
-
 }
