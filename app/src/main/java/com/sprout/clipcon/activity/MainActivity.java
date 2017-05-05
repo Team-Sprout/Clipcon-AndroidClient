@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                         Toast.makeText(getApplicationContext(), "만들어진 그룹명은 "+input.toString()+" 입니다", Toast.LENGTH_SHORT).show();
+
+
                         startActivity(new Intent(getApplicationContext(), GroupActivity.class));
                     }
                 }).show();
