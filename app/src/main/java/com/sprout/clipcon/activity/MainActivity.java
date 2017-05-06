@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.server.Endpoint;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // 연결
         Button createBtn = (Button)findViewById(R.id.main_create);
         Button joinBtn = (Button)findViewById(R.id.main_join);
