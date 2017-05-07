@@ -1,6 +1,7 @@
 package com.sprout.clipcon.server;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,16 +29,29 @@ import static android.R.id.input;
 
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
+
     private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
      // private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
     private Session session;
     private static Endpoint uniqueEndpoint;
+
+    private static SecondCallback secondCallback;
+
+    public interface SecondCallback {
+        public void onSecondSuccess();
+    }
+
+    public Endpoint(SecondCallback secondCallback) {
+        this.secondCallback = secondCallback;
+    }
+
 
     public static Endpoint getIntance() {
         try {
             if (uniqueEndpoint == null) {
                 uniqueEndpoint = new Endpoint();
                 Log.d("delf", "after constructor");
+                System.out.println("************  테스트중 1111 **************");
             }
         } catch (DeploymentException | IOException | URISyntaxException e) {
             // e.printStackTrace();
@@ -47,11 +61,13 @@ public class Endpoint {
         return uniqueEndpoint;
     }
 
+
     public Endpoint() throws DeploymentException, IOException, URISyntaxException {
         URI uRI = new URI(uri);
         Log.d("delf", "before connect");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uRI);
         Log.d("delf", "after connect");
+        System.out.println("************  테스트중 1212 **************");
     }
 
     @OnOpen
@@ -63,6 +79,7 @@ public class Endpoint {
     @OnMessage
     public void onMessage(Message message) {
         System.out.println("message type: " + message.getType());
+
         try {
             switch (message.get(Message.TYPE)) {
                 case Message.RESPONSE_CREATE_GROUP:
@@ -70,10 +87,18 @@ public class Endpoint {
                     switch (message.get(Message.RESULT)) {
                         case Message.CONFIRM:
                             System.out.println("create group confirm");
+                            //// TODO: 2017. 5. 7. have to make callback
 
+                            // 2차콜백 성공신호 보내는부분
+//                            secondCallback.onGood();
+                            System.out.println("************  테스트중 1313 **************");
+                            System.out.println("callback part ********************");
                             break;
+
                         case Message.REJECT:
                             System.out.println("create group reject");
+
+
                             break;
                     }
                     break;
@@ -121,6 +146,8 @@ public class Endpoint {
             System.out.println("debuger_delf: session is null");
         }
         session.getBasicRemote().sendObject(message);
+
+        System.out.println("************  테스트중 1414 **************");
     }
 
     @OnClose
