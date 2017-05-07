@@ -11,13 +11,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
-import com.sprout.clipcon.model.Message;
-import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
-
-import java.io.IOException;
-
-import javax.websocket.EncodeException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCreateDialog() {
-        // new EndpointInBackGround().doInBackground(this, "create_group");
+        // way to sending message of request "create group"
+        new EndpointInBackGround().execute("request_create_group");
+
         new MaterialDialog.Builder(this)
                 .title("그룹명을 입력하세요")
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
@@ -62,19 +58,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).show();
 
-
-        // way to sending message of request "create group"
-        Message req = new Message()
-                .setType(Message.REQUEST_CREATE_GROUP) // 1. add type
-                .add(Message.GROUP_NAME, "그룹 이름");  // 2. add contents
-        try {
-            // if exist this reference, use that
-            Endpoint.getIntance().sendMessage(req); // 3. send
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (EncodeException e) {
-            e.printStackTrace();
-        }
     }
 
     public void showJoinDialog() {

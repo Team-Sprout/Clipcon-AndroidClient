@@ -14,12 +14,13 @@ import javax.websocket.EncodeException;
  */
 
 public class EndpointInBackGround extends AsyncTask<String, Void, String> {
-    private AppCompatActivity  activity = null;
+    private AppCompatActivity activity = null;
 
     public EndpointInBackGround doInBackground(AppCompatActivity iActivity, String type) {
         this.activity = iActivity;
         return this;
     }
+
 
     @Override
     protected String doInBackground(String... params) {
@@ -28,15 +29,19 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 Endpoint.getIntance();
                 break;
             case "request_create_group":
-                break;
-            case "send_message":
+                Message req = new Message()
+                        .setType(Message.REQUEST_CREATE_GROUP) // 1. add type
+                        .add(Message.GROUP_NAME, "그룹 이름");  // 2. add contents
                 try {
-                    Endpoint.getIntance().sendMessage(new Message().setType(Message.REQUEST_CREATE_GROUP));
+                    // if exist this reference, use that
+                    Endpoint.getIntance().sendMessage(req); // 3. send
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (EncodeException e) {
                     e.printStackTrace();
                 }
+                break;
+            case "send_message":
                 break;
         }
         return null;
