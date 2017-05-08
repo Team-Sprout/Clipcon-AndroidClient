@@ -16,7 +16,9 @@ import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
+import javax.websocket.DeploymentException;
 import javax.websocket.EncodeException;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,13 +51,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         System.out.println("************  테스트중 55 **************");
+
         new EndpointInBackGround().execute("connect");
 
         System.out.println("************  테스트중 66 **************");
     }
 
     public void showCreateDialog() {
-        // new EndpointInBackGround().doInBackground(this, "create_group");
         new MaterialDialog.Builder(this)
                 .title("그룹명을 입력하세요")
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
@@ -66,11 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "만들어진 그룹명은 " + input.toString() + " 입니다", Toast.LENGTH_SHORT).show();
                         System.out.println("************  테스트중 11 **************");
 
-                        //// TODO: 2017. 5. 8. ( MainActivity <-> EndpointInBackGround ) 1차콜백 부분.
-                        // 1차 콜백. EndpointInBackGround에서 request_create_group을 정확히 받았을때 그룹화면으로 진입
                         final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
 
-                            // EndpointInBackGround에서 onSuccess() 를 부르면 실행되는 부분.
                             @Override
                             public void onSuccess() {
                                 System.out.println("1차 콜백 성공");
@@ -78,10 +77,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         };
 
-                        // result 를 EndpointInBackGround에 넘겨준다.
                         new EndpointInBackGround(result).execute("request_create_group");
 
-//                        startActivity(new Intent(getApplicationContext(), GroupActivity.class));
                     }
                 }).show();
 

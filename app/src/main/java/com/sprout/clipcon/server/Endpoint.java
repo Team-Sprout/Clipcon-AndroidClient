@@ -41,12 +41,12 @@ public class Endpoint {
         public void onSecondSuccess();
     }
 
-    public Endpoint(SecondCallback secondCallback) {
-        this.secondCallback = secondCallback;
+    public void setSecondCallback(SecondCallback callback) {
+        secondCallback = callback;
     }
 
 
-    public static Endpoint getIntance() {
+    public static Endpoint getInstance() {
         try {
             if (uniqueEndpoint == null) {
                 uniqueEndpoint = new Endpoint();
@@ -62,7 +62,7 @@ public class Endpoint {
     }
 
 
-    public Endpoint() throws DeploymentException, IOException, URISyntaxException {
+    private Endpoint() throws DeploymentException, IOException, URISyntaxException {
         URI uRI = new URI(uri);
         Log.d("delf", "before connect");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uRI);
@@ -87,18 +87,15 @@ public class Endpoint {
                     switch (message.get(Message.RESULT)) {
                         case Message.CONFIRM:
                             System.out.println("create group confirm");
-                            //// TODO: 2017. 5. 7. have to make callback
 
                             // 2차콜백 성공신호 보내는부분
-//                            secondCallback.onGood();
+                            secondCallback.onSecondSuccess();
                             System.out.println("************  테스트중 1313 **************");
-                            System.out.println("callback part ********************");
                             break;
 
                         case Message.REJECT:
+
                             System.out.println("create group reject");
-
-
                             break;
                     }
                     break;
