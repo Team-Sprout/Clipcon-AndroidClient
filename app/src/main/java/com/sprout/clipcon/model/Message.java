@@ -10,6 +10,8 @@ public class Message {
     private String type;
     private JSONObject json;
 
+    public Message() {}
+
     public String getType() {
         return type;
     }
@@ -62,12 +64,13 @@ public class Message {
         System.out.println(json.toString());
     }
 
-    public void add(String key, String value) {
+    public Message add(String key, String value) {
         try {
             json.put(key, value);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return this;
     }
  // 테스트 해보겠다
     public String get(String key) throws JSONException {
