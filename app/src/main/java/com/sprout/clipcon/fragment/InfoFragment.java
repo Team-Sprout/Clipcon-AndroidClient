@@ -41,6 +41,7 @@ public class InfoFragment extends Fragment {
         TextView infoGroupKey = (TextView) view.findViewById(R.id.group_key);
         ImageView editGroupName = (ImageView) view.findViewById(R.id.editGroupName);
         ImageView copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
+        ImageView editNickName= (ImageView) view.findViewById(R.id.editNickName);
         String groupName = getActivity().getIntent().getStringExtra("name");
         final String groupKey = getActivity().getIntent().getStringExtra("key");
 
@@ -61,6 +62,13 @@ public class InfoFragment extends Fragment {
                 ClipData clipData = ClipData.newPlainText("Test", groupKey);
                 cm.setPrimaryClip(clipData);
                 Toast.makeText(getContext(), "Copy Key", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        editNickName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Edit NickName", Toast.LENGTH_SHORT).show();
             }
         });
 

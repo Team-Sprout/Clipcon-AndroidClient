@@ -87,7 +87,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_margin="16dp">
+        android:layout_margin="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -95,12 +95,22 @@
             android:text="Members"
             android:textSize="16sp"/>
 
+        <ImageView
+            android:id="@+id/editNickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/upload_red"
+            android:layout_centerVertical="true"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="myNickname"
             android:textSize="16sp"
-            android:layout_alignParentEnd="true"/>
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@id/editNickName"/>
 
     </RelativeLayout>
 
