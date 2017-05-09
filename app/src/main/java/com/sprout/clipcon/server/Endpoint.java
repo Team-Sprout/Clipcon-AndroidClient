@@ -7,6 +7,7 @@ import com.sprout.clipcon.model.MessageDecoder;
 import com.sprout.clipcon.model.MessageEncoder;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URI;
@@ -32,7 +33,7 @@ public class Endpoint {
     private static SecondCallback secondCallback;
 
     public interface SecondCallback {
-        public void onSecondSuccess(String pk);
+        void onSecondSuccess(JSONObject result);
     }
 
     public void setSecondCallback(SecondCallback callback) {
@@ -44,8 +45,6 @@ public class Endpoint {
         try {
             if (uniqueEndpoint == null) {
                 uniqueEndpoint = new Endpoint();
-                Log.d("delf", "after constructor");
-                System.out.println("************  테스트중 1111 **************");
             }
         } catch (DeploymentException | IOException | URISyntaxException e) {
             // e.printStackTrace();
@@ -66,26 +65,24 @@ public class Endpoint {
 
     @OnOpen
     public void onOpen(Session session) {
-        Log.d("delf", "open session");
+        Log.d("delf", "[CLIENT] server connected. session open success.");
         this.session = session;
     }
 
     @OnMessage
     public void onMessage(Message message) {
-        System.out.println("message type: " + message.getType());
+        Log.d("delf", "[CLIENT] get message from server: " + message.toString());
 
         try {
             switch (message.get(Message.TYPE)) {
                 case Message.RESPONSE_CREATE_GROUP:
-
                     switch (message.get(Message.RESULT)) {
                         case Message.CONFIRM:
                             System.out.println("create group confirm");
 
-                            String pk = message.get(Message.GROUP_PK);
                             // 2차콜백 성공신호 보내는부분
-                            secondCallback.onSecondSuccess(pk);
-                            System.out.println("************  테스트중 1313 **************");
+                            JSONObject response = message.getJson();
+                            secondCallback.onSecondSuccess(response);
                             break;
 
                         case Message.REJECT:

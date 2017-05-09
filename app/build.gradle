@@ -39,5 +39,5 @@ dependencies {
     compile files('libs/javax.websocket-api-1.1.jar')
     // compile project(':json-20160810')
     compile files('libs/tyrus-standalone-client-1.13.jar')
-    compile project(':json-20160810')
+    //compile project(':json-20160810')
 }

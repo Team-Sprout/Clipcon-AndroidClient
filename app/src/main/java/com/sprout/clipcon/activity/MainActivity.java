@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,10 +42,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new EndpointInBackGround().execute(Message.CONNECT); // TODO: 17-05-09 change callback
-
-        // test code
-       // new EndpointInBackGround().execute(Message.UPLOAD);
+        new EndpointInBackGround().execute(Message.CONNECT); // connect
     }
 
 
@@ -54,16 +53,21 @@ public class MainActivity extends AppCompatActivity {
                 .positiveText("생성")
                 .input("Group 1", "Group 1", false, new MaterialDialog.InputCallback() {
                     @Override
-                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence input) {
+                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupName) {
+                        final String groupName = inputGroupName.toString();
+
                         // TODO: 17-05-08 show loading screen and block the input until changing screen.
                         final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
                             @Override
-                            public void onSuccess(String pk) {
-                                System.out.println("1차 콜백 성공");
-                                sendToGroupActivity(pk, input.toString());
+                            public void onSuccess(JSONObject response) {
+                                try {
+                                    startGroupActivity(response, inputGroupName.toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         };
-                        new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP);
+                        new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP, groupName);
                     }
                 }).show();
     }
@@ -75,17 +79,43 @@ public class MainActivity extends AppCompatActivity {
                 .positiveText("참여")
                 .input("", "", false, new MaterialDialog.InputCallback() {
                     @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        Toast.makeText(getApplicationContext(), "고유키는 " + input.toString() + " 입니다", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), GroupActivity.class));
+                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupKey) {
+                        final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
+                            @Override
+                            public void onSuccess(JSONObject response) {
+                                try {
+                                    if (response.get(Message.RESULT).equals(Message.CONFIRM)) {
+                                        startGroupActivity(response, inputGroupKey.toString());
+                                    } else { // reject
+                                        // case: miss matching group key
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        new EndpointInBackGround(result).execute(Message.REQUEST_JOIN_GROUP, inputGroupKey.toString());
                     }
                 }).show();
     }
 
-    public void sendToGroupActivity(String pk, String name) {
+    private void startGroupActivity(JSONObject response, String groupKey) throws JSONException {
         Intent intent = new Intent(MainActivity.this, GroupActivity.class);
-        intent.putExtra("key", pk);
-        intent.putExtra("name", name);
+        response.put(Message.GROUP_NAME, groupKey); // add group key to response JSON object
+        intent.putExtra("response", response.toString()); // send response to GroupActivity
         startActivity(intent);
     }
 }
+
+/*final EndpointInBackGround.ResultCallback resultConnect = new EndpointInBackGround.ResultCallback() {
+                            @Override
+                            public void onSuccess(String primaryKey) {
+                                if(primaryKey.equals(Message.CONFIRM)) {
+                                    // send request "create group"
+                                }
+                                else {
+                                    return;
+                                }
+                            }
+                        };
+                        new EndpointInBackGround(resultConnect).execute(Message.CONNECT);*/

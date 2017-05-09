@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.sprout.clipcon.model.Message;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import javax.websocket.EncodeException;
@@ -18,15 +20,14 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private ResultCallback resultCallback;
 
     public interface ResultCallback {
-        public void onSuccess(String pk);
-    }
-
-
-    public EndpointInBackGround(ResultCallback resultCallback) {
-        this.resultCallback = resultCallback;
+        void onSuccess(JSONObject result);
     }
 
     public EndpointInBackGround() {
+    }
+
+    public EndpointInBackGround(ResultCallback resultCallback) {
+        this.resultCallback = resultCallback;
     }
 
     @Override
@@ -34,6 +35,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
         switch (msg[0]) {
 
             case Message.CONNECT:
+                Log.d("delf", "[CLIENT] connecting server...");
                 Endpoint.getInstance();
                 break;
 
@@ -41,6 +43,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 setCallBack();
                 sendMessage(
                         new Message().setType(Message.REQUEST_CREATE_GROUP)
+                                .add(Message.GROUP_NAME, msg[1])
                 );
                 break;
 
@@ -86,9 +89,9 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private void setCallBack() {
         final Endpoint.SecondCallback secondResult = new Endpoint.SecondCallback() {
             @Override
-            public void onSecondSuccess(String pk) {
+            public void onSecondSuccess(JSONObject responseFromServer) {
                 System.out.println("2차 콜백 성공");
-                resultCallback.onSuccess(pk); // call in MainActivity
+                resultCallback.onSuccess(responseFromServer); // call in MainActivity
             }
         };
         Endpoint.getInstance().setSecondCallback(secondResult);
