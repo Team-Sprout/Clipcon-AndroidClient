@@ -83,7 +83,7 @@ public class Endpoint {
                             System.out.println("create group confirm");
 
                             // 2차콜백 성공신호 보내는부분
-                            // secondCallback.onSecondSuccess();
+                            secondCallback.onSecondSuccess();
                             System.out.println("************  테스트중 1313 **************");
                             break;
 

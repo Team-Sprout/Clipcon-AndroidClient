@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         new EndpointInBackGround().execute(Message.CONNECT);
 
         // test code
-        new EndpointInBackGround().execute(Message.UPLOAD);
+       // new EndpointInBackGround().execute(Message.UPLOAD);
     }
 
 
@@ -66,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(new Intent(getApplicationContext(), GroupActivity.class));
                             }
                         };
-                        // send request to server
-                        new EndpointInBackGround(result).execute(Message.CONNECT);
-
+                        new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP);
                         Toast.makeText(getApplicationContext(), "만들어진 그룹명은 " + input.toString() + " 입니다", Toast.LENGTH_SHORT).show();
                     }
                 }).show();

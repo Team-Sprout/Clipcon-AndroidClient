@@ -29,6 +29,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
         this.resultCallback = resultCallback;
     }
 
+
     @Override
     protected String doInBackground(String... msg) {
         switch (msg[0]) {
@@ -38,18 +39,18 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 break;
 
             case Message.REQUEST_CREATE_GROUP:
+                setCallBack();
                 sendMessage(
                         new Message().setType(Message.REQUEST_CREATE_GROUP)
                 );
-                setCallBack();
                 break;
 
             case Message.REQUEST_JOIN_GROUP:
+                setCallBack();
                 sendMessage(
                         new Message().setType(Message.REQUEST_JOIN_GROUP)
-                                .add(Message.GROUP_NAME, msg[1])
+                                .add(Message.GROUP_NAME, msg[1]) // msg[1]: group key
                 );
-                setCallBack();
                 break;
 
             case Message.UPLOAD:
