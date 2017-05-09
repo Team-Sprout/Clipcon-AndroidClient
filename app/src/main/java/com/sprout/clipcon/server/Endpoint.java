@@ -1,11 +1,7 @@
 package com.sprout.clipcon.server;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.sprout.clipcon.activity.GroupActivity;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.model.MessageDecoder;
 import com.sprout.clipcon.model.MessageEncoder;
@@ -24,8 +20,6 @@ import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-
-import static android.R.id.input;
 
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
@@ -89,7 +83,7 @@ public class Endpoint {
                             System.out.println("create group confirm");
 
                             // 2차콜백 성공신호 보내는부분
-                            secondCallback.onSecondSuccess();
+                            // secondCallback.onSecondSuccess();
                             System.out.println("************  테스트중 1313 **************");
                             break;
 
@@ -149,6 +143,6 @@ public class Endpoint {
 
     @OnClose
     public void onClose() {
-        // 세션이 끊겼을 때 어떻게 할지 처리
+        Log.d("delf", "session closed.");
     }
 }
