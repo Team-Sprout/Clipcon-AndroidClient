@@ -21,11 +21,11 @@
                 android:layout_height="wrap_content"
                 android:text="GroupName"
                 android:textSize="16sp"
-                android:id="@+id/textView"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
 
             <TextView
+                android:id="@+id/group_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0000"
@@ -49,6 +49,7 @@
                 android:layout_centerVertical="true"/>
 
             <TextView
+                android:id="@+id/group_key"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0000"
@@ -89,12 +90,5 @@
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
-
-    <!--<ImageView-->
-        <!--android:id="@+id/testImageView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"/>-->
-
-
 
 </LinearLayout>

@@ -18,7 +18,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private ResultCallback resultCallback;
 
     public interface ResultCallback {
-        public void onSuccess();
+        public void onSuccess(String pk);
     }
 
 
@@ -86,9 +86,9 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private void setCallBack() {
         final Endpoint.SecondCallback secondResult = new Endpoint.SecondCallback() {
             @Override
-            public void onSecondSuccess() {
+            public void onSecondSuccess(String pk) {
                 System.out.println("2차 콜백 성공");
-                resultCallback.onSuccess(); // call in MainActivity
+                resultCallback.onSuccess(pk); // call in MainActivity
             }
         };
         Endpoint.getInstance().setSecondCallback(secondResult);

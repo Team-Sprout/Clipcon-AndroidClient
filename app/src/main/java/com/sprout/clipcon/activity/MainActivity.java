@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public void showCreateDialog() {
         new MaterialDialog.Builder(this)
                 .title("그룹명을 입력하세요")
@@ -55,23 +54,18 @@ public class MainActivity extends AppCompatActivity {
                 .positiveText("생성")
                 .input("Group 1", "Group 1", false, new MaterialDialog.InputCallback() {
                     @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        System.out.println("************  테스트중 11 **************");
-
+                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence input) {
                         // TODO: 17-05-08 show loading screen and block the input until changing screen.
                         final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(String pk) {
                                 System.out.println("1차 콜백 성공");
-                                startActivity(new Intent(getApplicationContext(), GroupActivity.class));
+                                sendToGroupActivity(pk, input.toString());
                             }
                         };
                         new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP);
-                        Toast.makeText(getApplicationContext(), "만들어진 그룹명은 " + input.toString() + " 입니다", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
-
-        System.out.println("************  테스트중 22 **************");
     }
 
     public void showJoinDialog() {
@@ -86,5 +80,12 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), GroupActivity.class));
                     }
                 }).show();
+    }
+
+    public void sendToGroupActivity(String pk, String name) {
+        Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+        intent.putExtra("key", pk);
+        intent.putExtra("name", name);
+        startActivity(intent);
     }
 }

@@ -32,7 +32,7 @@ public class Endpoint {
     private static SecondCallback secondCallback;
 
     public interface SecondCallback {
-        public void onSecondSuccess();
+        public void onSecondSuccess(String pk);
     }
 
     public void setSecondCallback(SecondCallback callback) {
@@ -82,8 +82,9 @@ public class Endpoint {
                         case Message.CONFIRM:
                             System.out.println("create group confirm");
 
+                            String pk = message.get(Message.GROUP_PK);
                             // 2차콜백 성공신호 보내는부분
-                            secondCallback.onSecondSuccess();
+                            secondCallback.onSecondSuccess(pk);
                             System.out.println("************  테스트중 1313 **************");
                             break;
 
