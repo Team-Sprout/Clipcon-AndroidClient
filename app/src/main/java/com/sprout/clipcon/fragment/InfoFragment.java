@@ -1,5 +1,8 @@
 package com.sprout.clipcon.fragment;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.adapter.MemberAdapter;
@@ -34,11 +39,30 @@ public class InfoFragment extends Fragment {
 
         TextView infoGroupName = (TextView) view.findViewById(R.id.group_name);
         TextView infoGroupKey = (TextView) view.findViewById(R.id.group_key);
+        ImageView editGroupName = (ImageView) view.findViewById(R.id.editGroupName);
+        ImageView copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
         String groupName = getActivity().getIntent().getStringExtra("name");
-        String groupKey = getActivity().getIntent().getStringExtra("key");
+        final String groupKey = getActivity().getIntent().getStringExtra("key");
 
         infoGroupName.setText(groupName);
         infoGroupKey.setText(groupKey);
+
+        editGroupName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Edit Group Name", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        copyGroupKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager cm = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("Test", groupKey);
+                cm.setPrimaryClip(clipData);
+                Toast.makeText(getContext(), "Copy Key", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         ArrayList<Member> membersArrayList = new ArrayList<>();
         membersArrayList.add(new Member("Member 1"));
