@@ -18,9 +18,12 @@ import android.widget.Toast;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Member;
+import com.sprout.clipcon.model.Message;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-
 
 /**
  * Created by Yongwon on 2017. 2. 8..
@@ -28,9 +31,15 @@ import java.util.ArrayList;
 
 public class InfoFragment extends Fragment {
 
-    RecyclerView recyclerView;
-    MemberAdapter memberAdapter;
+    private RecyclerView recyclerView;
+    private MemberAdapter memberAdapter;
 
+    private String groupKey;
+    private String groupName;
+
+    private ImageView editGroupName;
+    private ImageView copyGroupKey ;
+    private ImageView editNickName ;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
@@ -39,38 +48,36 @@ public class InfoFragment extends Fragment {
 
         TextView infoGroupName = (TextView) view.findViewById(R.id.group_name);
         TextView infoGroupKey = (TextView) view.findViewById(R.id.group_key);
-        ImageView editGroupName = (ImageView) view.findViewById(R.id.editGroupName);
-        ImageView copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
-        ImageView editNickName= (ImageView) view.findViewById(R.id.editNickName);
-        String groupName = getActivity().getIntent().getStringExtra("name");
-        final String groupKey = getActivity().getIntent().getStringExtra("key");
 
-        infoGroupName.setText(groupName);
-        infoGroupKey.setText(groupKey);
+        editGroupName = (ImageView) view.findViewById(R.id.editGroupName);
+        copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
+        editNickName = (ImageView) view.findViewById(R.id.editNickName);
+        // String groupName = getActivity().getIntent().getStringExtra("name");
 
-        editGroupName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Edit Group Name", Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            JSONObject response = new JSONObject(getActivity().getIntent().getStringExtra("response"));
 
-        copyGroupKey.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager cm = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Test", groupKey);
-                cm.setPrimaryClip(clipData);
-                Toast.makeText(getContext(), "Copy Key", Toast.LENGTH_SHORT).show();
-            }
-        });
+            groupName = response.get(Message.GROUP_NAME).toString();
+            groupKey = response.get(Message.GROUP_PK).toString();
 
-        editNickName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Edit NickName", Toast.LENGTH_SHORT).show();
-            }
-        });
+            infoGroupName.setText(groupName);
+            infoGroupKey.setText(groupKey);
+
+            /*if(response.get(Message.TYPE).equals(Message.REQUEST_JOIN_GROUP)) {
+                JSONArray usersInGroup = response.getJSONArray(Message.LIST);
+                Iterator<?> it = usersInGroup.iterator();
+                while (it.hasNext()) {
+                    String tmpString = (String) it.next();
+                    userStringList.add(tmpString);
+                }
+
+            }*/
+                // TODO: 17-05-09 assign history
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        setButtonListener();
 
         ArrayList<Member> membersArrayList = new ArrayList<>();
         membersArrayList.add(new Member("Member 1"));
@@ -89,5 +96,31 @@ public class InfoFragment extends Fragment {
         recyclerView.setAdapter(memberAdapter);
 
         return view;
+    }
+
+    private void setButtonListener() {
+        editGroupName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Edit Group Name", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        copyGroupKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("Test", groupKey);
+                cm.setPrimaryClip(clipData);
+                Toast.makeText(getContext(), "Copy Key", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        editNickName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Edit NickName", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
