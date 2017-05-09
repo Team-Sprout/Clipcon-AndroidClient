@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new EndpointInBackGround().execute(Message.CONNECT);
+        new EndpointInBackGround().execute(Message.CONNECT); // TODO: 17-05-09 change callback
 
         // test code
        // new EndpointInBackGround().execute(Message.UPLOAD);

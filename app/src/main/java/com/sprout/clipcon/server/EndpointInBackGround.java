@@ -21,14 +21,13 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
         public void onSuccess();
     }
 
-    public EndpointInBackGround() {
-
-    }
 
     public EndpointInBackGround(ResultCallback resultCallback) {
         this.resultCallback = resultCallback;
     }
 
+    public EndpointInBackGround() {
+    }
 
     @Override
     protected String doInBackground(String... msg) {
@@ -65,6 +64,8 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
             case Message.DOWNLOAD:
                 break;
 
+            //...
+
             default:
                 Log.d("delf", "do nothing in doInBackground()");
                 break;
@@ -92,9 +93,9 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
         };
         Endpoint.getInstance().setSecondCallback(secondResult);
     }
+
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
     }
-
 }
