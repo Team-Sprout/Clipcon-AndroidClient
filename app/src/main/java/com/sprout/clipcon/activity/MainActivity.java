@@ -12,14 +12,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
-import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import javax.websocket.DeploymentException;
-import javax.websocket.EncodeException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,12 +29,9 @@ public class MainActivity extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("************  테스트중 33 **************");
                 showCreateDialog();
-                System.out.println("************  테스트중 44 **************");
             }
         });
-
         // join group
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,12 +40,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        System.out.println("************  테스트중 55 **************");
+        new EndpointInBackGround().execute(Message.CONNECT); // TODO: 17-05-09 change callback
 
-        new EndpointInBackGround().execute("connect");
-
-        System.out.println("************  테스트중 66 **************");
+        // test code
+       // new EndpointInBackGround().execute(Message.UPLOAD);
     }
+
+
 
     public void showCreateDialog() {
         new MaterialDialog.Builder(this)
@@ -65,20 +56,18 @@ public class MainActivity extends AppCompatActivity {
                 .input("Group 1", "Group 1", false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        Toast.makeText(getApplicationContext(), "만들어진 그룹명은 " + input.toString() + " 입니다", Toast.LENGTH_SHORT).show();
                         System.out.println("************  테스트중 11 **************");
 
+                        // TODO: 17-05-08 show loading screen and block the input until changing screen.
                         final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
-
                             @Override
                             public void onSuccess() {
                                 System.out.println("1차 콜백 성공");
                                 startActivity(new Intent(getApplicationContext(), GroupActivity.class));
                             }
                         };
-
-                        new EndpointInBackGround(result).execute("request_create_group");
-
+                        new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP);
+                        Toast.makeText(getApplicationContext(), "만들어진 그룹명은 " + input.toString() + " 입니다", Toast.LENGTH_SHORT).show();
                     }
                 }).show();
 

@@ -10,7 +10,8 @@ public class Message {
     private String type;
     private JSONObject json;
 
-    public Message() {}
+    public Message() {
+    }
 
     public String getType() {
         return type;
@@ -72,7 +73,8 @@ public class Message {
         }
         return this;
     }
- // 테스트 해보겠다
+
+    // 테스트 해보겠다
     public String get(String key) throws JSONException {
         return json.get(key).toString();
     }
@@ -88,6 +90,7 @@ public class Message {
     public long getLong(String key) throws JSONException {
         return json.getLong(key);
     }
+
     public final static String TYPE = "message type";
 
     public final static String REQUEST_CREATE_GROUP = "request/create group";
@@ -117,4 +120,8 @@ public class Message {
     public final static String PARTICIPANT_NAME = "participant name";
 
     public final static String TEST_DEBUG_MODE = "debug";
+
+    public final static String CONNECT = "connect";
+    public final static String UPLOAD = "upload";
+    public final static String DOWNLOAD = "download";
 }
