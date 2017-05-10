@@ -30,14 +30,23 @@ public class Endpoint {
     private Session session;
     private static Endpoint uniqueEndpoint;
 
-    private static SecondCallback secondCallback;
+    private SecondCallback secondCallback;
+    private JoinCallback joinCallback;
 
     public interface SecondCallback {
         void onSecondSuccess(JSONObject result);
     }
 
+    public interface JoinCallback {
+        void onJoinAdded();
+    }
+
     public void setSecondCallback(SecondCallback callback) {
         secondCallback = callback;
+    }
+
+    public void setJoinCallback(JoinCallback callback) {
+        joinCallback = callback;
     }
 
 
@@ -96,6 +105,10 @@ public class Endpoint {
 
                     switch (message.get(Message.RESULT)) {
                         case Message.CONFIRM:
+
+                            // 2차콜백 성공신호 보내는부분
+                            JSONObject response = message.getJson();
+                            secondCallback.onSecondSuccess(response);
                             System.out.println("join group confirm");
                             break;
                         case Message.REJECT:
@@ -109,6 +122,7 @@ public class Endpoint {
 
                 case Message.NOTI_ADD_PARTICIPANT: // 그룹 내 다른 User 들어올 때 마다 Message 받고 UI 갱신
 
+                    joinCallback.onJoinAdded();
                     System.out.println("add participant noti");
                     break;
 

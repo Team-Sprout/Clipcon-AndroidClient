@@ -43,7 +43,6 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 setCallBack();
                 sendMessage(
                         new Message().setType(Message.REQUEST_CREATE_GROUP)
-                                .add(Message.GROUP_NAME, msg[1])
                 );
                 break;
 
@@ -51,7 +50,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 setCallBack();
                 sendMessage(
                         new Message().setType(Message.REQUEST_JOIN_GROUP)
-                                .add(Message.GROUP_NAME, msg[1]) // msg[1]: group key
+                                .add(Message.GROUP_PK, msg[1]) // msg[1]: group key
                 );
                 break;
 

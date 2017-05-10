@@ -19,6 +19,7 @@ import com.sprout.clipcon.R;
 import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Member;
 import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.Endpoint;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,9 +36,8 @@ public class InfoFragment extends Fragment {
     private MemberAdapter memberAdapter;
 
     private String groupKey;
-    private String groupName;
+    private String nickName;
 
-    private ImageView editGroupName;
     private ImageView copyGroupKey ;
     private ImageView editNickName ;
     @Override
@@ -46,38 +46,34 @@ public class InfoFragment extends Fragment {
 
         System.out.println("그룹화면으로 진입");
 
-        TextView infoGroupName = (TextView) view.findViewById(R.id.group_name);
         TextView infoGroupKey = (TextView) view.findViewById(R.id.group_key);
+        TextView myNickName = (TextView) view.findViewById(R.id.my_nickname);
 
-        editGroupName = (ImageView) view.findViewById(R.id.editGroupName);
         copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
         editNickName = (ImageView) view.findViewById(R.id.editNickName);
-        // String groupName = getActivity().getIntent().getStringExtra("name");
 
         try {
             JSONObject response = new JSONObject(getActivity().getIntent().getStringExtra("response"));
-
-            groupName = response.get(Message.GROUP_NAME).toString();
+            System.out.println("리스폰스" +response);
             groupKey = response.get(Message.GROUP_PK).toString();
+            nickName = response.get(Message.NAME).toString();
 
-            infoGroupName.setText(groupName);
+            System.out.println("여기다");
+            System.out.println(groupKey);
+            System.out.println(nickName);
+            System.out.println("여기다 끝");
+
             infoGroupKey.setText(groupKey);
+            myNickName.setText(nickName);
 
-            /*if(response.get(Message.TYPE).equals(Message.REQUEST_JOIN_GROUP)) {
-                JSONArray usersInGroup = response.getJSONArray(Message.LIST);
-                Iterator<?> it = usersInGroup.iterator();
-                while (it.hasNext()) {
-                    String tmpString = (String) it.next();
-                    userStringList.add(tmpString);
-                }
-
-            }*/
                 // TODO: 17-05-09 assign history
         } catch (JSONException e) {
+            System.out.println("여기냐?");
             e.printStackTrace();
         }
 
         setButtonListener();
+        setJoinCallback();
 
         ArrayList<Member> membersArrayList = new ArrayList<>();
         membersArrayList.add(new Member("Member 1"));
@@ -99,12 +95,6 @@ public class InfoFragment extends Fragment {
     }
 
     private void setButtonListener() {
-        editGroupName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Edit Group Name", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         copyGroupKey.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,5 +112,16 @@ public class InfoFragment extends Fragment {
                 Toast.makeText(getContext(), "Edit NickName", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setJoinCallback() {
+
+        Endpoint.JoinCallback joinResult = new Endpoint.JoinCallback() {
+            @Override
+            public void onJoinAdded() {
+                System.out.println("New Member Joined");
+            }
+        };
+        Endpoint.getInstance().setJoinCallback(joinResult);
     }
 }

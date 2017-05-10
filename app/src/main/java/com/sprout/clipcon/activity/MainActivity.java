@@ -31,7 +31,19 @@ public class MainActivity extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCreateDialog();
+
+                // TODO: 17-05-08 show loading screen and block the input until changing screen.
+                final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
+                    @Override
+                    public void onSuccess(JSONObject response) {
+                        try {
+                            startGroupActivity(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP);
             }
         });
         // join group
@@ -46,38 +58,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void showCreateDialog() {
-        new MaterialDialog.Builder(this)
-                .title("그룹명을 입력하세요")
-                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                .positiveText("생성")
-                .input("Group 1", "Group 1", false, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupName) {
-                        final String groupName = inputGroupName.toString();
-
-                        // TODO: 17-05-08 show loading screen and block the input until changing screen.
-                        final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
-                            @Override
-                            public void onSuccess(JSONObject response) {
-                                try {
-                                    startGroupActivity(response, inputGroupName.toString());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        };
-                        new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP, groupName);
-                    }
-                }).show();
-    }
+//    public void showCreateDialog() {
+//        new MaterialDialog.Builder(this)
+//                .title("그룹명을 입력하세요")
+//                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
+//                .positiveText("생성")
+//                .input("Group 1", "Group 1", false, new MaterialDialog.InputCallback() {
+//                    @Override
+//                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupName) {
+//                        final String groupName = inputGroupName.toString();
+//
+//                        // TODO: 17-05-08 show loading screen and block the input until changing screen.
+//                        final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
+//                            @Override
+//                            public void onSuccess(JSONObject response) {
+//                                try {
+//                                    response.put(Message.GROUP_PK, inputGroupName.toString());
+//                                    startGroupActivity(response);
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        };
+//                        new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP, groupName);
+//                    }
+//                }).show();
+//    }
 
     public void showJoinDialog() {
         new MaterialDialog.Builder(this)
                 .title("고유키를 입력하세요")
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
                 .positiveText("참여")
-                .input("", "", false, new MaterialDialog.InputCallback() {
+                .input("", "abcABC", false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupKey) {
                         final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
@@ -85,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
                             public void onSuccess(JSONObject response) {
                                 try {
                                     if (response.get(Message.RESULT).equals(Message.CONFIRM)) {
-                                        startGroupActivity(response, inputGroupKey.toString());
+                                        response.put(Message.GROUP_NAME, inputGroupKey.toString());
+                                        startGroupActivity(response);
                                     } else { // reject
                                         // case: miss matching group key
                                     }
@@ -99,9 +113,9 @@ public class MainActivity extends AppCompatActivity {
                 }).show();
     }
 
-    private void startGroupActivity(JSONObject response, String groupKey) throws JSONException {
+    private void startGroupActivity(JSONObject response) throws JSONException {
         Intent intent = new Intent(MainActivity.this, GroupActivity.class);
-        response.put(Message.GROUP_NAME, groupKey); // add group key to response JSON object
+
         intent.putExtra("response", response.toString()); // send response to GroupActivity
         startActivity(intent);
     }
