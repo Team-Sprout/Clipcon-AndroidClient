@@ -90,6 +90,7 @@ public class InfoFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
+        //// TODO: 2017. 5. 11. when Create Group, My nickname is not in Member List. Have to Check it
         memberAdapter = new MemberAdapter(membersArrayList);
         recyclerView.setAdapter(memberAdapter);
 

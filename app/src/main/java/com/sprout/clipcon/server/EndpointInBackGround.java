@@ -2,13 +2,9 @@ package com.sprout.clipcon.server;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.sprout.clipcon.model.Message;
-
 import org.json.JSONObject;
-
 import java.io.IOException;
-
 import javax.websocket.EncodeException;
 
 /**

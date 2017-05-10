@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="120dp">
+    android:layout_height="113dp">
 
     <ImageView
         android:id="@+id/thumbnail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="76dp"
+        android:layout_height="80dp"
         android:layout_margin="14dp"
-        android:src="@drawable/upload_red"/>
+        android:src="@drawable/deport_img"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="84dp"
         android:orientation="vertical"
         android:layout_toEndOf="@id/thumbnail"
         android:layout_margin="14dp"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:gravity="center">
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/history_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Test Description"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/sender"
+            android:id="@+id/history_sender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:text="Test Person"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 

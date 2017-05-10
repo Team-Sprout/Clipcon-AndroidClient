@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder>{
 
-    ArrayList<Member> memberList;
+    private ArrayList<Member> memberList;
 
     public MemberAdapter(ArrayList<Member> membersArrayList) {
         memberList = membersArrayList;
@@ -33,8 +33,8 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
 
     @Override
     public void onBindViewHolder(MemberViewHolder holder, int position) {
-        Member members = memberList.get(position);
-        holder.nickView.setText(members.getNickname());
+        Member member = memberList.get(position);
+        holder.nickView.setText(member.getNickname());
 
     }
 
