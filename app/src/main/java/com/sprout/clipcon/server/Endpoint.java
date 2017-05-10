@@ -38,7 +38,7 @@ public class Endpoint {
     }
 
     public interface JoinCallback {
-        void onJoinAdded();
+        void onJoinAdded(String newMemeber);
     }
 
     public void setSecondCallback(SecondCallback callback) {
@@ -122,7 +122,7 @@ public class Endpoint {
 
                 case Message.NOTI_ADD_PARTICIPANT: // 그룹 내 다른 User 들어올 때 마다 Message 받고 UI 갱신
 
-                    joinCallback.onJoinAdded();
+                    joinCallback.onJoinAdded(message.get(Message.PARTICIPANT_NAME));
                     System.out.println("add participant noti");
                     break;
 

@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // TODO: 17-05-08 show loading screen and block the input until changing screen.
-                final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
+                final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
                     @Override
                     public void onSuccess(JSONObject response) {
                         try {
@@ -57,43 +57,15 @@ public class MainActivity extends AppCompatActivity {
         new EndpointInBackGround().execute(Message.CONNECT); // connect
     }
 
-
-//    public void showCreateDialog() {
-//        new MaterialDialog.Builder(this)
-//                .title("그룹명을 입력하세요")
-//                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-//                .positiveText("생성")
-//                .input("Group 1", "Group 1", false, new MaterialDialog.InputCallback() {
-//                    @Override
-//                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupName) {
-//                        final String groupName = inputGroupName.toString();
-//
-//                        // TODO: 17-05-08 show loading screen and block the input until changing screen.
-//                        final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
-//                            @Override
-//                            public void onSuccess(JSONObject response) {
-//                                try {
-//                                    response.put(Message.GROUP_PK, inputGroupName.toString());
-//                                    startGroupActivity(response);
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        };
-//                        new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP, groupName);
-//                    }
-//                }).show();
-//    }
-
     public void showJoinDialog() {
         new MaterialDialog.Builder(this)
                 .title("고유키를 입력하세요")
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
                 .positiveText("참여")
-                .input("", "abcABC", false, new MaterialDialog.InputCallback() {
+                .input("", "", false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupKey) {
-                        final EndpointInBackGround.ResultCallback result = new EndpointInBackGround.ResultCallback() {
+                        final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
                             @Override
                             public void onSuccess(JSONObject response) {
                                 try {
@@ -120,16 +92,3 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 }
-
-/*final EndpointInBackGround.ResultCallback resultConnect = new EndpointInBackGround.ResultCallback() {
-                            @Override
-                            public void onSuccess(String primaryKey) {
-                                if(primaryKey.equals(Message.CONFIRM)) {
-                                    // send request "create group"
-                                }
-                                else {
-                                    return;
-                                }
-                            }
-                        };
-                        new EndpointInBackGround(resultConnect).execute(Message.CONNECT);*/

@@ -17,17 +17,17 @@ import javax.websocket.EncodeException;
 
 public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
-    private ResultCallback resultCallback;
+    private BackgroundCallback backgroundCallback;
 
-    public interface ResultCallback {
+    public interface BackgroundCallback {
         void onSuccess(JSONObject result);
     }
 
     public EndpointInBackGround() {
     }
 
-    public EndpointInBackGround(ResultCallback resultCallback) {
-        this.resultCallback = resultCallback;
+    public EndpointInBackGround(BackgroundCallback callback) {
+        this.backgroundCallback = callback;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
             @Override
             public void onSecondSuccess(JSONObject responseFromServer) {
                 System.out.println("2차 콜백 성공");
-                resultCallback.onSuccess(responseFromServer); // call in MainActivity
+                backgroundCallback.onSuccess(responseFromServer); // call in MainActivity
             }
         };
         Endpoint.getInstance().setSecondCallback(secondResult);

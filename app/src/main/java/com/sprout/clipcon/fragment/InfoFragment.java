@@ -4,10 +4,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Member;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.Endpoint;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,6 +44,9 @@ public class InfoFragment extends Fragment {
 
     private ImageView copyGroupKey ;
     private ImageView editNickName ;
+
+    private ArrayList<Member> membersArrayList = new ArrayList<>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
@@ -54,34 +61,29 @@ public class InfoFragment extends Fragment {
 
         try {
             JSONObject response = new JSONObject(getActivity().getIntent().getStringExtra("response"));
-            System.out.println("리스폰스" +response);
             groupKey = response.get(Message.GROUP_PK).toString();
             nickName = response.get(Message.NAME).toString();
-
-            System.out.println("여기다");
-            System.out.println(groupKey);
-            System.out.println(nickName);
-            System.out.println("여기다 끝");
 
             infoGroupKey.setText(groupKey);
             myNickName.setText(nickName);
 
+            if(response.get(Message.TYPE).equals(Message.RESPONSE_JOIN_GROUP)) {
+                JSONArray usersInGroup = response.getJSONArray(Message.LIST);
+
+                for (int i = 0; i < usersInGroup.length(); i++) {
+//                    usersInGroup.getJSONObject(i);
+                    membersArrayList.add(new Member(usersInGroup.getString(i)));
+                    // TODO: 17-05-09 assign in UI
+                }
+            }
                 // TODO: 17-05-09 assign history
         } catch (JSONException e) {
-            System.out.println("여기냐?");
             e.printStackTrace();
         }
 
         setButtonListener();
         setJoinCallback();
 
-        ArrayList<Member> membersArrayList = new ArrayList<>();
-        membersArrayList.add(new Member("Member 1"));
-        membersArrayList.add(new Member("Member 2"));
-        membersArrayList.add(new Member("Member 3"));
-        membersArrayList.add(new Member("Member 4"));
-        membersArrayList.add(new Member("Member 5"));
-        membersArrayList.add(new Member("Member 6"));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_item);
@@ -94,8 +96,13 @@ public class InfoFragment extends Fragment {
         return view;
     }
 
-    private void setButtonListener() {
+    private void statusChanged(String newName) {
+        membersArrayList.add(new Member(newName));
+        memberAdapter = new MemberAdapter(membersArrayList);
+        recyclerView.setAdapter(memberAdapter);
+    }
 
+    private void setButtonListener() {
         copyGroupKey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +116,7 @@ public class InfoFragment extends Fragment {
         editNickName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Edit NickName", Toast.LENGTH_SHORT).show();
+                changeName();
             }
         });
     }
@@ -118,10 +125,30 @@ public class InfoFragment extends Fragment {
 
         Endpoint.JoinCallback joinResult = new Endpoint.JoinCallback() {
             @Override
-            public void onJoinAdded() {
+            public void onJoinAdded(final String newName) {
                 System.out.println("New Member Joined");
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        statusChanged(newName);
+                    }
+                });
             }
         };
         Endpoint.getInstance().setJoinCallback(joinResult);
+    }
+
+    public void changeName() {
+        new MaterialDialog.Builder(getContext())
+                .title("새로운 닉네임 입력")
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
+                .positiveText("완료")
+                .input("", "", false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence newName) {
+                        Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
     }
 }
