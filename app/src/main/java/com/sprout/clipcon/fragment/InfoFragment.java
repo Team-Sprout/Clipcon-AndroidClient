@@ -4,10 +4,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Member;
+import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.Endpoint;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-
 
 /**
  * Created by Yongwon on 2017. 2. 8..
@@ -28,8 +36,16 @@ import java.util.ArrayList;
 
 public class InfoFragment extends Fragment {
 
-    RecyclerView recyclerView;
-    MemberAdapter memberAdapter;
+    private RecyclerView recyclerView;
+    private MemberAdapter memberAdapter;
+
+    private String groupKey;
+    private String nickName;
+
+    private ImageView copyGroupKey ;
+    private ImageView editNickName ;
+
+    private ArrayList<Member> membersArrayList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,48 +53,37 @@ public class InfoFragment extends Fragment {
 
         System.out.println("그룹화면으로 진입");
 
-        TextView infoGroupName = (TextView) view.findViewById(R.id.group_name);
         TextView infoGroupKey = (TextView) view.findViewById(R.id.group_key);
-        ImageView editGroupName = (ImageView) view.findViewById(R.id.editGroupName);
-        ImageView copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
-        ImageView editNickName= (ImageView) view.findViewById(R.id.editNickName);
-        String groupName = getActivity().getIntent().getStringExtra("name");
-        final String groupKey = getActivity().getIntent().getStringExtra("key");
+        TextView myNickName = (TextView) view.findViewById(R.id.my_nickname);
 
-        infoGroupName.setText(groupName);
-        infoGroupKey.setText(groupKey);
+        copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
+        editNickName = (ImageView) view.findViewById(R.id.editNickName);
 
-        editGroupName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Edit Group Name", Toast.LENGTH_SHORT).show();
+        try {
+            JSONObject response = new JSONObject(getActivity().getIntent().getStringExtra("response"));
+            groupKey = response.get(Message.GROUP_PK).toString();
+            nickName = response.get(Message.NAME).toString();
+
+            infoGroupKey.setText(groupKey);
+            myNickName.setText(nickName);
+
+            if(response.get(Message.TYPE).equals(Message.RESPONSE_JOIN_GROUP)) {
+                JSONArray usersInGroup = response.getJSONArray(Message.LIST);
+
+                for (int i = 0; i < usersInGroup.length(); i++) {
+//                    usersInGroup.getJSONObject(i);
+                    membersArrayList.add(new Member(usersInGroup.getString(i)));
+                    // TODO: 17-05-09 assign in UI
+                }
             }
-        });
+                // TODO: 17-05-09 assign history
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        copyGroupKey.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager cm = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Test", groupKey);
-                cm.setPrimaryClip(clipData);
-                Toast.makeText(getContext(), "Copy Key", Toast.LENGTH_SHORT).show();
-            }
-        });
+        setButtonListener();
+        setJoinCallback();
 
-        editNickName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Edit NickName", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        ArrayList<Member> membersArrayList = new ArrayList<>();
-        membersArrayList.add(new Member("Member 1"));
-        membersArrayList.add(new Member("Member 2"));
-        membersArrayList.add(new Member("Member 3"));
-        membersArrayList.add(new Member("Member 4"));
-        membersArrayList.add(new Member("Member 5"));
-        membersArrayList.add(new Member("Member 6"));
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_item);
@@ -89,5 +94,61 @@ public class InfoFragment extends Fragment {
         recyclerView.setAdapter(memberAdapter);
 
         return view;
+    }
+
+    private void statusChanged(String newName) {
+        membersArrayList.add(new Member(newName));
+        memberAdapter = new MemberAdapter(membersArrayList);
+        recyclerView.setAdapter(memberAdapter);
+    }
+
+    private void setButtonListener() {
+        copyGroupKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("Test", groupKey);
+                cm.setPrimaryClip(clipData);
+                Toast.makeText(getContext(), "Copy Key", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        editNickName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeName();
+            }
+        });
+    }
+
+    private void setJoinCallback() {
+
+        Endpoint.JoinCallback joinResult = new Endpoint.JoinCallback() {
+            @Override
+            public void onJoinAdded(final String newName) {
+                System.out.println("New Member Joined");
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        statusChanged(newName);
+                    }
+                });
+            }
+        };
+        Endpoint.getInstance().setJoinCallback(joinResult);
+    }
+
+    public void changeName() {
+        new MaterialDialog.Builder(getContext())
+                .title("새로운 닉네임 입력")
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
+                .positiveText("완료")
+                .input("", "", false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence newName) {
+                        Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
     }
 }

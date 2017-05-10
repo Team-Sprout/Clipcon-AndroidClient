@@ -19,13 +19,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GroupName"
+                android:text="MyName"
                 android:textSize="16sp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
 
             <ImageView
-                android:id="@+id/editGroupName"
+                android:id="@+id/editNickName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -33,14 +33,14 @@
                 android:layout_centerVertical="true"/>
 
             <TextView
-                android:id="@+id/group_name"
+                android:id="@+id/my_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0000"
+                android:text="myNickname"
                 android:textSize="16sp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
-                android:layout_toLeftOf="@id/editGroupName"/>
+                android:layout_toLeftOf="@id/editNickName"/>
 
         </RelativeLayout>
 
@@ -84,35 +84,20 @@
         android:layout_height="0.5dp"
         android:background="#d1d1d1"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_margin="10dp">
+        android:layout_height="40dp"
+        android:background="@color/toolbarColor"
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Members"
+            android:text="Member List"
+            android:textColor="#ffffff"
             android:textSize="16sp"/>
 
-        <ImageView
-            android:id="@+id/editNickName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/upload_red"
-            android:layout_centerVertical="true"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="myNickname"
-            android:textSize="16sp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:layout_toLeftOf="@id/editNickName"/>
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
