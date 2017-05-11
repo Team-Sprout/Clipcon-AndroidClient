@@ -42,7 +42,7 @@ public class Endpoint {
     // method name recommendation: callBackToFragment()
     public interface ParticipantCallback {
         // method name onServerResponse()
-        void onParticipantStatus(String newMemeber, int type); // TODO: 17-05-11 may change String to JSONObject
+        void onParticipantStatus(String newMemeber); // TODO: 17-05-11 may change String to JSONObject
     }
 
     public void setSecondCallback(SecondCallback callback) {
@@ -124,14 +124,14 @@ public class Endpoint {
                     break;
 
                 case Message.NOTI_ADD_PARTICIPANT: // 그룹 내 다른 User 들어올 때 마다 Message 받고 UI 갱신
-                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME), 1);
+                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME));
                     Log.d("delf", "[CLIENT] \"" + message.get(Message.PARTICIPANT_NAME) + "\" is join in ths group");
                     System.out.println("add participant noti");
                     // TODO: 17-05-10 pass message object to Fragment or Activity
                     break;
 
                 case Message.NOTI_EXIT_PARTICIPANT: // 그룹 내 다른 User 나갈 때 마다 Message 받고 UI 갱신??
-                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME), 2);
+                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME));
                     System.out.println("remove participant noti");
                     Log.d("delf", "[CLIENT] \"" + message.get(Message.PARTICIPANT_NAME) + "\" exit the group");
                     break;

@@ -98,7 +98,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
 
-    // start MyService.class to float always on Top Button when clipbard changed
+    // start MyService.class to float always on Top Button when clipboard changed
     public void checkStart() {
         Intent intent = new Intent(getApplicationContext(), MyService.class);
         startService(intent);

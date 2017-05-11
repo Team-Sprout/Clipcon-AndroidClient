@@ -4,12 +4,10 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Member;
@@ -31,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by Yongwon on 2017. 2. 8..
@@ -44,8 +42,8 @@ public class InfoFragment extends Fragment {
     private String groupKey;
     private String nickName;
 
-    private ImageView copyGroupKey ;
-    private ImageView editNickName ;
+    private ImageView copyGroupKey;
+    private ImageView editNickName;
 
     private ArrayList<Member> membersArrayList = new ArrayList<>();
 
@@ -77,7 +75,7 @@ public class InfoFragment extends Fragment {
                 membersArrayList.add(new Member(usersInGroup.getString(i)));
             }
 
-            if(response.get(Message.TYPE).equals(Message.RESPONSE_JOIN_GROUP)) {
+            if (response.get(Message.TYPE).equals(Message.RESPONSE_JOIN_GROUP)) {
                 // TODO: 17-05-09 assign history (may not be used)
             }
         } catch (JSONException e) {
@@ -100,14 +98,15 @@ public class InfoFragment extends Fragment {
     }
 
     // method name recommendation: addParticipant() / addMember() / updateParticipant() / updateMember()
-    private void statusChanged(String newName, int type) {
+    private void updateMember(String name) {
+        Log.d("delf", "[CLIENT] receive name is " + name);
 
-        if(type == 1){ // add
-            membersArrayList.add(new Member(newName));
-            System.out.println("추가");
-        }else if(type == 2){ // remove
-            membersArrayList.remove(new Member(newName));
-            System.out.println("삭제");
+        if (isContain(name)) {
+            Log.d("delf", "nothing");
+            membersArrayList.remove(getIndex(name));
+        } else {
+            Log.d("delf", "something");
+            membersArrayList.add(new Member(name));
         }
         memberAdapter = new MemberAdapter(membersArrayList);
         recyclerView.setAdapter(memberAdapter);
@@ -131,20 +130,20 @@ public class InfoFragment extends Fragment {
                 changeName();
             }
         });
+
     }
 
     private void setMemberCallback() {
 
         Endpoint.ParticipantCallback participantResult = new Endpoint.ParticipantCallback() {
             @Override
-            public void onParticipantStatus(final String newName, final int type) {
+            public void onParticipantStatus(final String newName) {
                 System.out.println("Member List Changed");
-                System.out.println("종류는 "+type);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        statusChanged(newName, type);
+                        updateMember(newName);
                     }
                 });
             }
@@ -154,18 +153,39 @@ public class InfoFragment extends Fragment {
 
     // method name recommendation: showChangeNameDialog()
     public void changeName() {
-        new MaterialDialog.Builder(getContext())
-                .title(R.string.changeName)
-                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                .positiveText(R.string.confirm)
-                .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
-                    // TODO: 17-05-10 add server callback
-                    @Override
-                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence newName) {
-                        Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                }).show();
-
+//        new MaterialDialog.Builder(getContext())
+//                .title(R.string.changeName)
+//                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
+//                .positiveText(R.string.confirm)
+//                .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
+//                    // TODO: 17-05-10 add server callback
+//                    @Override
+//                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence newName) {
+//                        Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }).show();
         new EndpointInBackGround().execute("test");
+    }
+
+    public boolean isContain(String name) {
+        Iterator<Member> it = membersArrayList.iterator();
+        while (it.hasNext()) {
+            if (it.next().getNickname().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getIndex(String name) {
+        Iterator<Member> it = membersArrayList.iterator();
+        Member tmp;
+        while (it.hasNext()) {
+            tmp = it.next();
+            if (tmp.getNickname().equals(name)) {
+                return membersArrayList.indexOf(tmp);
+            }
+        }
+        return -1;
     }
 }
