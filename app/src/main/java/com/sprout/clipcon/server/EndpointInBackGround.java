@@ -76,15 +76,13 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                         new Message().setType(Message.REQUEST_EXIT_GROUP) // TODO: 17-05-11 maybe needed user's name
                 );
                 break;
-
-            //...
-
             case "test":
                 Log.d("delf", "send test request");
                 sendMessage(
-                        new Message().setType("test: hansung")
+                    new Message().setType("test: hansung")
                 );
                 break;
+
 
             default:
                 Log.d("delf", "do nothing in doInBackground()");
