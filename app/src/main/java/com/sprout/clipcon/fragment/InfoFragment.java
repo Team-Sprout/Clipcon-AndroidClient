@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,31 +60,31 @@ public class InfoFragment extends Fragment {
         copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
         editNickName = (ImageView) view.findViewById(R.id.editNickName);
 
+
         try {
             JSONObject response = new JSONObject(getActivity().getIntent().getStringExtra("response"));
+            Log.d("delf", "response: " + getActivity().getIntent().getStringExtra("response"));
             groupKey = response.get(Message.GROUP_PK).toString();
             nickName = response.get(Message.NAME).toString();
 
             infoGroupKey.setText(groupKey);
             myNickName.setText(nickName);
 
-            if(response.get(Message.TYPE).equals(Message.RESPONSE_JOIN_GROUP)) {
-                JSONArray usersInGroup = response.getJSONArray(Message.LIST);
-
-                for (int i = 0; i < usersInGroup.length(); i++) {
-//                    usersInGroup.getJSONObject(i);
-                    membersArrayList.add(new Member(usersInGroup.getString(i)));
-                    // TODO: 17-05-09 assign in UI
-                }
+            JSONArray usersInGroup = response.getJSONArray(Message.LIST);
+            for (int i = 0; i < usersInGroup.length(); i++) {
+                Log.d("delf", "list loop " + i);
+                membersArrayList.add(new Member(usersInGroup.getString(i)));
             }
-                // TODO: 17-05-09 assign history
+
+            if(response.get(Message.TYPE).equals(Message.RESPONSE_JOIN_GROUP)) {
+                // TODO: 17-05-09 assign history (may not be used)
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         setButtonListener();
         setMemberCallback();
-
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_item);
@@ -97,6 +98,7 @@ public class InfoFragment extends Fragment {
         return view;
     }
 
+    // method name recommendation: addParticipant() / addMember() / updateParticipant() / updateMember()
     private void statusChanged(String newName, int type) {
 
         if(type == 1){ // add
@@ -110,6 +112,7 @@ public class InfoFragment extends Fragment {
         recyclerView.setAdapter(memberAdapter);
     }
 
+    // method name recommendation: setCopyGroupKeyButtonListener()
     private void setButtonListener() {
         copyGroupKey.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,7 +144,6 @@ public class InfoFragment extends Fragment {
                     @Override
                     public void run() {
                         statusChanged(newName, type);
-
                     }
                 });
             }
@@ -149,12 +151,14 @@ public class InfoFragment extends Fragment {
         Endpoint.getInstance().setParticipantCallback(participantResult);
     }
 
+    // method name recommendation: showChangeNameDialog()
     public void changeName() {
         new MaterialDialog.Builder(getContext())
                 .title("새로운 닉네임 입력")
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
                 .positiveText("완료")
                 .input("", "", false, new MaterialDialog.InputCallback() {
+                    // TODO: 17-05-10 add server callback
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, final CharSequence newName) {
                         Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();

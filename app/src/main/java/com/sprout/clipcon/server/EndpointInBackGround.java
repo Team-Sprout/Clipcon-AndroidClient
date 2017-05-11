@@ -2,9 +2,13 @@ package com.sprout.clipcon.server;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
 import com.sprout.clipcon.model.Message;
+
 import org.json.JSONObject;
+
 import java.io.IOException;
+
 import javax.websocket.EncodeException;
 
 /**
@@ -12,6 +16,8 @@ import javax.websocket.EncodeException;
  */
 
 public class EndpointInBackGround extends AsyncTask<String, Void, String> {
+    private final static int TYPE = 0;
+    private final static int GROUP_PK = 1;
 
     private BackgroundCallback backgroundCallback;
 
@@ -28,14 +34,14 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... msg) {
-        switch (msg[0]) {
-
+        switch (msg[TYPE]) {
             case Message.CONNECT:
                 Log.d("delf", "[CLIENT] connecting server...");
                 Endpoint.getInstance();
                 break;
 
             case Message.REQUEST_CREATE_GROUP:
+                // Log.d("delf", "[CLIENT] send group create request to server. group pk is \"" + msg[GROUP_PK] + "\""); // XXX: caution!
                 setCallBack();
                 sendMessage(
                         new Message().setType(Message.REQUEST_CREATE_GROUP)
@@ -44,15 +50,16 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
             case Message.REQUEST_JOIN_GROUP:
                 setCallBack();
+                Log.d("delf", "[CLIENT] send group join request to server. group pk is \"" + msg[GROUP_PK] + "\"");
                 sendMessage(
                         new Message().setType(Message.REQUEST_JOIN_GROUP)
-                                .add(Message.GROUP_PK, msg[1]) // msg[1]: group key
+                                .add(Message.GROUP_PK, msg[GROUP_PK]) // msg[1]: group key
                 );
                 break;
 
             case Message.UPLOAD:
                 // test code ~
-                Log.d("delf", "upload request");
+                Log.d("delf", "[CLIENT] send upload request to group");
                 UploadData tmp = new UploadData("name", "pk");
                 tmp.uploadStringData("test string");
                 // ~ test code
@@ -60,6 +67,14 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 break;
 
             case Message.DOWNLOAD:
+                break;
+
+            case Message.REQUEST_EXIT_GROUP:
+                // TODO: 17-05-11 add callback(it's may not needed, but natural logic)
+                Log.d("delf", "[CLIENT] send exit request to server");
+                sendMessage(
+                        new Message().setType(Message.REQUEST_EXIT_GROUP) // TODO: 17-05-11 maybe needed user's name
+                );
                 break;
 
             //...
@@ -84,8 +99,8 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private void setCallBack() {
         final Endpoint.SecondCallback secondResult = new Endpoint.SecondCallback() {
             @Override
+            // method name recommendation: onResponseAtEndpoint() // tmp
             public void onSecondSuccess(JSONObject responseFromServer) {
-                System.out.println("2차 콜백 성공");
                 backgroundCallback.onSuccess(responseFromServer); // call in MainActivity
             }
         };
