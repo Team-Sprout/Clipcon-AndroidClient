@@ -20,7 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.settings_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
-        toolbar.setTitle("설정");
+        toolbar.setTitle(R.string.setting);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

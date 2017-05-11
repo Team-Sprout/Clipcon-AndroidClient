@@ -24,6 +24,7 @@ import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Member;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.Endpoint;
+import com.sprout.clipcon.server.EndpointInBackGround;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,7 +106,7 @@ public class InfoFragment extends Fragment {
             membersArrayList.add(new Member(newName));
             System.out.println("추가");
         }else if(type == 2){ // remove
-//            membersArrayList.remove();
+            membersArrayList.remove(new Member(newName));
             System.out.println("삭제");
         }
         memberAdapter = new MemberAdapter(membersArrayList);
@@ -154,15 +155,17 @@ public class InfoFragment extends Fragment {
     // method name recommendation: showChangeNameDialog()
     public void changeName() {
         new MaterialDialog.Builder(getContext())
-                .title("새로운 닉네임 입력")
+                .title(R.string.changeName)
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                .positiveText("완료")
-                .input("", "", false, new MaterialDialog.InputCallback() {
+                .positiveText(R.string.confirm)
+                .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
                     // TODO: 17-05-10 add server callback
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, final CharSequence newName) {
                         Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }).show();
+
+        new EndpointInBackGround().execute("test");
     }
 }

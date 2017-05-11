@@ -79,6 +79,13 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
             //...
 
+            case "test":
+                Log.d("delf", "send test request");
+                sendMessage(
+                        new Message().setType("test: hansung")
+                );
+                break;
+
             default:
                 Log.d("delf", "do nothing in doInBackground()");
                 break;

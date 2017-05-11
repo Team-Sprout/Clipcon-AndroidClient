@@ -59,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void showJoinDialog() {
         new MaterialDialog.Builder(this)
-                .title("고유키를 입력하세요")
+                .title(R.string.inputKey)
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                .positiveText("참여")
-                .input("", "", false, new MaterialDialog.InputCallback() {
+                .positiveText(R.string.joinKo)
+                .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupKey) {
                         final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
