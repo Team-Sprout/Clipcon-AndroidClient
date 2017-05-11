@@ -31,22 +31,22 @@ public class Endpoint {
     private static Endpoint uniqueEndpoint;
 
     private SecondCallback secondCallback;
-    private JoinCallback joinCallback;
+    private ParticipantCallback participantCallback;
 
     public interface SecondCallback {
         void onSecondSuccess(JSONObject result);
     }
 
-    public interface JoinCallback {
-        void onJoinAdded(String newMemeber);
+    public interface ParticipantCallback {
+        void onParticipantStatus(String newMemeber, int type);
     }
 
     public void setSecondCallback(SecondCallback callback) {
         secondCallback = callback;
     }
 
-    public void setJoinCallback(JoinCallback callback) {
-        joinCallback = callback;
+    public void setParticipantCallback(ParticipantCallback callback) {
+        participantCallback = callback;
     }
 
 
@@ -121,13 +121,13 @@ public class Endpoint {
                     break;
 
                 case Message.NOTI_ADD_PARTICIPANT: // 그룹 내 다른 User 들어올 때 마다 Message 받고 UI 갱신
-
-                    joinCallback.onJoinAdded(message.get(Message.PARTICIPANT_NAME));
+                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME), 1);
                     System.out.println("add participant noti");
                     break;
 
-                case Message.NOTI_EXIT_PARTICIPANT:
-
+                case Message.NOTI_EXIT_PARTICIPANT: // 그룹 내 다른 User 나갈 때 마다 Message 받고 UI 갱신??
+                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME), 2);
+                    System.out.println("remove participant noti");
                     break;
 
                 case Message.NOTI_UPLOAD_DATA:

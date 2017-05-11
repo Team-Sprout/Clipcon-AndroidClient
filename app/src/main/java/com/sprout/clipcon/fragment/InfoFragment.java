@@ -82,7 +82,7 @@ public class InfoFragment extends Fragment {
         }
 
         setButtonListener();
-        setJoinCallback();
+        setMemberCallback();
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -97,8 +97,15 @@ public class InfoFragment extends Fragment {
         return view;
     }
 
-    private void statusChanged(String newName) {
-        membersArrayList.add(new Member(newName));
+    private void statusChanged(String newName, int type) {
+
+        if(type == 1){ // add
+            membersArrayList.add(new Member(newName));
+            System.out.println("추가");
+        }else if(type == 2){ // remove
+//            membersArrayList.remove();
+            System.out.println("삭제");
+        }
         memberAdapter = new MemberAdapter(membersArrayList);
         recyclerView.setAdapter(memberAdapter);
     }
@@ -122,22 +129,24 @@ public class InfoFragment extends Fragment {
         });
     }
 
-    private void setJoinCallback() {
+    private void setMemberCallback() {
 
-        Endpoint.JoinCallback joinResult = new Endpoint.JoinCallback() {
+        Endpoint.ParticipantCallback participantResult = new Endpoint.ParticipantCallback() {
             @Override
-            public void onJoinAdded(final String newName) {
-                System.out.println("New Member Joined");
+            public void onParticipantStatus(final String newName, final int type) {
+                System.out.println("Member List Changed");
+                System.out.println("종류는 "+type);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        statusChanged(newName);
+                        statusChanged(newName, type);
+
                     }
                 });
             }
         };
-        Endpoint.getInstance().setJoinCallback(joinResult);
+        Endpoint.getInstance().setParticipantCallback(participantResult);
     }
 
     public void changeName() {

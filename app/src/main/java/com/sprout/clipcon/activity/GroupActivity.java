@@ -22,11 +22,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.fragment.HistoryFragment;
 import com.sprout.clipcon.fragment.InfoFragment;
-import com.sprout.clipcon.model.Message;
-import com.sprout.clipcon.server.EndpointInBackGround;
 import com.sprout.clipcon.service.MyService;
-
-import org.json.JSONObject;
 
 
 /**
@@ -89,6 +85,7 @@ public class GroupActivity extends AppCompatActivity {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         //// TODO: 2017. 4. 19. add delete group history action
+                        //// TODO: 2017. 5. 11. notify server about participant leaving
 
                         Intent intent = new Intent(getApplicationContext(), MyService.class);
                         stopService(intent);
