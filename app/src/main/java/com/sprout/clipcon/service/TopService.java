@@ -95,10 +95,9 @@ public class TopService extends Service {
             return;
         }
 
-        //// TODO: 2017. 5. 2. upload date to server for each dataType at this part
-            if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
-                System.out.println("Text");
-                String temp = cm.getPrimaryClipDescription().getMimeType(0);
+        if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
+            System.out.println("Text");
+            String temp = cm.getPrimaryClipDescription().getMimeType(0);
 
             ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
             textData = item.getText().toString();
@@ -107,15 +106,16 @@ public class TopService extends Service {
             new EndpointInBackGround().execute(Message.UPLOAD, "text");
 
             Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
+
         }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
             System.out.println("Image");
 
-                //// TODO: 2017. 5. 5. check again whether we can use Uri or not
-                ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
-                uri = item.getUri();
-                System.out.println(uri);
+            //// TODO: 2017. 5. 5. check again whether we can use Uri or not
+            ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
+            uri = item.getUri();
+            System.out.println(uri);
 
-                Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
         }
     }
 

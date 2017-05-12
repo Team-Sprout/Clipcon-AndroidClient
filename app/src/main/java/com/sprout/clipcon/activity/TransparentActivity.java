@@ -16,9 +16,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.sprout.clipcon.R;
-import com.sprout.clipcon.model.Message;
-import com.sprout.clipcon.server.EndpointInBackGround;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -70,7 +69,7 @@ public class TransparentActivity extends Activity{
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
             getPermission();
-            new EndpointInBackGround().execute(Message.UPLOAD);
+//            new EndpointInBackGround().execute(Message.UPLOAD);
             // insert image uri to clipboard to notify clipboard changing
             ClipData clip = ClipData.newRawUri("test", uri);
             ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
@@ -90,9 +89,12 @@ public class TransparentActivity extends Activity{
         try {
             Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri); // 비트맵 객체 보유
 //            MediaStore.Images.Media.insertImage(getContentResolver(), bm, "test.png", "testCheck");
+
+            bitmapToByteArray(bm);
+            System.out.println("여기여기"+bitmapToByteArray(bm));
+
             newFile.createNewFile();
             out = new FileOutputStream(newFile);
-
             bm.compress(Bitmap.CompressFormat.PNG, 100, out);
 
             out.flush();
@@ -101,6 +103,13 @@ public class TransparentActivity extends Activity{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public byte[] bitmapToByteArray( Bitmap bitmap ) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
+        bitmap.compress( Bitmap.CompressFormat.PNG, 100, stream) ;
+        byte[] byteArray = stream.toByteArray() ;
+        return byteArray;
     }
 
     private void getPermission() {

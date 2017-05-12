@@ -1,5 +1,6 @@
 package com.sprout.clipcon.server;
 
+import android.media.Image;
 import android.util.Log;
 
 import com.sprout.clipcon.model.Message;
