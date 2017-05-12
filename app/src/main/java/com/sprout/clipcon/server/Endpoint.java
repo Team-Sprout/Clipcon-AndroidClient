@@ -31,8 +31,11 @@ public class Endpoint {
     private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
      // private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
     private Session session;
+
     private static String userName;
     private static String groupKey;
+
+
     private static Endpoint uniqueEndpoint;
     private static ContentsUpload uniqueUploader;
     private SecondCallback secondCallback;
@@ -111,12 +114,10 @@ public class Endpoint {
                     break;
 
                 case Message.RESPONSE_JOIN_GROUP:
-
+                    secondCallback.onEndpointResponse(message.getJson());
                     switch (message.get(Message.RESULT)) {
                         case Message.CONFIRM:
                             // 2차콜백 성공신호 보내는부분
-                            JSONObject response = message.getJson();
-                            secondCallback.onEndpointResponse(response);
                             System.out.println("join group confirm");
                             break;
 

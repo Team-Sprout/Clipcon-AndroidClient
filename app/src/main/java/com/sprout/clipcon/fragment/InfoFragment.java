@@ -169,7 +169,6 @@ public class InfoFragment extends Fragment {
 //                    }
 //                }).show();
         Log.d("delf", "[SYSTEM] \"change name button\" clicked");
-        new EndpointInBackGround().execute(Message.UPLOAD);
         // TODO: 17-05-11 right here!! event occurred!!
     }
 
