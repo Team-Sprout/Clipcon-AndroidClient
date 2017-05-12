@@ -2,21 +2,27 @@ package com.sprout.clipcon.server;
 
 import com.sprout.clipcon.service.TopService;
 
-public class ContentsUpload {
 
+public class ContentsUpload {
     public UploadData uploader;
 
     public ContentsUpload(String userName, String groupKey) {
         uploader = new UploadData(userName, groupKey);
     }
 
-    public void upload() {
-        uploader.uploadStringData(TopService.getTextData());
+    public void upload(String type) {
+        switch (type) {
+            case "text":
+                uploader.uploadStringData(TopService.getTextData());
+                break;
+            case "image":
+
+                break;
+        }
     }
 
-	 /*public static UploadData uploader = new UploadData(Endpoint.user.getName(), Endpoint.user.getGroup().getPrimaryKey());
-
-	 public void upload() {
+    /*
+     public void upload() {
 
 		 Object clipboardData = ClipboardController.readClipboard();
 

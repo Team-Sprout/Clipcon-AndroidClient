@@ -62,7 +62,6 @@ public class InfoFragment extends Fragment {
 
         try {
             JSONObject response = new JSONObject(getActivity().getIntent().getStringExtra("response"));
-            Log.d("delf", "response: " + getActivity().getIntent().getStringExtra("response"));
             groupKey = response.get(Message.GROUP_PK).toString();
             nickName = response.get(Message.NAME).toString();
 
@@ -169,7 +168,9 @@ public class InfoFragment extends Fragment {
 //                        Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
 //                    }
 //                }).show();
-        new EndpointInBackGround().execute("test");
+        Log.d("delf", "[SYSTEM] \"change name button\" clicked");
+        new EndpointInBackGround().execute(Message.UPLOAD);
+        // TODO: 17-05-11 right here!! event occurred!!
     }
 
     public boolean isContain(String name) {
