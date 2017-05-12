@@ -3,33 +3,34 @@ package com.sprout.clipcon.model;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Yongwon on 2017. 4. 30..
- */
-
 public class History {
 
-//    private Map<String, Contents> contentsMap = new HashMap<String, Contents>();
-//
-//    /** 새로운 데이터가 업로드되면 히스토리에 add */
-//    public void addContents(Contents contents) {
-//        contentsMap.put(contents.getContentsPKName(), contents);
-//    }
-//
-//    /** Data를 구분하는 고유키값과 일치하는 Contents를 return */
-//    public Contents getContentsByPK(String contentsPKName) {
-//        return contentsMap.get(contentsPKName);
-//    }
+    private Map<String, Contents> contentsMap = new HashMap<String, Contents>();
+    private String sender;
+    private String description;
+    private String image;
 
-    //// TODO: 2017. 5. 11. have to add Image in Constructor
+    public History() {
+    }
+
     public History(String sender, String description) {
         this.sender = sender;
         this.description = description;
     }
 
-    private String sender;
-    private String description;
-    private String image;
+    /**
+     * 새로운 데이터가 업로드되면 히스토리에 add
+     */
+    public void addContents(Contents contents) {
+        contentsMap.put(contents.getContentsPKName(), contents);
+    }
+
+    /**
+     * Data를 구분하는 고유키값과 일치하는 Contents를 return
+     */
+    public Contents getContentsByPK(String contentsPKName) {
+        return contentsMap.get(contentsPKName);
+    }
 
     public String getSender() {
         return sender;
@@ -54,4 +55,11 @@ public class History {
     public void setImage(String image) {
         this.image = image;
     }
+
 }
+
+
+
+
+
+

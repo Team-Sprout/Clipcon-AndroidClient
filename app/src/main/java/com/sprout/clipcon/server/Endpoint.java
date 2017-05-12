@@ -1,11 +1,12 @@
 package com.sprout.clipcon.server;
 
-import android.media.Image;
 import android.util.Log;
 
+import com.sprout.clipcon.model.Group;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.model.MessageDecoder;
 import com.sprout.clipcon.model.MessageEncoder;
+import com.sprout.clipcon.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,21 +24,18 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
-import static com.sprout.clipcon.R.string.groupKey;
-
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
     private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
      // private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
     private Session session;
-
-    private static String userName;
-    private static String groupKey;
-
-
+    private static User user;
+//    private static String userName;
+//    private static String groupKey;
     private static Endpoint uniqueEndpoint;
     private static ContentsUpload uniqueUploader;
+    private static ContentsDownload uniqueDownloader;
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
 
@@ -55,10 +53,16 @@ public class Endpoint {
 
     public static ContentsUpload getUploader() {
         if(uniqueUploader == null) {
-
-            uniqueUploader = new ContentsUpload(userName, groupKey);
+            uniqueUploader = new ContentsUpload(user.getName(), user.getGroup().getPrimaryKey());
         }
         return uniqueUploader;
+    }
+
+    public static ContentsDownload getDownloader() {
+        if(uniqueDownloader == null) {
+            uniqueDownloader = new ContentsDownload(user.getName(), user.getGroup().getPrimaryKey());
+        }
+        return uniqueDownloader;
     }
 
     // method name recommendation: callBackToWorkThread(), callBackToAsyncTask(), callBackToBackGround()
@@ -109,8 +113,7 @@ public class Endpoint {
                             System.out.println("create group reject");
                             break;
                     }
-                    this.userName = message.get(Message.NAME);
-                    this.groupKey = message.get(Message.GROUP_PK);
+                    user = new User(Message.NAME, new Group(Message.GROUP_PK));
                     break;
 
                 case Message.RESPONSE_JOIN_GROUP:
@@ -125,8 +128,7 @@ public class Endpoint {
                             System.out.println("join group reject");
                             break;
                     }
-                    this.userName = message.get(Message.NAME);
-                    this.groupKey = message.get(Message.GROUP_PK);
+                    user = new User(Message.NAME, new Group(Message.GROUP_PK));
                     break;
 
                 case Message.RESPONSE_EXIT_GROUP:
@@ -171,7 +173,11 @@ public class Endpoint {
 
     @OnClose
     public void onClose() {
-        // new EndpointInBackGround().execute(Message);
+        // new EndpointInBackGround().execute(Message.Exit);
         Log.d("delf", "session closed.");
+    }
+
+    public static User getUser() {
+        return user;
     }
 }

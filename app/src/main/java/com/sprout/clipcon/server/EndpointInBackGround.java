@@ -8,6 +8,7 @@ import com.sprout.clipcon.model.Message;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javax.websocket.EncodeException;
 
@@ -58,12 +59,18 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 break;
 
             case Message.UPLOAD:
-                Log.d("delf", "[CLIENT] send upload request to group");
+                Log.d("delf", "[CLIENT] send upload request to server");
                 Endpoint.getUploader().upload(msg[1]);
                 break;
 
             case Message.DOWNLOAD:
-
+                Log.d("delf", "[CLIENT] send download request to server");
+                try {
+                    Endpoint.getDownloader().requestDataDownload("1"); // for test
+                } catch (MalformedURLException e) {
+                    Log.e("delf", "[CLIENT] error at sending download request");
+                    e.printStackTrace();
+                }
                 break;
 
             case Message.REQUEST_EXIT_GROUP:
@@ -111,6 +118,6 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        super.onPostExecute(s);
+
     }
 }
