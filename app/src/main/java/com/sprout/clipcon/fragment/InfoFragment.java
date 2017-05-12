@@ -53,8 +53,8 @@ public class InfoFragment extends Fragment {
 
         System.out.println("그룹화면으로 진입");
 
-        TextView infoGroupKey = (TextView) view.findViewById(R.id.group_key);
-        TextView myNickName = (TextView) view.findViewById(R.id.my_nickname);
+        final TextView infoGroupKey = (TextView) view.findViewById(R.id.group_key);
+        final TextView myNickName = (TextView) view.findViewById(R.id.my_nickname);
 
         copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
         editNickName = (ImageView) view.findViewById(R.id.editNickName);
@@ -66,8 +66,13 @@ public class InfoFragment extends Fragment {
             groupKey = response.get(Message.GROUP_PK).toString();
             nickName = response.get(Message.NAME).toString();
 
-            infoGroupKey.setText(groupKey);
-            myNickName.setText(nickName);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    infoGroupKey.setText(groupKey);
+                    myNickName.setText(nickName);
+                }
+            });
 
             JSONArray usersInGroup = response.getJSONArray(Message.LIST);
             for (int i = 0; i < usersInGroup.length(); i++) {

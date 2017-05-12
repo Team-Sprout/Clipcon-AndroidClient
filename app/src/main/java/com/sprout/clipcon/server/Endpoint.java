@@ -22,13 +22,18 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
+import static com.sprout.clipcon.R.string.groupKey;
+
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
     private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
      // private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
     private Session session;
+    private static String userName;
+    private static String groupKey;
     private static Endpoint uniqueEndpoint;
+    private static ContentsUpload uniqueUploader;
 
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
@@ -67,6 +72,14 @@ public class Endpoint {
         return uniqueEndpoint;
     }
 
+    public static ContentsUpload getUploader() {
+        if(uniqueUploader == null) {
+            uniqueUploader = new ContentsUpload(userName, groupKey);
+        }
+
+        return uniqueUploader;
+    }
+
 
     private Endpoint() throws DeploymentException, IOException, URISyntaxException {
         URI uRI = new URI(uri);
@@ -102,6 +115,9 @@ public class Endpoint {
                             System.out.println("create group reject");
                             break;
                     }
+                    this.userName = message.get(Message.NAME);
+                    this.groupKey = message.get(Message.GROUP_PK);
+
                     break;
 
                 case Message.RESPONSE_JOIN_GROUP:
@@ -118,6 +134,8 @@ public class Endpoint {
                             System.out.println("join group reject");
                             break;
                     }
+                    this.userName = message.get(Message.NAME);
+                    this.groupKey = message.get(Message.GROUP_PK);
                     break;
                 case Message.RESPONSE_EXIT_GROUP:
                     Log.d("delf", "[CLIENT] exit the group");

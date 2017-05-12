@@ -17,6 +17,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.EndpointInBackGround;
 
 public class TopService extends Service {
     private View m_View;
@@ -24,6 +26,11 @@ public class TopService extends Service {
     private WindowManager.LayoutParams  m_Params;
 
     private static Uri uri;
+    private static String textData;
+
+    public static String getTextData() {
+        return textData;
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -99,8 +106,10 @@ public class TopService extends Service {
             String temp = cm.getPrimaryClipDescription().getMimeType(0);
 
             ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
-            String textData = item.getText().toString();
+            textData = item.getText().toString();
             System.out.println(textData);
+
+            new EndpointInBackGround().execute(Message.UPLOAD, "text");
 
             Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
         }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {

@@ -60,8 +60,9 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
             case Message.UPLOAD:
                 // test code ~
                 Log.d("delf", "[CLIENT] send upload request to group");
-                UploadData tmp = new UploadData("name", "pk");
-                tmp.uploadStringData("test string");
+
+                Endpoint.getUploader().upload();
+
                 // ~ test code
 
                 break;

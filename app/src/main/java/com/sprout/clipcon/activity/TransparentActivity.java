@@ -88,7 +88,6 @@ public class TransparentActivity extends Activity{
         try {
             Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri); // 비트맵 객체 보유
 //            MediaStore.Images.Media.insertImage(getContentResolver(), bm, "test.png", "testCheck");
-
             newFile.createNewFile();
             out = new FileOutputStream(newFile);
 
