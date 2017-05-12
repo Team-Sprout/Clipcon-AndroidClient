@@ -58,16 +58,12 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 break;
 
             case Message.UPLOAD:
-                // test code ~
                 Log.d("delf", "[CLIENT] send upload request to group");
-
-                Endpoint.getUploader().upload();
-
-                // ~ test code
-
+                Endpoint.getUploader().upload(msg[1]);
                 break;
 
             case Message.DOWNLOAD:
+
                 break;
 
             case Message.REQUEST_EXIT_GROUP:
@@ -106,7 +102,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
         final Endpoint.SecondCallback secondResult = new Endpoint.SecondCallback() {
             @Override
             // method name recommendation: onResponseAtEndpoint() // tmp
-            public void onSecondSuccess(JSONObject responseFromServer) {
+            public void onEndpointResponse(JSONObject responseFromServer) {
                 backgroundCallback.onSuccess(responseFromServer); // call in MainActivity
             }
         };

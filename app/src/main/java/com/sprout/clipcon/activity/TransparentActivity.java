@@ -16,6 +16,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.EndpointInBackGround;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -68,7 +70,7 @@ public class TransparentActivity extends Activity{
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
             getPermission();
-
+            new EndpointInBackGround().execute(Message.UPLOAD);
             // insert image uri to clipboard to notify clipboard changing
             ClipData clip = ClipData.newRawUri("test", uri);
             ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);

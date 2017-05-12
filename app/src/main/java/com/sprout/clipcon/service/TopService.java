@@ -24,13 +24,8 @@ public class TopService extends Service {
     private View m_View;
     private WindowManager m_WindowManager;
     private WindowManager.LayoutParams  m_Params;
-
-    private static Uri uri;
     private static String textData;
-
-    public static String getTextData() {
-        return textData;
-    }
+    private static Uri uri;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -89,7 +84,7 @@ public class TopService extends Service {
     };
 
     // event occurs when Top button pressed after clipboard changing
-    public void onImageBtnTest(View v) {
+    public void onClickImageBtn(View v) {
 
         System.out.println("Button Pressed");
 
@@ -101,9 +96,9 @@ public class TopService extends Service {
         }
 
         //// TODO: 2017. 5. 2. upload date to server for each dataType at this part
-        if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
-            System.out.println("Text");
-            String temp = cm.getPrimaryClipDescription().getMimeType(0);
+            if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
+                System.out.println("Text");
+                String temp = cm.getPrimaryClipDescription().getMimeType(0);
 
             ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
             textData = item.getText().toString();
@@ -115,12 +110,16 @@ public class TopService extends Service {
         }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
             System.out.println("Image");
 
-            //// TODO: 2017. 5. 5. check again whether we can use Uri or not
-            ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
-            uri = item.getUri();
-            System.out.println(uri);
+                //// TODO: 2017. 5. 5. check again whether we can use Uri or not
+                ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
+                uri = item.getUri();
+                System.out.println(uri);
 
-            Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static String getTextData() {
+        return textData;
     }
 }
