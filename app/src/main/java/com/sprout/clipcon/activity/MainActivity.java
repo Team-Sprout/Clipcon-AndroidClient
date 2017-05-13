@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // TODO: 17-05-08 show loading screen and block the input until changing screen.
                 final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
                     @Override
                     public void onSuccess(JSONObject response) {
@@ -73,10 +72,11 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     if (response.get(Message.RESULT).equals(Message.CONFIRM)) {
                                         response.put(Message.GROUP_NAME, inputGroupKey.toString());
+                                        System.out.println("결과는 성공" + response.get(Message.RESULT));
                                         startGroupActivity(response);
                                     } else { // reject
                                         //// TODO: 2017. 5. 12. have to put Toast Message
-                                        Toast.makeText(getApplicationContext(), "그룹키를 확인하세요", Toast.LENGTH_SHORT).show();
+                                        System.out.println("결과는 실패" + response.get(Message.RESULT));
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
