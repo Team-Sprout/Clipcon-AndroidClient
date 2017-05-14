@@ -20,6 +20,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private final static int TYPE = 0;
     private final static int GROUP_PK = 1;
 
+
     private BackgroundCallback backgroundCallback;
 
     public interface BackgroundCallback {
@@ -42,7 +43,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 break;
 
             case Message.REQUEST_CREATE_GROUP:
-                // Log.d("delf", "[CLIENT] send group create request to server. group pk is \"" + msg[GROUP_PK] + "\""); // XXX: caution!
+                Log.d("delf", "[CLIENT] send group create request to server."); // XXX: caution!
                 setCallBack();
                 sendMessage(
                         new Message().setType(Message.REQUEST_CREATE_GROUP)
@@ -64,9 +65,9 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 break;
 
             case Message.DOWNLOAD:
-                Log.d("delf", "[CLIENT] send download request to server");
+                Log.d("delf", "[CLIENT] send download request to server. pk is " + Endpoint.lastContentsPK);
                 try {
-                    Endpoint.getDownloader().requestDataDownload("1"); // for test
+                    Endpoint.getDownloader().requestDataDownload(Endpoint.lastContentsPK); // for test
                 } catch (MalformedURLException e) {
                     Log.e("delf", "[CLIENT] error at sending download request");
                     e.printStackTrace();

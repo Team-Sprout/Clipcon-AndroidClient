@@ -169,7 +169,6 @@ public class InfoFragment extends Fragment {
 //                        Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
 //                    }
 //                }).show();
-        Log.d("delf", "[SYSTEM] \"change name button\" clicked");
         new EndpointInBackGround().execute(Message.DOWNLOAD);
         // TODO: 17-05-11 right here!! event occurred!!
     }

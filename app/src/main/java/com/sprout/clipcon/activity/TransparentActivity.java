@@ -105,6 +105,7 @@ public class TransparentActivity extends Activity{
         }
     }
 
+    // move to ContentsDownload
     public byte[] bitmapToByteArray( Bitmap bitmap ) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
         bitmap.compress( Bitmap.CompressFormat.PNG, 100, stream) ;

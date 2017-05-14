@@ -1,11 +1,11 @@
 package com.sprout.clipcon.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -29,11 +29,12 @@ public class MainActivity extends AppCompatActivity {
         Button createBtn = (Button) findViewById(R.id.main_create);
         Button joinBtn = (Button) findViewById(R.id.main_join);
 
+        new EndpointInBackGround().execute(Message.CONNECT); // connect
         // create group
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.d("delf", "[SYSTEM] create group button clicked");
                 // TODO: 17-05-08 show loading screen and block the input until changing screen.
                 final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
                     @Override
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showJoinDialog() {
+        Log.d("delf", "join group button clicked");
         new MaterialDialog.Builder(this)
                 .title(R.string.inputKey)
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
