@@ -1,10 +1,13 @@
 package com.sprout.clipcon.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Member;
@@ -17,10 +20,12 @@ import java.util.ArrayList;
 
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberViewHolder>{
 
+    private Context context;
     private ArrayList<Member> memberList;
 
-    public MemberAdapter(ArrayList<Member> membersArrayList) {
-        memberList = membersArrayList;
+    public MemberAdapter(Context context, ArrayList<Member> membersArrayList) {
+        this.context = context;
+        this.memberList = membersArrayList;
     }
 
     @Override
@@ -32,10 +37,9 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.MemberView
     }
 
     @Override
-    public void onBindViewHolder(MemberViewHolder holder, int position) {
+    public void onBindViewHolder(MemberViewHolder holder, final int position) {
         Member member = memberList.get(position);
         holder.nickView.setText(member.getNickname());
-
     }
 
     @Override

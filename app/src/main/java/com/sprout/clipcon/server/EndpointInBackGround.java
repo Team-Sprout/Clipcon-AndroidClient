@@ -87,12 +87,16 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 );
                 break;
 
-
             default:
                 Log.d("delf", "do nothing in doInBackground()");
                 break;
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
     }
 
     private void sendMessage(Message message) {
@@ -114,10 +118,5 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
             }
         };
         Endpoint.getInstance().setSecondCallback(secondResult);
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-
     }
 }

@@ -2,8 +2,8 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#a6172d</color>
-    <color name="toolbarColor">#c72e45</color>
+    <color name="colorAccent">#f26868</color>
+    <color name="toolbarColor">#f26868</color>
 
     <color name="input_login_hint">#bababa</color>
 </resources>
