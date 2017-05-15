@@ -7,8 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.sprout.clipcon.R;
-import com.sprout.clipcon.model.Message;
-import com.sprout.clipcon.server.EndpointInBackGround;
 
 /**
  * Created by Yongwon on 2017. 5. 12..
@@ -21,7 +19,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-        new EndpointInBackGround().execute(Message.CONNECT); // connect
+        // new EndpointInBackGround().execute(Message.CONNECT); // connect
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

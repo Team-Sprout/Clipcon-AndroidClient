@@ -1,17 +1,20 @@
 package com.sprout.clipcon.server;
 
-import android.media.Image;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.History;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -21,10 +24,7 @@ import java.net.URL;
 public class ContentsDownload {
 
     // 다운로드 파일을 임시로 저장할 위치
-    private final String DOWNLOAD_LOCATION = "C:\\User\\delf\\desktop"; // 충돌 유도
-
     private final static String SERVER_URL = "http://delf.gonetis.com:8080/websocketServerModule";
-
     private final static String SERVER_SERVLET = "/DownloadServlet";
 
     private final String charset = "UTF-8";
@@ -51,21 +51,15 @@ public class ContentsDownload {
      * @param downloadDataPK 다운로드할 Data의 고유키
      */
     public void requestDataDownload(String downloadDataPK) throws MalformedURLException {
-
-        // 내가 속한 Group의 History를 가져온다. 수정 필요.
-        History myhistory = Endpoint.getUser().getGroup().getHistory();
-
-    /*    // Retrieving Contents from My History
-        requestContents = myhistory.getContentsByPK(downloadDataPK);
-        // Type of data to download
-        String contentsType = requestContents.getContentsType();
-
-        // Parameter to be sent by the GET method
-        String parameters = "userName=" + userName + "&" + "groupPK=" + groupPK + "&" + "downloadDataPK=" + downloadDataPK;*/
+        Log.d("delf", "[CLIENT] requestDataDownload(), pk is " + downloadDataPK);
+        History myHistory = Endpoint.getUser().getGroup().getHistory();
+        requestContents = myHistory.getContentsByPK(downloadDataPK);
+        if(requestContents == null) {
+            Log.d("delf", "[SYSTEM] requestContents is null");
+        }
 
         try {
-            // URL url = new URL(SERVER_URL + SERVER_SERVLET + "?" + parameters);
-            URL url = new URL(SERVER_URL + SERVER_SERVLET + "?" + "1");
+            URL url = new URL(generateRequestParameter(downloadDataPK));
             httpConn = (HttpURLConnection) url.openConnection();
             Log.d("delf", "[CLIENT] complete connecting to server for sending download request");
             httpConn.setRequestMethod("GET");
@@ -77,11 +71,16 @@ public class ContentsDownload {
             int status = httpConn.getResponseCode();
             Log.d("delf", "[CLIENT] response received. status: " + status + ".");
             if (status == HttpURLConnection.HTTP_OK) {
-                /*switch (contentsType) {
+                switch (requestContents.getContentsType()) {
                     case Contents.TYPE_STRING:
+                        String stringData = downloadStringData(httpConn.getInputStream());
+                        // TODO: 17-05-13 insert string data in clipboard
+                        Log.d("delf", "[CLIENT] received test data: " + stringData);
                         break;
 
                     case Contents.TYPE_IMAGE:
+                        // TODO: 17-05-13 download and get image data
+                        // TODO: 17-05-13 save image at local store
                         break;
 
                     case Contents.TYPE_FILE:
@@ -90,7 +89,7 @@ public class ContentsDownload {
 
                     default:
                         System.out.println("어떤 형식에도 속하지 않음.");
-                }*/
+                }
                 System.out.println();
 
             } else {
@@ -131,11 +130,48 @@ public class ContentsDownload {
         return stringBuilder.toString();
     }
 
-    private Image downloadCapturedImageData(InputStream inputStream) {
-        return null;
+    // test code
+    private File downloadCapturedImageData(InputStream inputStream) {
+        // TODO: 17-05-13 convert inputStream to file
+        File file = new File("outFile.java");
+        //  context.getFilesDir();
+
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Ensure that the InputStreams are closed even if there's an exception.
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return file;
     }
 
     private File downloadFileData(InputStream inputStream, String fileName) throws FileNotFoundException {
         return null;
+    }
+
+    public byte[] bitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
+    }
+
+    private String generateRequestParameter(String downloadDataPK) {
+        return SERVER_URL + SERVER_SERVLET + "?" + "userName=" + userName + "&" + "groupPK=" + groupPK + "&" + "downloadDataPK=" + downloadDataPK;
     }
 }
