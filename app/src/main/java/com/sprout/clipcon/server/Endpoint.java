@@ -2,9 +2,13 @@ package com.sprout.clipcon.server;
 
 import android.util.Log;
 
+import com.sprout.clipcon.model.Contents;
+import com.sprout.clipcon.model.Group;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.model.MessageDecoder;
 import com.sprout.clipcon.model.MessageEncoder;
+import com.sprout.clipcon.model.MessageParser;
+import com.sprout.clipcon.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,30 +29,19 @@ import javax.websocket.Session;
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
-    private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
-     // private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
+    //private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
+    private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
     private Session session;
+    private static User user;
+    //    private static String userName;
+//    private static String groupKey;
     private static Endpoint uniqueEndpoint;
-
+    private static ContentsUpload uniqueUploader;
+    private static ContentsDownload uniqueDownloader;
     private SecondCallback secondCallback;
-    private JoinCallback joinCallback;
+    private ParticipantCallback participantCallback;
 
-    public interface SecondCallback {
-        void onSecondSuccess(JSONObject result);
-    }
-
-    public interface JoinCallback {
-        void onJoinAdded(String newMemeber);
-    }
-
-    public void setSecondCallback(SecondCallback callback) {
-        secondCallback = callback;
-    }
-
-    public void setJoinCallback(JoinCallback callback) {
-        joinCallback = callback;
-    }
-
+    public static String lastContentsPK; // [delf] tep field
 
     public static Endpoint getInstance() {
         try {
@@ -56,20 +49,50 @@ public class Endpoint {
                 uniqueEndpoint = new Endpoint();
             }
         } catch (DeploymentException | IOException | URISyntaxException e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             Log.d("delf", "occurred exception");
         }
-
         return uniqueEndpoint;
     }
 
+    public static ContentsUpload getUploader() {
+        if (uniqueUploader == null) {
+            Log.d("delf", "[SYSTEM] uploader is create. the name is " + user.getName() + " and group key is " + user.getGroup().getPrimaryKey());
+            uniqueUploader = new ContentsUpload(user.getName(), user.getGroup().getPrimaryKey());
+        }
+        return uniqueUploader;
+    }
+
+    public static ContentsDownload getDownloader() {
+        if (uniqueDownloader == null) {
+            uniqueDownloader = new ContentsDownload(user.getName(), user.getGroup().getPrimaryKey());
+        }
+        return uniqueDownloader;
+    }
+
+    // method name recommendation: callBackToWorkThread(), callBackToAsyncTask(), callBackToBackGround()
+    public interface SecondCallback {
+        void onEndpointResponse(JSONObject result); // define at EndpointInBackground
+    }
+
+    public void setSecondCallback(SecondCallback callback) {
+        secondCallback = callback;
+    }
+
+    // method name recommendation: callBackToFragment()
+    public interface ParticipantCallback {
+        // method name onServerResponse()
+        void onParticipantStatus(String newMemeber); // TODO: 17-05-11 may change String to JSONObject
+    }
+
+    public void setParticipantCallback(ParticipantCallback callback) {
+        participantCallback = callback;
+    }
 
     private Endpoint() throws DeploymentException, IOException, URISyntaxException {
         URI uRI = new URI(uri);
-        Log.d("delf", "before connect");
+        Log.d("delf", "[CLIENT] connecting server...");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uRI);
-        Log.d("delf", "after connect");
-        System.out.println("************  테스트중 1212 **************");
     }
 
     @OnOpen
@@ -90,51 +113,56 @@ public class Endpoint {
                             System.out.println("create group confirm");
 
                             // 2차콜백 성공신호 보내는부분
-                            JSONObject response = message.getJson();
-                            secondCallback.onSecondSuccess(response);
+                            secondCallback.onEndpointResponse(message.getJson());
                             break;
 
                         case Message.REJECT:
-
                             System.out.println("create group reject");
                             break;
                     }
+                    user = new User(message.get(Message.NAME), new Group(message.get(Message.GROUP_PK)));
                     break;
 
                 case Message.RESPONSE_JOIN_GROUP:
-
+                    secondCallback.onEndpointResponse(message.getJson());
                     switch (message.get(Message.RESULT)) {
                         case Message.CONFIRM:
-
                             // 2차콜백 성공신호 보내는부분
-                            JSONObject response = message.getJson();
-                            secondCallback.onSecondSuccess(response);
                             System.out.println("join group confirm");
                             break;
+
                         case Message.REJECT:
                             System.out.println("join group reject");
                             break;
                     }
+                    user = new User(message.get(Message.NAME), new Group(message.get(Message.GROUP_PK)));
                     break;
+
                 case Message.RESPONSE_EXIT_GROUP:
-
+                    Log.d("delf", "[CLIENT] exit the group");
                     break;
 
-                case Message.NOTI_ADD_PARTICIPANT: // 그룹 내 다른 User 들어올 때 마다 Message 받고 UI 갱신
-
-                    joinCallback.onJoinAdded(message.get(Message.PARTICIPANT_NAME));
-                    System.out.println("add participant noti");
+                case Message.NOTI_ADD_PARTICIPANT:
+                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME));
+                    Log.d("delf", "[CLIENT] \"" + message.get(Message.PARTICIPANT_NAME) + "\" is join in ths group");
+                    // TODO: 17-05-10 pass message object to Fragment or Activity
                     break;
 
                 case Message.NOTI_EXIT_PARTICIPANT:
-
+                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME));
+                    System.out.println("remove participant noti");
+                    Log.d("delf", "[CLIENT] \"" + message.get(Message.PARTICIPANT_NAME) + "\" exit the group");
                     break;
 
                 case Message.NOTI_UPLOAD_DATA:
-
+                    Log.d("delf", "[CLIENT] \"" + message.get("uploadUserName") + "\" is upload the data");
+                    lastContentsPK  = message.get("contentsPKName");
+                    Contents contents = MessageParser.getContentsbyMessage(message);
+                    user.getGroup().addContents(contents);
                     break;
 
                 default:
+                    Log.d("delf", "[CLIENT] unknown message");
                     System.out.println("default");
                     break;
             }
@@ -149,12 +177,16 @@ public class Endpoint {
             System.out.println("debuger_delf: session is null");
         }
         session.getBasicRemote().sendObject(message);
-
-        System.out.println("************  테스트중 1414 **************");
+        Log.d("delf", "[CLIENT] send message to server: " + message.toString());
     }
 
     @OnClose
     public void onClose() {
+        // new EndpointInBackGround().execute(Message.Exit);
         Log.d("delf", "session closed.");
+    }
+
+    public static User getUser() {
+        return user;
     }
 }

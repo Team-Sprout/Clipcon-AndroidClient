@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">Clipcon</string>
+
+    <!--GroupActivity-->
+    <string name="exitAlert">그룹에서 나가며, 히스토리가 모두 삭제됩니다. 계속하시겠습니까?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="info">INFO</string>
+    <string name="history">HISTORY</string>
+
+    <!--MainActivity-->
+    <string name="inputKey">고유키를 입력하세요</string>
+    <string name="joinKo">참여</string>
+
+    <!--SettingsActivity-->
+    <string name="setting">설정</string>
+
+    <!--infoFragment-->
+    <string name="changeName">새로운 닉네임 입력</string>
+    <string name="confirm">완료</string>
+    <string name="empty"> </string>
+
+    <!--activity_main.xml-->
+    <string name="joinEn">JOIN</string>
+    <string name="create">CREATE</string>
+
+    <!--fragment_info.xml-->
+    <string name="nickName">닉네임</string>
+    <string name="groupKey">그룹키</string>
+
 </resources>

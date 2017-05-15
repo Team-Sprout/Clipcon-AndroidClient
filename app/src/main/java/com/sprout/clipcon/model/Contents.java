@@ -1,9 +1,9 @@
 package com.sprout.clipcon.model;
 
 public class Contents {
-	public static String TYPE_STRING = "STRING";
-	public static String TYPE_IMAGE = "IMAGE";
-	public static String TYPE_FILE = "FILE";
+	public final static String TYPE_STRING = "STRING";
+	public final static String TYPE_IMAGE = "IMAGE";
+	public final static String TYPE_FILE = "FILE";
 
 	private String contentsType;
 	private long contentsSize;

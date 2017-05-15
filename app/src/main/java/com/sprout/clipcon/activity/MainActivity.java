@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -27,11 +28,12 @@ public class MainActivity extends AppCompatActivity {
         Button createBtn = (Button) findViewById(R.id.main_create);
         Button joinBtn = (Button) findViewById(R.id.main_join);
 
+        new EndpointInBackGround().execute(Message.CONNECT); // connect
         // create group
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.d("delf", "[SYSTEM] create group button clicked");
                 // TODO: 17-05-08 show loading screen and block the input until changing screen.
                 final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
                     @Override
@@ -53,16 +55,15 @@ public class MainActivity extends AppCompatActivity {
                 showJoinDialog();
             }
         });
-
-        new EndpointInBackGround().execute(Message.CONNECT); // connect
     }
 
     public void showJoinDialog() {
+        Log.d("delf", "join group button clicked");
         new MaterialDialog.Builder(this)
-                .title("고유키를 입력하세요")
+                .title(R.string.inputKey)
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                .positiveText("참여")
-                .input("", "", false, new MaterialDialog.InputCallback() {
+                .positiveText(R.string.joinKo)
+                .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupKey) {
                         final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
@@ -73,7 +74,13 @@ public class MainActivity extends AppCompatActivity {
                                         response.put(Message.GROUP_NAME, inputGroupKey.toString());
                                         startGroupActivity(response);
                                     } else { // reject
-                                        // case: miss matching group key
+                                        //// TODO: 2017. 5. 12. have to put Toast Message
+                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                showBasicNoTitle();
+                                            }
+                                        });
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -90,5 +97,12 @@ public class MainActivity extends AppCompatActivity {
 
         intent.putExtra("response", response.toString()); // send response to GroupActivity
         startActivity(intent);
+    }
+
+    public void showBasicNoTitle() {
+        new MaterialDialog.Builder(this)
+                .content("해당 그룹키를 가진 그룹이 존재하지 않습니다. 그룹키를 확인하세요.")
+                .positiveText("확인")
+                .show();
     }
 }

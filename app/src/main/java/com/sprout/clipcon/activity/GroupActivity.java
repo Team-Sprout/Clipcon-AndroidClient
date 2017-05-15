@@ -26,8 +26,6 @@ import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
 import com.sprout.clipcon.service.MyService;
 
-import org.json.JSONObject;
-
 
 /**
  * Created by Yongwon on 2017. 4. 17..
@@ -82,14 +80,14 @@ public class GroupActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         new MaterialDialog.Builder(this)
-                .content("그룹에서 나가며, 히스토리가 모두 삭제됩니다. 계속하시겠습니까?")
-                .negativeText("NO")
-                .positiveText("YES")
+                .content(R.string.exitAlert)
+                .negativeText(R.string.no)
+                .positiveText(R.string.yes)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         //// TODO: 2017. 4. 19. add delete group history action
-
+                        new EndpointInBackGround().execute(Message.REQUEST_EXIT_GROUP);
                         Intent intent = new Intent(getApplicationContext(), MyService.class);
                         stopService(intent);
                         GroupActivity.super.onBackPressed();
@@ -99,7 +97,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
 
-    // start MyService.class to float always on Top Button when clipbard changed
+    // start MyService.class to float always on Top Button when clipboard changed
     public void checkStart() {
         Intent intent = new Intent(getApplicationContext(), MyService.class);
         startService(intent);
@@ -113,12 +111,12 @@ public class GroupActivity extends AppCompatActivity {
     private void initLayout() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.group_toolbar);
-        toolbar.setTitle("Clipcon");
+        toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("INFO"));
-        tabLayout.addTab(tabLayout.newTab().setText("HISTORY"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.info));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.history));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
