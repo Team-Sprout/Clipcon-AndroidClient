@@ -8,7 +8,6 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
@@ -56,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 showJoinDialog();
             }
         });
-
-
     }
 
     public void showJoinDialog() {
@@ -78,7 +75,12 @@ public class MainActivity extends AppCompatActivity {
                                         startGroupActivity(response);
                                     } else { // reject
                                         //// TODO: 2017. 5. 12. have to put Toast Message
-                                        Toast.makeText(getApplicationContext(), "그룹키를 확인하세요", Toast.LENGTH_SHORT).show();
+                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                showBasicNoTitle();
+                                            }
+                                        });
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -95,5 +97,12 @@ public class MainActivity extends AppCompatActivity {
 
         intent.putExtra("response", response.toString()); // send response to GroupActivity
         startActivity(intent);
+    }
+
+    public void showBasicNoTitle() {
+        new MaterialDialog.Builder(this)
+                .content("해당 그룹키를 가진 그룹이 존재하지 않습니다. 그룹키를 확인하세요.")
+                .positiveText("확인")
+                .show();
     }
 }

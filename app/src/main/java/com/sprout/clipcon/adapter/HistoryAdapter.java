@@ -1,10 +1,13 @@
 package com.sprout.clipcon.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.History;
@@ -18,10 +21,12 @@ import java.util.ArrayList;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>{
 
+    private Context context;
     private ArrayList<History> historyList;
 
-    public HistoryAdapter(ArrayList<History> historyArrayList) {
-        historyList = historyArrayList;
+    public HistoryAdapter(Context context, ArrayList<History> historyArrayList) {
+        this.context = context;
+        this.historyList = historyArrayList;
     }
 
     @Override
@@ -33,10 +38,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     }
 
     @Override
-    public void onBindViewHolder(HistoryViewHolder holder, int position) {
+    public void onBindViewHolder(HistoryViewHolder holder, final int position) {
         History history = historyList.get(position);
         holder.sender.setText(history.getSender());
         holder.description.setText(history.getDescription());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("choi", position+"번째 클릭");
+                Toast.makeText(context, position+"번째가 클릭됐음", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

@@ -88,7 +88,6 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 );
                 break;
 
-
             default:
                 Log.d("delf", "do nothing in doInBackground()");
                 break;
