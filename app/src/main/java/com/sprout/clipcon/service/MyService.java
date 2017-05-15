@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import android.widget.Toast;
 public class MyService extends Service {
 
     private ClipboardManager mClipboardManager;
+    private Thread mThread = null; // test code
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -56,31 +58,38 @@ public class MyService extends Service {
     private ClipboardManager.OnPrimaryClipChangedListener changedListener = new ClipboardManager.OnPrimaryClipChangedListener() {
         @Override
         public void onPrimaryClipChanged() {
-
-            System.out.println("서비스 호출 테스트 ==== 11111 =======");
-
+            Log.d("delf", "[SYSTEM] clipboard changing detected");
             Toast toast = Toast.makeText(getApplicationContext(), "Clipboard changed", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
             toast.show();
 
             showTopButton();
-
-            System.out.println("서비스 호출 테스트 ==== 22222 =======");
         }
     };
 
     // handler to control Top button only to show 5 seconds
     private void showTopButton() {
-        startService(new Intent(getApplicationContext(), TopService.class));
+        Log.d("delf", "[SYSTEM] show top button");
 
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                stopService(new Intent(getApplicationContext(), TopService.class));
+      /*  Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(new Runnable() {*/
+         /*   @Override
+            public void run() {*/
+                Log.d("delf", "[SYSTEM] start topService");
+                startService(new Intent(getApplicationContext(), TopService.class));
 
+                Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        super.handleMessage(msg);
+                        stopService(new Intent(getApplicationContext(), TopService.class));
+                    }
+                };
+                handler.sendEmptyMessageDelayed(0, 5000);
+                Log.d("delf", "[SYSTEM] showTopButton() is end");
             }
-        };
-        handler.sendEmptyMessageDelayed(0, 5000);
-    }
+        /*}, 0);*/
+
+
+    //}
 }

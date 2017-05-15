@@ -8,6 +8,7 @@ import com.sprout.clipcon.model.Message;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javax.websocket.EncodeException;
 
@@ -18,6 +19,7 @@ import javax.websocket.EncodeException;
 public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private final static int TYPE = 0;
     private final static int GROUP_PK = 1;
+
 
     private BackgroundCallback backgroundCallback;
 
@@ -41,7 +43,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 break;
 
             case Message.REQUEST_CREATE_GROUP:
-                // Log.d("delf", "[CLIENT] send group create request to server. group pk is \"" + msg[GROUP_PK] + "\""); // XXX: caution!
+                Log.d("delf", "[CLIENT] send group create request to server."); // XXX: caution!
                 setCallBack();
                 sendMessage(
                         new Message().setType(Message.REQUEST_CREATE_GROUP)
@@ -58,12 +60,18 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 break;
 
             case Message.UPLOAD:
-                Log.d("delf", "[CLIENT] send upload request to group");
+                Log.d("delf", "[CLIENT] send upload request to server");
                 Endpoint.getUploader().upload(msg[1]);
                 break;
 
             case Message.DOWNLOAD:
-
+                Log.d("delf", "[CLIENT] send download request to server. pk is " + Endpoint.lastContentsPK);
+                try {
+                    Endpoint.getDownloader().requestDataDownload(Endpoint.lastContentsPK); // for test
+                } catch (MalformedURLException e) {
+                    Log.e("delf", "[CLIENT] error at sending download request");
+                    e.printStackTrace();
+                }
                 break;
 
             case Message.REQUEST_EXIT_GROUP:
@@ -87,11 +95,6 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
         return null;
     }
 
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-    }
-
     private void sendMessage(Message message) {
         try {
             Endpoint.getInstance().sendMessage(message);
@@ -111,5 +114,10 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
             }
         };
         Endpoint.getInstance().setSecondCallback(secondResult);
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+
     }
 }

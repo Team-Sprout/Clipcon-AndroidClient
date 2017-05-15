@@ -1,11 +1,14 @@
 package com.sprout.clipcon.server;
 
-import android.media.Image;
 import android.util.Log;
 
+import com.sprout.clipcon.model.Contents;
+import com.sprout.clipcon.model.Group;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.model.MessageDecoder;
 import com.sprout.clipcon.model.MessageEncoder;
+import com.sprout.clipcon.model.MessageParser;
+import com.sprout.clipcon.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,23 +26,22 @@ import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
-import static com.sprout.clipcon.R.string.groupKey;
-
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
-    private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
-     // private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
+    //private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
+    private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
     private Session session;
-
-    private static String userName;
-    private static String groupKey;
-
-
+    private static User user;
+    //    private static String userName;
+//    private static String groupKey;
     private static Endpoint uniqueEndpoint;
     private static ContentsUpload uniqueUploader;
+    private static ContentsDownload uniqueDownloader;
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
+
+    public static String lastContentsPK; // [delf] tep field
 
     public static Endpoint getInstance() {
         try {
@@ -47,24 +49,32 @@ public class Endpoint {
                 uniqueEndpoint = new Endpoint();
             }
         } catch (DeploymentException | IOException | URISyntaxException e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             Log.d("delf", "occurred exception");
         }
         return uniqueEndpoint;
     }
 
     public static ContentsUpload getUploader() {
-        if(uniqueUploader == null) {
-
-            uniqueUploader = new ContentsUpload(userName, groupKey);
+        if (uniqueUploader == null) {
+            Log.d("delf", "[SYSTEM] uploader is create. the name is " + user.getName() + " and group key is " + user.getGroup().getPrimaryKey());
+            uniqueUploader = new ContentsUpload(user.getName(), user.getGroup().getPrimaryKey());
         }
         return uniqueUploader;
+    }
+
+    public static ContentsDownload getDownloader() {
+        if (uniqueDownloader == null) {
+            uniqueDownloader = new ContentsDownload(user.getName(), user.getGroup().getPrimaryKey());
+        }
+        return uniqueDownloader;
     }
 
     // method name recommendation: callBackToWorkThread(), callBackToAsyncTask(), callBackToBackGround()
     public interface SecondCallback {
         void onEndpointResponse(JSONObject result); // define at EndpointInBackground
     }
+
     public void setSecondCallback(SecondCallback callback) {
         secondCallback = callback;
     }
@@ -74,6 +84,7 @@ public class Endpoint {
         // method name onServerResponse()
         void onParticipantStatus(String newMemeber); // TODO: 17-05-11 may change String to JSONObject
     }
+
     public void setParticipantCallback(ParticipantCallback callback) {
         participantCallback = callback;
     }
@@ -109,8 +120,7 @@ public class Endpoint {
                             System.out.println("create group reject");
                             break;
                     }
-                    this.userName = message.get(Message.NAME);
-                    this.groupKey = message.get(Message.GROUP_PK);
+                    user = new User(message.get(Message.NAME), new Group(message.get(Message.GROUP_PK)));
                     break;
 
                 case Message.RESPONSE_JOIN_GROUP:
@@ -125,8 +135,7 @@ public class Endpoint {
                             System.out.println("join group reject");
                             break;
                     }
-                    this.userName = message.get(Message.NAME);
-                    this.groupKey = message.get(Message.GROUP_PK);
+                    user = new User(message.get(Message.NAME), new Group(message.get(Message.GROUP_PK)));
                     break;
 
                 case Message.RESPONSE_EXIT_GROUP:
@@ -136,7 +145,6 @@ public class Endpoint {
                 case Message.NOTI_ADD_PARTICIPANT:
                     participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME));
                     Log.d("delf", "[CLIENT] \"" + message.get(Message.PARTICIPANT_NAME) + "\" is join in ths group");
-                    System.out.println("add participant noti");
                     // TODO: 17-05-10 pass message object to Fragment or Activity
                     break;
 
@@ -147,7 +155,10 @@ public class Endpoint {
                     break;
 
                 case Message.NOTI_UPLOAD_DATA:
-                    Log.d("delf", "[CLIENT] \"" + message.get(Message.NAME) + "\" is upload the data");
+                    Log.d("delf", "[CLIENT] \"" + message.get("uploadUserName") + "\" is upload the data");
+                    lastContentsPK  = message.get("contentsPKName");
+                    Contents contents = MessageParser.getContentsbyMessage(message);
+                    user.getGroup().addContents(contents);
                     break;
 
                 default:
@@ -171,7 +182,11 @@ public class Endpoint {
 
     @OnClose
     public void onClose() {
-        // new EndpointInBackGround().execute(Message);
+        // new EndpointInBackGround().execute(Message.Exit);
         Log.d("delf", "session closed.");
+    }
+
+    public static User getUser() {
+        return user;
     }
 }
