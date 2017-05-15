@@ -1,5 +1,6 @@
 package com.sprout.clipcon.server;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.io.File;
@@ -48,15 +49,13 @@ public class UploadData {
 		}
 	}
 
-	/** Upload Captured Image Data in Clipboard */
-	/*public void uploadCapturedImageData(Image capturedImageData) {
+	public void uploadImageData(Bitmap bitmapImage) {
 		try {
 			MultipartUtility multipart = new MultipartUtility(SERVER_URL + SERVER_SERVLET, charset);
 			setCommonParameter(multipart);
 
 			multipart.addFormField("createFolder", "FALSE");
-			multipart.addImagePart("imageData", capturedImageData);
-			System.out.println("imageData: " + capturedImageData.toString());
+			multipart.addImagePart("imageData", bitmapImage);
 
 			List<String> response = multipart.finish();
 
@@ -67,7 +66,7 @@ public class UploadData {
 		} catch (IOException ex) {
 			System.err.println(ex);
 		}
-	}*/
+	}
 
 	/** Upload File Data
 	 * 

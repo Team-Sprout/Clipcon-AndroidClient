@@ -103,13 +103,8 @@ public class TopService extends Service {
                         return;
                     }
 
-                    if (cm.getPrimaryClipDescription().
-
-                            hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().
-
-                            hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML))
-
-                    {
+                    if (cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                            || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)){
                         System.out.println("Text");
                         String temp = cm.getPrimaryClipDescription().getMimeType(0);
 
@@ -120,11 +115,7 @@ public class TopService extends Service {
                         new EndpointInBackGround().execute(Message.UPLOAD, "text");
 
 
-                    } else if (cm.getPrimaryClipDescription().
-
-                            hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST))
-
-                    {
+                    } else if (cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
                         System.out.println("Image");
 
                         //// TODO: 2017. 5. 5. check again whether we can use Uri or not
@@ -137,7 +128,6 @@ public class TopService extends Service {
             mThread.start();
         }
     }
-
 
     public static String getTextData() {
         return textData;

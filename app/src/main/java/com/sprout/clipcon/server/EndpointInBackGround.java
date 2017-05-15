@@ -84,7 +84,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
             case "test":
                 Log.d("delf", "send test request");
                 sendMessage(
-                    new Message().setType("test: hansung")
+                        new Message().setType("test: hansung")
                 );
                 break;
 
@@ -118,6 +118,5 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-
     }
 }
