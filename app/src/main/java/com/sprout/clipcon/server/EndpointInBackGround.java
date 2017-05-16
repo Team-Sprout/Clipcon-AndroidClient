@@ -22,16 +22,16 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private final static int GROUP_PK = 1;
     private BackgroundCallback backgroundCallback;
 
-    private Bitmap snedBitmapImage;
+    private Bitmap sendBitmapImage;
     private String sendText;
 
-    public EndpointInBackGround setSnedBitmapImage(Bitmap snedBitmapImage) {
-        this.snedBitmapImage = snedBitmapImage;
+    public EndpointInBackGround setSendBitmapImage(Bitmap sendBitmapImage) {
+        this.sendBitmapImage = sendBitmapImage;
         return this;
     }
 
-    public EndpointInBackGround setSendTest(String sendTest) {
-        this.sendText = sendTest;
+    public EndpointInBackGround setSendText(String sendText) {
+        this.sendText = sendText;
         return this;
     }
 
@@ -75,10 +75,11 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 Log.d("delf", "[CLIENT] send upload request to server");
                 switch (msg[1]) {
                     case "text":
+                        Log.d("delf", "[SYSTEM] in upload() upload the string: " + sendText);
                         Endpoint.getUploader().upload(sendText);
                         break;
                     case "image":
-                        Endpoint.getUploader().upload(snedBitmapImage);
+                        Endpoint.getUploader().upload(sendBitmapImage);
                         break;
                     case "file":
                         break;
