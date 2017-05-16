@@ -3,52 +3,74 @@
     android:layout_width="match_parent"
     android:layout_height="113dp">
 
-    <ImageView
-        android:id="@+id/thumbnail"
-        android:layout_width="76dp"
-        android:layout_height="80dp"
-        android:layout_margin="14dp"
-        android:src="@drawable/text_icon"/>
-
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="84dp"
-        android:orientation="vertical"
-        android:layout_toEndOf="@id/thumbnail"
-        android:layout_margin="14dp"
-        android:layout_alignParentEnd="true"
-        android:gravity="end">
+        android:id="@+id/contents_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/contents_description"
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="76dp"
+            android:layout_height="80dp"
+            android:layout_margin="14dp"
+            android:src="@drawable/text_icon"/>
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textSize="14sp"
-            android:text="testestesttestestesttestestesttestestesttestestesttestestesttestestesttestestesttestestesttestestest"/>
+            android:layout_height="84dp"
+            android:orientation="vertical"
+            android:layout_margin="14dp"
+            android:gravity="end">
 
-        <TextView
-            android:id="@+id/contents_sender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textSize="12sp"
-            android:text="sender"/>
+            <TextView
+                android:id="@+id/contents_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textSize="14sp"
+                android:text="testestesttestestesttestestesttestestesttestestesttestestesttestestesttestestesttestestesttestestest"/>
 
-        <TextView
-            android:id="@+id/contents_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textSize="12sp"
-            android:text="time"/>
+            <TextView
+                android:id="@+id/contents_sender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="14sp"
+                android:text="sender"/>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/contents_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:text="time"
+                    android:layout_alignParentEnd="true"/>
+
+                <TextView
+                    android:id="@+id/contents_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="size"
+                    android:textSize="12sp"
+                    android:layout_alignParentStart="true"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
     </LinearLayout>
+
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#d1d1d1" />
+        android:background="#d1d1d1"
+        android:layout_alignBottom="@id/contents_layout"/>
 
 </RelativeLayout>
