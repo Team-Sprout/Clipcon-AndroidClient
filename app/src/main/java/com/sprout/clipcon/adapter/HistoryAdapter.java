@@ -49,6 +49,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             case Contents.TYPE_IMAGE:
                 Bitmap tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 holder.description.setText("image");
+
                 holder.thumbnail.setImageBitmap(tmpBitmap);
 //                holder.thumbnail.setImageResource(tmpBitmap);
                 holder.size.setText(Long.toString(contents.getContentsSize()));
@@ -90,6 +91,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         public HistoryViewHolder(final View historyView) {
             super(historyView);
+
             thumbnail = (ImageView) historyView.findViewById(R.id.thumbnail);
             sender = (TextView) historyView.findViewById(R.id.contents_sender);
             description = (TextView) historyView.findViewById(R.id.contents_description);
