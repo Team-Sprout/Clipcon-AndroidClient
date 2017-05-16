@@ -46,15 +46,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             case Contents.TYPE_IMAGE:
                 holder.description.setText("image");
                 holder.thumbnail.setImageResource(R.drawable.text_icon);
+                holder.size.setText((int) contents.getContentsSize());
+                //// TODO: 2017. 5. 16. should use glide
                 break;
             case Contents.TYPE_FILE:
                 holder.description.setText(contents.getContentsValue());
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
+                holder.size.setText((int) contents.getContentsSize());
                 break;
             case Contents.TYPE_STRING:
                 holder.description.setText(contents.getContentsValue());
                 holder.thumbnail.setImageResource(R.drawable.text_icon);
-                //// TODO: 2017. 5. 16. should use glide
+                holder.size.setText("-");
                 break;
         }
 
@@ -78,6 +81,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         TextView sender;
         TextView description;
         TextView time;
+        TextView size;
 
         public HistoryViewHolder(final View historyView) {
             super(historyView);
@@ -85,6 +89,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             sender = (TextView)historyView.findViewById(R.id.contents_sender);
             description = (TextView)historyView.findViewById(R.id.contents_description);
             time = (TextView)historyView.findViewById(R.id.contents_time);
+            size = (TextView)historyView.findViewById(R.id.contents_size);
         }
     }
 }
