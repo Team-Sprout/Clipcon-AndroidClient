@@ -64,13 +64,10 @@ public class TransparentActivity extends Activity{
         String action = getIntent().getAction();
 
         if(Intent.ACTION_SEND.equals(action)){
-            System.out.println("********* ACTION_SEND called *********");
-
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
             getPermission();
 //            new EndpointInBackGround().execute(Message.UPLOAD);
-            // insert image uri to clipboard to notify clipboard changing
             ClipData clip = ClipData.newRawUri("test", uri);
             ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
             cm.setPrimaryClip(clip);
@@ -88,10 +85,8 @@ public class TransparentActivity extends Activity{
         OutputStream out;
         try {
             Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri); // 비트맵 객체 보유
-//            MediaStore.Images.Media.insertImage(getContentResolver(), bm, "test.png", "testCheck");
 
             bitmapToByteArray(bm);
-            System.out.println("여기여기"+bitmapToByteArray(bm));
 
             newFile.createNewFile();
             out = new FileOutputStream(newFile);

@@ -20,21 +20,26 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/history_description"
+            android:id="@+id/contents_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Test Description"
             android:maxLines="2"
             android:ellipsize="end"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/history_sender"
+            android:id="@+id/contents_sender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Test Person"
             android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/contents_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="16sp"/>
 
     </LinearLayout>
 

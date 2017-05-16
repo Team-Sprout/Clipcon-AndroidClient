@@ -79,9 +79,6 @@ public class InfoFragment extends Fragment {
                 membersArrayList.add(new Member(usersInGroup.getString(i)));
             }
 
-            if (response.get(Message.TYPE).equals(Message.RESPONSE_JOIN_GROUP)) {
-                // TODO: 17-05-09 assign history (may not be used)
-            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

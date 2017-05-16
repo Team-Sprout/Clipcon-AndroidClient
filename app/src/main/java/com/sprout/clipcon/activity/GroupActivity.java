@@ -35,20 +35,16 @@ public class GroupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
-        System.out.println("GroupActivity === onCreate called =============");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_activity);
 
         initLayout();
         checkStart();
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        System.out.println("GroupActivity === onDestroy called =============");
         Intent intent = new Intent(getApplicationContext(), MyService.class);
         stopService(intent);
     }
@@ -66,7 +62,6 @@ public class GroupActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.group_settings:
-                Toast.makeText(getApplicationContext(), "설정으로 이동", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 return true;
 
@@ -86,7 +81,7 @@ public class GroupActivity extends AppCompatActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        //// TODO: 2017. 4. 19. add delete group history action
+                        //// TODO: 2017. 4. 19. add delete group contents action
                         new EndpointInBackGround().execute(Message.REQUEST_EXIT_GROUP);
                         Intent intent = new Intent(getApplicationContext(), MyService.class);
                         stopService(intent);
@@ -102,9 +97,9 @@ public class GroupActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), MyService.class);
         startService(intent);
 
-        Toast toast = Toast.makeText(getApplicationContext(), "Start Clipboard Check", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-        toast.show();
+//        Toast toast = Toast.makeText(getApplicationContext(), "Start Clipboard Check", Toast.LENGTH_SHORT);
+//        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+//        toast.show();
     }
 
     // make Toolbar, Tablayout, ViewPager
