@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.adapter.HistoryAdapter;
 import com.sprout.clipcon.adapter.MemberAdapter;
+import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.History;
 import com.sprout.clipcon.model.Member;
 import com.sprout.clipcon.model.Message;
@@ -34,7 +35,7 @@ public class HistoryFragment extends Fragment {
     private RecyclerView recyclerView;
     private HistoryAdapter historyAdapter;
 
-    private ArrayList<History> historyArrayList = new ArrayList<>();
+    private ArrayList<Contents> contentsArrayList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -43,21 +44,20 @@ public class HistoryFragment extends Fragment {
 
         System.out.println("히스토리 화면으로 진입");
 
-        historyArrayList.add(new History("user1", "this is clipboard contents"));
-        historyArrayList.add(new History("user2", "this is clipboard contents"));
-        historyArrayList.add(new History("user3", "this is clipboard contents"));
-        historyArrayList.add(new History("user4", "this is clipboard contents"));
-        historyArrayList.add(new History("user5", "this is clipboard contents"));
-        historyArrayList.add(new History("user6", "this is clipboard contents"));
+//        historyArrayList.add(new History("user1", "this is clipboard contents"));
+//        historyArrayList.add(new History("user2", "this is clipboard contents"));
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_history);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        historyAdapter = new HistoryAdapter(getContext(), historyArrayList);
+        historyAdapter = new HistoryAdapter(getContext(), contentsArrayList);
         recyclerView.setAdapter(historyAdapter);
 
         return view;
     }
+
+
 }
