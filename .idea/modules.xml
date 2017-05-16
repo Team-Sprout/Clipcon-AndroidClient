@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Clipcon.iml" filepath="$PROJECT_DIR$/Clipcon.iml" />
       <module fileurl="file://$PROJECT_DIR$/Clipcon-AndroidClient.iml" filepath="$PROJECT_DIR$/Clipcon-AndroidClient.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/json-20160810/json-20160810.iml" filepath="$PROJECT_DIR$/json-20160810/json-20160810.iml" />

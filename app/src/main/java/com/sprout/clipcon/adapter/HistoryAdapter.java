@@ -12,8 +12,6 @@ import android.widget.Toast;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Contents;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 /**
