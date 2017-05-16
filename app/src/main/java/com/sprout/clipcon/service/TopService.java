@@ -117,7 +117,7 @@ public class TopService extends Service {
             textData = item.getText().toString();
             System.out.println(textData);
 
-            new EndpointInBackGround().execute(Message.UPLOAD, "text");
+            new EndpointInBackGround().execute(Message.UPLOAD, "text", textData);
 
             Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
 
