@@ -1,5 +1,7 @@
 package com.sprout.clipcon.adapter;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -41,7 +43,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     @Override
     public void onBindViewHolder(HistoryViewHolder holder, final int position) {
-        Contents contents = contentsList.get(position);
+        final Contents contents = contentsList.get(position);
         holder.sender.setText(contents.getUploadUserName());
         holder.time.setText(contents.getUploadTime());
 
@@ -71,6 +73,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, position + "번째가 클릭됐음", Toast.LENGTH_SHORT).show();
+
+                if(contentsList.get(position).getContentsType() == Contents.TYPE_STRING) {
+                    String copiedString = contentsList.get(position).getContentsValue();
+                    ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("text", copiedString);
+                    cm.setPrimaryClip(clip);
+                }
             }
         });
 
