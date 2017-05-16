@@ -21,6 +21,7 @@ public class Contents {
 		this.contentsValue = contentsValue;
 	}
 
+
 	public String getContentsType() {
 		return contentsType;
 	}

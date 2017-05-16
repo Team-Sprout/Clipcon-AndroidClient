@@ -79,12 +79,6 @@ public class InfoFragment extends Fragment {
                 membersArrayList.add(new Member(usersInGroup.getString(i)));
             }
 
-<<<<<<< Updated upstream
-=======
-            if (response.get(Message.TYPE).equals(Message.RESPONSE_JOIN_GROUP)) {
-
-            }
->>>>>>> Stashed changes
         } catch (JSONException e) {
             e.printStackTrace();
         }

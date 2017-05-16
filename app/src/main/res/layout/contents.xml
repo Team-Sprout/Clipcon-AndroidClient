@@ -17,7 +17,7 @@
         android:layout_toEndOf="@id/thumbnail"
         android:layout_margin="14dp"
         android:layout_alignParentEnd="true"
-        android:gravity="center">
+        android:gravity="end">
 
         <TextView
             android:id="@+id/contents_description"
@@ -25,21 +25,24 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:ellipsize="end"
-            android:textSize="16sp" />
+            android:textSize="14sp"
+            android:text="testestesttestestesttestestesttestestesttestestesttestestesttestestesttestestesttestestesttestestest"/>
 
         <TextView
             android:id="@+id/contents_sender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textSize="16sp" />
+            android:textSize="12sp"
+            android:text="sender"/>
 
         <TextView
             android:id="@+id/contents_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textSize="16sp"/>
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:text="time"/>
 
     </LinearLayout>
 

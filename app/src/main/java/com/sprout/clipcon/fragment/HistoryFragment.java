@@ -5,13 +5,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.adapter.HistoryAdapter;
+import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Contents;
+import com.sprout.clipcon.model.Member;
 import com.sprout.clipcon.server.Endpoint;
 
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ public class HistoryFragment extends Fragment {
 //        historyArrayList.add(new History("user1", "this is clipboard contents"));
 //        historyArrayList.add(new History("user2", "this is clipboard contents"));
 
+        setContentsCallback();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_history);
@@ -50,15 +54,23 @@ public class HistoryFragment extends Fragment {
         return view;
     }
 
+    private void updateHistory(Contents contents) {
+        contentsArrayList.add(contents);
+
+        historyAdapter = new HistoryAdapter(getActivity(), contentsArrayList);
+        recyclerView.setAdapter(historyAdapter);
+    }
+
     private void setContentsCallback() {
         Endpoint.ContentsCallback contentsResult = new Endpoint.ContentsCallback() {
             @Override
-            public void onContentsUpdate(Contents contents) {
-                System.out.println("Member List Changed");
+            public void onContentsUpdate(final Contents contents) {
+                System.out.println("History List Changed");
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         // update history ui
+                        updateHistory(contents);
                     }
                 });
             }
