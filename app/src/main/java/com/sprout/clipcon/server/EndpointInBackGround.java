@@ -1,5 +1,6 @@
 package com.sprout.clipcon.server;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -19,9 +20,20 @@ import javax.websocket.EncodeException;
 public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private final static int TYPE = 0;
     private final static int GROUP_PK = 1;
-
-
     private BackgroundCallback backgroundCallback;
+
+    private Bitmap snedBitmapImage;
+    private String sendText;
+
+    public EndpointInBackGround setSnedBitmapImage(Bitmap snedBitmapImage) {
+        this.snedBitmapImage = snedBitmapImage;
+        return this;
+    }
+
+    public EndpointInBackGround setSendTest(String sendTest) {
+        this.sendText = sendTest;
+        return this;
+    }
 
     public interface BackgroundCallback {
         void onSuccess(JSONObject result);
@@ -61,7 +73,16 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
             case Message.UPLOAD:
                 Log.d("delf", "[CLIENT] send upload request to server");
-                Endpoint.getUploader().upload(msg[1]);
+                switch (msg[1]) {
+                    case "text":
+                        Endpoint.getUploader().upload(sendText);
+                        break;
+                    case "image":
+                        Endpoint.getUploader().upload(snedBitmapImage);
+                        break;
+                    case "file":
+                        break;
+                }
                 break;
 
             case Message.DOWNLOAD:

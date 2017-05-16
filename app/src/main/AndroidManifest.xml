@@ -44,7 +44,5 @@
         <intent-fiter>
             <action android:name ="com.sprout.clipcon.service.TopService"/>
         </intent-fiter>
-
     </application>
-
 </manifest>

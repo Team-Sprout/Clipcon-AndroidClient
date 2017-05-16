@@ -2,9 +2,6 @@ package com.sprout.clipcon.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,6 +13,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.EndpointInBackGround;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -29,10 +28,10 @@ import java.util.Date;
  * Created by Yongwon on 2017. 5. 1..
  */
 
-public class TransparentActivity extends Activity{
+public class TransparentActivity extends Activity {
 
     private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-    Uri uri;
+    private Uri uri;
 
     //ask user about permission to save image into basic gallery apps.
     @Override
@@ -63,14 +62,17 @@ public class TransparentActivity extends Activity{
         System.out.println("투명액티비티 시작");
         String action = getIntent().getAction();
 
-        if(Intent.ACTION_SEND.equals(action)){
+        if (Intent.ACTION_SEND.equals(action)) {
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-
             getPermission();
-//            new EndpointInBackGround().execute(Message.UPLOAD);
-            ClipData clip = ClipData.newRawUri("test", uri);
-            ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setPrimaryClip(clip);
+
+            new EndpointInBackGround() // TODO: 17-05-16 change name
+                    .setSnedBitmapImage(getBitmapByUri(uri))
+                    .execute(Message.UPLOAD, "image");
+
+            /*ClipData clip = ClipData.newRawUri("test", uri);
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            cm.setPrimaryClip(clip);*/
         }
 
         finish();
@@ -78,8 +80,8 @@ public class TransparentActivity extends Activity{
     }
 
     private void bitmapToImage() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/download/";
-        String fileName = "Image"+createName(System.currentTimeMillis())+".png";
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
+        String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
 
         File newFile = new File(filePath, fileName);
         OutputStream out;
@@ -100,11 +102,20 @@ public class TransparentActivity extends Activity{
         }
     }
 
+    private Bitmap getBitmapByUri(Uri uri) {
+        try {
+            return MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // move to ContentsDownload
-    public byte[] bitmapToByteArray( Bitmap bitmap ) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
-        bitmap.compress( Bitmap.CompressFormat.PNG, 100, stream) ;
-        byte[] byteArray = stream.toByteArray() ;
+    public byte[] bitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
         return byteArray;
     }
 
@@ -127,13 +138,12 @@ public class TransparentActivity extends Activity{
                 // app-defined int constant. The callback method gets the
                 // result of the request.
             }
-        }else {
+        } else {
             bitmapToImage();
-
         }
     }
 
-    private String createName(long dateTaken){
+    private String createName(long dateTaken) {
         Date date = new Date(dateTaken);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         return dateFormat.format(date);

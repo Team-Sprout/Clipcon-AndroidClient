@@ -21,7 +21,6 @@ import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Member;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.Endpoint;
-import com.sprout.clipcon.server.EndpointInBackGround;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -164,7 +163,8 @@ public class InfoFragment extends Fragment {
 //                        Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
 //                    }
 //                }).show();
-        new EndpointInBackGround().execute(Message.DOWNLOAD);
+        // new EndpointInBackGround().execute(Message.DOWNLOAD);
+
         // TODO: 17-05-11 right here!! event occurred!!
     }
 
