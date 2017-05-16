@@ -79,6 +79,12 @@ public class InfoFragment extends Fragment {
                 membersArrayList.add(new Member(usersInGroup.getString(i)));
             }
 
+<<<<<<< Updated upstream
+=======
+            if (response.get(Message.TYPE).equals(Message.RESPONSE_JOIN_GROUP)) {
+
+            }
+>>>>>>> Stashed changes
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -103,8 +109,8 @@ public class InfoFragment extends Fragment {
         Log.d("delf", "[CLIENT] receive name is " + name);
 
         if (isContain(name)) {
-            Log.d("delf", "nothing");
-            membersArrayList.remove(getIndex(name));
+            Log.d("delf", "nothing"); membersArrayList.remove(getIndex(name));
+
         } else {
             Log.d("delf", "something");
             membersArrayList.add(new Member(name));
@@ -135,12 +141,10 @@ public class InfoFragment extends Fragment {
     }
 
     private void setMemberCallback() {
-
         Endpoint.ParticipantCallback participantResult = new Endpoint.ParticipantCallback() {
             @Override
             public void onParticipantStatus(final String newName) {
                 System.out.println("Member List Changed");
-
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

@@ -40,6 +40,8 @@ public class Endpoint {
     private static ContentsDownload uniqueDownloader;
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
+    private ContentsCallback contentsCallback;
+
 
     public static String lastContentsPK; // [delf] tep field
 
@@ -84,10 +86,17 @@ public class Endpoint {
         // method name onServerResponse()
         void onParticipantStatus(String newMemeber); // TODO: 17-05-11 may change String to JSONObject
     }
-
     public void setParticipantCallback(ParticipantCallback callback) {
         participantCallback = callback;
     }
+
+    public interface ContentsCallback {
+        void onContentsUpdate(Contents contents);
+    }
+    public void setContentsCallback(ContentsCallback callback) {
+        contentsCallback = callback;
+    }
+
 
     private Endpoint() throws DeploymentException, IOException, URISyntaxException {
         URI uRI = new URI(uri);
@@ -155,10 +164,15 @@ public class Endpoint {
                     break;
 
                 case Message.NOTI_UPLOAD_DATA:
+
                     Log.d("delf", "[CLIENT] \"" + message.get("uploadUserName") + "\" is upload the data");
                     lastContentsPK  = message.get("contentsPKName");
                     Contents contents = MessageParser.getContentsbyMessage(message);
                     user.getGroup().addContents(contents);
+
+                    contentsCallback.onContentsUpdate(contents);
+
+                    // TODO: 17-05-16 floating notification
                     break;
 
                 default:

@@ -8,8 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-
-import com.sprout.clipcon.exception.ClipboardEmptyException;
+import android.util.Log;
 
 /**
  * Created by delf on 17-05-12.
@@ -17,11 +16,16 @@ import com.sprout.clipcon.exception.ClipboardEmptyException;
 
 public class MyClipboard extends Service {
 
-    private ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+    private ClipboardManager cm;
     private static MyClipboard uniqueMyClipboard;
 
     private MyClipboard() {
+        cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        Log.d("delf", "[SYSTEM] clipboard manager is created.");
+    }
 
+    private void getClopboard() {
+        // cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
     }
 
     public static MyClipboard getInstance() {
@@ -32,17 +36,24 @@ public class MyClipboard extends Service {
     }
 
     public String getTextInClipboard() { // probably change static
-        if(!cm.hasPrimaryClip()) {
-            throw new ClipboardEmptyException(); // test code of delf
-        } else if (!cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) && !cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
-            return null;
-        }
         return cm.getPrimaryClip().getItemAt(0).getText().toString();
     }
 
     public Bitmap getImageInClipboard() {
         // TODO: 17-05-13 iamge
         return null;
+    }
+
+    public boolean isEmpty() {
+        return !cm.hasPrimaryClip();
+    }
+
+    public boolean isStringType() {
+        return (cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML));
+    }
+
+    public boolean isImageType() {
+        return cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST);
     }
 
     public void insertDataInClipboard(String text) {
@@ -54,5 +65,10 @@ public class MyClipboard extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
     }
 }
