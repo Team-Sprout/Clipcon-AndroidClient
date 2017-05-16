@@ -1,7 +1,10 @@
 package com.sprout.clipcon.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +21,7 @@ import java.util.ArrayList;
  * Created by Yongwon on 2017. 4. 30..
  */
 
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>{
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
 
     private Context context;
     private ArrayList<Contents> contentsList;
@@ -42,12 +45,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.sender.setText(contents.getUploadUserName());
         holder.time.setText(contents.getUploadTime());
 
-        switch(contents.getContentsType()) {
+        switch (contents.getContentsType()) {
             case Contents.TYPE_IMAGE:
+                Bitmap tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 holder.description.setText("image");
-                holder.thumbnail.setImageResource(R.drawable.text_icon);
-                holder.size.setText((int) contents.getContentsSize());
-                //// TODO: 2017. 5. 16. should use glide
+
+                holder.thumbnail.setImageBitmap(tmpBitmap);
+//                holder.thumbnail.setImageResource(tmpBitmap);
+                holder.size.setText(Long.toString(contents.getContentsSize()));
+                // TODO: 2017. 5. 16. should use glide
                 break;
             case Contents.TYPE_FILE:
                 holder.description.setText(contents.getContentsValue());
@@ -64,7 +70,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, position+"번째가 클릭됐음", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, position + "번째가 클릭됐음", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -85,11 +91,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         public HistoryViewHolder(final View historyView) {
             super(historyView);
-            thumbnail = (ImageView)historyView.findViewById(R.id.thumbnail);
-            sender = (TextView)historyView.findViewById(R.id.contents_sender);
-            description = (TextView)historyView.findViewById(R.id.contents_description);
-            time = (TextView)historyView.findViewById(R.id.contents_time);
-            size = (TextView)historyView.findViewById(R.id.contents_size);
+
+            thumbnail = (ImageView) historyView.findViewById(R.id.thumbnail);
+            sender = (TextView) historyView.findViewById(R.id.contents_sender);
+            description = (TextView) historyView.findViewById(R.id.contents_description);
+            time = (TextView) historyView.findViewById(R.id.contents_time);
+            size = (TextView) historyView.findViewById(R.id.contents_size);
         }
+    }
+
+
+    private Bitmap getBitmapByBase64String(String imageString) {
+        byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 }

@@ -67,7 +67,7 @@ public class TransparentActivity extends Activity {
             getPermission();
 
             new EndpointInBackGround() // TODO: 17-05-16 change name
-                    .setSnedBitmapImage(getBitmapByUri(uri))
+                    .setSendBitmapImage(getBitmapByUri(uri))
                     .execute(Message.UPLOAD, "image");
 
             /*ClipData clip = ClipData.newRawUri("test", uri);
