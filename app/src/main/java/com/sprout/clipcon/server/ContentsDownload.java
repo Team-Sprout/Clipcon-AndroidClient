@@ -137,7 +137,7 @@ public class ContentsDownload {
     // test code
     private File downloadImageData(InputStream inputStream) throws IOException {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png";
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/clipcon/";
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
         Log.d("delf", "[SYSTEM] download path: " + path);
         File file = new File(path, fileName);
         OutputStream out = new FileOutputStream(file);

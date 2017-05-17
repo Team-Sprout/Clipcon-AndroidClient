@@ -182,6 +182,7 @@ public class Endpoint {
 
                     handler.sendEmptyMessage(0);
 
+                    contentsCallback.onContentsUpdate(contents);
                     break;
 
                 default:

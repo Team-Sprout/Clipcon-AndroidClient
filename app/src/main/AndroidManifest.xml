@@ -29,7 +29,6 @@
                 <action android:name="android.intent.action.SEND" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="image/*" />
                 <data android:mimeType="text/*" />
             </intent-filter>
@@ -39,18 +38,10 @@
         <service android:name=".service.MyService" />
         <service android:name=".service.TopService" />
 
-        <intent-fiter>
-            <action android:name="com.sprout.clipcon.service.TopService" />
-        </intent-fiter>
-
-        <service
-            android:name=".service.NotificationService2"
-            android:enabled="true"
-            android:exported="true" />
         <service
             android:name=".service.NotificationService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"/>
     </application>
 
 </manifest>

@@ -77,13 +77,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 Toast.makeText(context, position + "번째가 클릭됐음", Toast.LENGTH_SHORT).show();
 
                 Contents contents = contentsList.get(position);
-                if(contents.getContentsType().equals(Contents.TYPE_IMAGE)) {
-                    Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
+
+                if (contents.getContentsType().equals(Contents.TYPE_STRING)) {
                     String copiedString = contents.getContentsValue();
                     ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("text", copiedString);
                     cm.setPrimaryClip(clip);
+                } else if (contents.getContentsType().equals(Contents.TYPE_IMAGE)) {
+                    Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
                     new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
+
                 }
             }
         });
