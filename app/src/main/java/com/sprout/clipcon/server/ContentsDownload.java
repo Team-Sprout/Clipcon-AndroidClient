@@ -1,6 +1,7 @@
 package com.sprout.clipcon.server;
 
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Log;
 
 import com.sprout.clipcon.model.Contents;
@@ -19,6 +20,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class ContentsDownload {
@@ -54,7 +57,7 @@ public class ContentsDownload {
         Log.d("delf", "[CLIENT] requestDataDownload(), pk is " + downloadDataPK);
         History myHistory = Endpoint.getUser().getGroup().getHistory();
         requestContents = myHistory.getContentsByPK(downloadDataPK);
-        if(requestContents == null) {
+        if (requestContents == null) {
             Log.d("delf", "[SYSTEM] requestContents is null");
         }
 
@@ -74,13 +77,13 @@ public class ContentsDownload {
                 switch (requestContents.getContentsType()) {
                     case Contents.TYPE_STRING:
                         String stringData = downloadStringData(httpConn.getInputStream());
-                        // TODO: 17-05-13 insert string data in clipboard
+                        // TODO: 17-05-13 insert to clipboard
                         Log.d("delf", "[CLIENT] received test data: " + stringData);
                         break;
 
                     case Contents.TYPE_IMAGE:
-                        // TODO: 17-05-13 download and get image data
-                        // TODO: 17-05-13 save image at local store
+                        Log.d("delf", "[CLIENT] received test data is image");
+                        downloadImageData(httpConn.getInputStream());
                         break;
 
                     case Contents.TYPE_FILE:
@@ -131,33 +134,23 @@ public class ContentsDownload {
     }
 
     // test code
-    private File downloadCapturedImageData(InputStream inputStream) {
-        // TODO: 17-05-13 convert inputStream to file
-        File file = new File("outFile.java");
-        //  context.getFilesDir();
+    // test code
+    private File downloadImageData(InputStream inputStream) throws IOException {
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png";
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
+        Log.d("delf", "[SYSTEM] download path: " + path);
+        File file = new File(path, fileName);
+        OutputStream out = new FileOutputStream(file);
 
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = inputStream.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            // Ensure that the InputStreams are closed even if there's an exception.
-            try {
-                if (out != null) {
-                    out.close();
-                }
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        int len = 0;
+        while ((len = inputStream.read()) != -1) {
+            out.write(len);
         }
-        return file;
+        out.flush();
+        out.close();
+        Log.d("delf", "[SYSTEM] complete download file.");
+
+        return null;
     }
 
     private File downloadFileData(InputStream inputStream, String fileName) throws FileNotFoundException {

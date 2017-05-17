@@ -1,5 +1,7 @@
 package com.sprout.clipcon.server;
 
+import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.sprout.clipcon.model.Contents;
@@ -29,6 +31,7 @@ import javax.websocket.Session;
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
+
     //private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
     private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
     private Session session;
@@ -40,6 +43,14 @@ public class Endpoint {
     private static ContentsDownload uniqueDownloader;
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
+    private ContentsCallback contentsCallback;
+
+    private Handler handler;
+
+    private Context context;
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public static String lastContentsPK; // [delf] tep field
 
@@ -84,15 +95,23 @@ public class Endpoint {
         // method name onServerResponse()
         void onParticipantStatus(String newMemeber); // TODO: 17-05-11 may change String to JSONObject
     }
-
     public void setParticipantCallback(ParticipantCallback callback) {
         participantCallback = callback;
     }
+
+    public interface ContentsCallback {
+        void onContentsUpdate(Contents contents);
+    }
+    public void setContentsCallback(ContentsCallback callback) {
+        contentsCallback = callback;
+    }
+
 
     private Endpoint() throws DeploymentException, IOException, URISyntaxException {
         URI uRI = new URI(uri);
         Log.d("delf", "[CLIENT] connecting server...");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uRI);
+
     }
 
     @OnOpen
@@ -117,7 +136,7 @@ public class Endpoint {
                             break;
 
                         case Message.REJECT:
-                            System.out.println("create group reject");
+                            System.out.println("create group reject") ;
                             break;
                     }
                     user = new User(message.get(Message.NAME), new Group(message.get(Message.GROUP_PK)));
@@ -155,10 +174,15 @@ public class Endpoint {
                     break;
 
                 case Message.NOTI_UPLOAD_DATA:
+
                     Log.d("delf", "[CLIENT] \"" + message.get("uploadUserName") + "\" is upload the data");
                     lastContentsPK  = message.get("contentsPKName");
                     Contents contents = MessageParser.getContentsbyMessage(message);
                     user.getGroup().addContents(contents);
+
+                    handler.sendEmptyMessage(0);
+
+                    contentsCallback.onContentsUpdate(contents);
                     break;
 
                 default:
@@ -171,6 +195,9 @@ public class Endpoint {
         }
     }
 
+    public void setHandeler(Handler handler) {
+        this.handler = handler;
+    }
 
     public void sendMessage(Message message) throws IOException, EncodeException {
         if (session == null) {

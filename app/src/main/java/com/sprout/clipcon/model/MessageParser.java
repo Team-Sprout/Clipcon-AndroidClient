@@ -50,11 +50,11 @@ public class MessageParser {
 	 * 			Contents object converted from message
 	 */
 	public static Contents getContentsbyMessage(Message m) throws JSONException {
-
+		Contents rtnContents = new Contents(m.get("contentsType"), m.getLong("contentsSize"), m.get("contentsPKName"), m.get("uploadUserName"), m.get("uploadTime"), m.get("contentsValue"));
 		if (m.get("contentsType").equals(Contents.TYPE_IMAGE)) {
-			String imageString = m.get("imageString");
+            rtnContents.setContentsValue(m.get("imageString"));
 		}
-		return new Contents(m.get("contentsType"), m.getLong("contentsSize"), m.get("contentsPKName"), m.get("uploadUserName"), m.get("uploadTime"), m.get("contentsValue"));
+		return rtnContents;
 	}
 
 	/**

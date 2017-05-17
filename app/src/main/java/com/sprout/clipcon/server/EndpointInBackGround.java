@@ -1,5 +1,6 @@
 package com.sprout.clipcon.server;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -19,9 +20,20 @@ import javax.websocket.EncodeException;
 public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private final static int TYPE = 0;
     private final static int GROUP_PK = 1;
-
-
     private BackgroundCallback backgroundCallback;
+
+    private Bitmap sendBitmapImage;
+    private String sendText;
+
+    public EndpointInBackGround setSendBitmapImage(Bitmap sendBitmapImage) {
+        this.sendBitmapImage = sendBitmapImage;
+        return this;
+    }
+
+    public EndpointInBackGround setSendText(String sendText) {
+        this.sendText = sendText;
+        return this;
+    }
 
     public interface BackgroundCallback {
         void onSuccess(JSONObject result);
@@ -61,13 +73,24 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
             case Message.UPLOAD:
                 Log.d("delf", "[CLIENT] send upload request to server");
-                Endpoint.getUploader().upload(msg[1]);
+                switch (msg[1]) {
+                    case "text":
+                        Log.d("delf", "[SYSTEM] in upload() upload the string: " + sendText);
+                        Endpoint.getUploader().upload(sendText);
+                        break;
+                    case "image":
+                        Log.d("delf", "[SYSTEM] in upload() upload the image");
+                        Endpoint.getUploader().upload(sendBitmapImage);
+                        break;
+                    case "file":
+                        break;
+                }
                 break;
 
             case Message.DOWNLOAD:
                 Log.d("delf", "[CLIENT] send download request to server. pk is " + Endpoint.lastContentsPK);
                 try {
-                    Endpoint.getDownloader().requestDataDownload(Endpoint.lastContentsPK); // for test
+                    Endpoint.getDownloader().requestDataDownload(msg[1]); // for test
                 } catch (MalformedURLException e) {
                     Log.e("delf", "[CLIENT] error at sending download request");
                     e.printStackTrace();
@@ -84,7 +107,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
             case "test":
                 Log.d("delf", "send test request");
                 sendMessage(
-                    new Message().setType("test: hansung")
+                        new Message().setType("test: hansung")
                 );
                 break;
 
@@ -118,6 +141,5 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-
     }
 }

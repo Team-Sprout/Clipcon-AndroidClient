@@ -1,6 +1,9 @@
 package com.sprout.clipcon.server;
 
+import android.graphics.Bitmap;
+
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -144,5 +147,26 @@ public class MultipartUtility {
       System.out.println("======================SERVER REPLIED======================\n");
 
       return response;
+   }
+
+   public void addImagePart(String fieldName, Bitmap bitmap) throws IOException {
+      String imageName = "capturedImage";
+
+      writer.append("--" + boundary).append(LINE_FEED);
+      writer.append("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + imageName + "\"").append(LINE_FEED);
+      writer.append("Content-Type: image/png").append(LINE_FEED);
+      writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
+      writer.append(LINE_FEED);
+      writer.flush();
+
+      ByteArrayOutputStream stream = new ByteArrayOutputStream() ;
+      bitmap.compress( Bitmap.CompressFormat.PNG, 100, stream) ;
+      byte[] byteArray = stream.toByteArray() ;
+
+      outputStream.write(byteArray);
+      outputStream.flush();
+
+      writer.append(LINE_FEED);
+      writer.flush();
    }
 }
