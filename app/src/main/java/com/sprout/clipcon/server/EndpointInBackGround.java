@@ -79,6 +79,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                         Endpoint.getUploader().upload(sendText);
                         break;
                     case "image":
+                        Log.d("delf", "[SYSTEM] in upload() upload the image");
                         Endpoint.getUploader().upload(sendBitmapImage);
                         break;
                     case "file":
@@ -89,7 +90,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
             case Message.DOWNLOAD:
                 Log.d("delf", "[CLIENT] send download request to server. pk is " + Endpoint.lastContentsPK);
                 try {
-                    Endpoint.getDownloader().requestDataDownload(Endpoint.lastContentsPK); // for test
+                    Endpoint.getDownloader().requestDataDownload(msg[1]); // for test
                 } catch (MalformedURLException e) {
                     Log.e("delf", "[CLIENT] error at sending download request");
                     e.printStackTrace();

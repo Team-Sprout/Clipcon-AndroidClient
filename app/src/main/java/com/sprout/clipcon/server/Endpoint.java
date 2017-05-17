@@ -1,5 +1,7 @@
 package com.sprout.clipcon.server;
 
+import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.sprout.clipcon.model.Contents;
@@ -29,6 +31,7 @@ import javax.websocket.Session;
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
+
     //private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
     private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
     private Session session;
@@ -42,6 +45,12 @@ public class Endpoint {
     private ParticipantCallback participantCallback;
     private ContentsCallback contentsCallback;
 
+    private Handler handler;
+
+    private Context context;
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public static String lastContentsPK; // [delf] tep field
 
@@ -102,6 +111,7 @@ public class Endpoint {
         URI uRI = new URI(uri);
         Log.d("delf", "[CLIENT] connecting server...");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uRI);
+
     }
 
     @OnOpen
@@ -126,7 +136,7 @@ public class Endpoint {
                             break;
 
                         case Message.REJECT:
-                            System.out.println("create group reject");
+                            System.out.println("create group reject") ;
                             break;
                     }
                     user = new User(message.get(Message.NAME), new Group(message.get(Message.GROUP_PK)));
@@ -170,9 +180,8 @@ public class Endpoint {
                     Contents contents = MessageParser.getContentsbyMessage(message);
                     user.getGroup().addContents(contents);
 
-                    contentsCallback.onContentsUpdate(contents);
+                    handler.sendEmptyMessage(0);
 
-                    // TODO: 17-05-16 floating notification
                     break;
 
                 default:
@@ -185,6 +194,9 @@ public class Endpoint {
         }
     }
 
+    public void setHandeler(Handler handler) {
+        this.handler = handler;
+    }
 
     public void sendMessage(Message message) throws IOException, EncodeException {
         if (session == null) {

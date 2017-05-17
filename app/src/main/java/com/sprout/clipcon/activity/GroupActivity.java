@@ -12,10 +12,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -25,6 +23,7 @@ import com.sprout.clipcon.fragment.InfoFragment;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
 import com.sprout.clipcon.service.MyService;
+import com.sprout.clipcon.service.NotificationService;
 
 
 /**
@@ -45,8 +44,11 @@ public class GroupActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent(getApplicationContext(), MyService.class);
-        stopService(intent);
+        Intent clipIntent = new Intent(getApplicationContext(), MyService.class);
+        stopService(clipIntent);
+
+        Intent notiIntent = new Intent(getApplicationContext(), NotificationService.class);
+        stopService(notiIntent);
     }
 
     // create menu in Toolbar
@@ -94,8 +96,11 @@ public class GroupActivity extends AppCompatActivity {
 
     // start MyService.class to float always on Top Button when clipboard changed
     public void checkStart() {
-        Intent intent = new Intent(getApplicationContext(), MyService.class);
-        startService(intent);
+        Intent clipIntent = new Intent(getApplicationContext(), MyService.class);
+        startService(clipIntent);
+
+        Intent notiIntent = new Intent(getApplicationContext(), NotificationService.class);
+        startService(notiIntent);
 
 //        Toast toast = Toast.makeText(getApplicationContext(), "Start Clipboard Check", Toast.LENGTH_SHORT);
 //        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
@@ -142,7 +147,7 @@ public class GroupActivity extends AppCompatActivity {
 
         private final int TAB_COUNT = 2;
         private final int INFO = 0;
-        private final int HISTORY= 1;
+        private final int HISTORY = 1;
 
         public MainPagerAdapter(FragmentManager fm) {
             super(fm);

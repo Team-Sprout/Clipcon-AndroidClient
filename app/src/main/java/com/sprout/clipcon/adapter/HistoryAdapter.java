@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Contents;
+import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.EndpointInBackGround;
 
 import java.util.ArrayList;
 
@@ -73,11 +76,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             public void onClick(View v) {
                 Toast.makeText(context, position + "번째가 클릭됐음", Toast.LENGTH_SHORT).show();
 
-                if(contentsList.get(position).getContentsType().equals(Contents.TYPE_STRING)) {
-                    String copiedString = contentsList.get(position).getContentsValue();
+                Contents contents = contentsList.get(position);
+                if(contents.getContentsType().equals(Contents.TYPE_IMAGE)) {
+                    Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
+                    String copiedString = contents.getContentsValue();
                     ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("text", copiedString);
                     cm.setPrimaryClip(clip);
+                    new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                 }
             }
         });

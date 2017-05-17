@@ -5,16 +5,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.adapter.HistoryAdapter;
-import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Contents;
-import com.sprout.clipcon.model.Member;
 import com.sprout.clipcon.server.Endpoint;
 
 import java.util.ArrayList;
