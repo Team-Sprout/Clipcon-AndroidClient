@@ -37,6 +37,6 @@ dependencies {
     compile files('libs/tyrus-standalone-client-1.13.jar')
     //compile project(':json-20160810')
 
-    compile 'org.json:json:20160810'
+//    compile 'org.json:json:20160810'
 
 }

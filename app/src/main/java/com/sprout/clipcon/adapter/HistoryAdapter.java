@@ -50,10 +50,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         switch (contents.getContentsType()) {
             case Contents.TYPE_IMAGE:
                 Bitmap tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
-                holder.description.setText("image");
-
+                holder.description.setText("image\n");
+                holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 holder.thumbnail.setImageBitmap(tmpBitmap);
-//                holder.thumbnail.setImageResource(tmpBitmap);
                 holder.size.setText(Long.toString(contents.getContentsSize()));
                 // TODO: 2017. 5. 16. should use glide
                 break;
