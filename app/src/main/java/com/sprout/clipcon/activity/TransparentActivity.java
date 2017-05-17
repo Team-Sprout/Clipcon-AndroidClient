@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -16,11 +15,7 @@ import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -79,7 +74,7 @@ public class TransparentActivity extends Activity {
         System.out.println("투명액티비티 종료");
     }
 
-    private void bitmapToImage() {
+    /*private void bitmapToImage() {
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
         String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
 
@@ -87,8 +82,6 @@ public class TransparentActivity extends Activity {
         OutputStream out;
         try {
             Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri); // 비트맵 객체 보유
-
-            bitmapToByteArray(bm);
 
             newFile.createNewFile();
             out = new FileOutputStream(newFile);
@@ -100,7 +93,7 @@ public class TransparentActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private Bitmap getBitmapByUri(Uri uri) {
         try {
@@ -111,13 +104,6 @@ public class TransparentActivity extends Activity {
         return null;
     }
 
-    // move to ContentsDownload
-    public byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
-    }
 
     private void getPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -139,7 +125,7 @@ public class TransparentActivity extends Activity {
                 // result of the request.
             }
         } else {
-            bitmapToImage();
+            //bitmapToImage();
         }
     }
 
@@ -148,4 +134,6 @@ public class TransparentActivity extends Activity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         return dateFormat.format(date);
     }
+
 }
+
