@@ -73,7 +73,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             public void onClick(View v) {
                 Toast.makeText(context, position + "번째가 클릭됐음", Toast.LENGTH_SHORT).show();
 
-                if(contentsList.get(position).getContentsType() == Contents.TYPE_STRING) {
+                if(contentsList.get(position).getContentsType().equals(Contents.TYPE_STRING)) {
                     String copiedString = contentsList.get(position).getContentsValue();
                     ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("text", copiedString);
