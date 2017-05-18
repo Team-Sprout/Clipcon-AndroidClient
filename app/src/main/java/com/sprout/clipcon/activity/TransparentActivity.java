@@ -52,11 +52,11 @@ public class TransparentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transparent_activity);
 
-        System.out.println("투명액티비티 시작");
         String action = getIntent().getAction();
 
         if (Intent.ACTION_SEND.equals(action)) {
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+
             getPermission();
 
             new EndpointInBackGround() // TODO: 17-05-16 change name
@@ -69,11 +69,10 @@ public class TransparentActivity extends Activity {
         }
 
         finish();
-        System.out.println("투명액티비티 종료");
     }
 
 //    private void bitmapToImage() {
-//        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/";
+//        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
 //        String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
 //
 //        File newFile = new File(filePath, fileName);

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.activity.GroupActivity;
@@ -52,10 +51,10 @@ public class NotificationService extends Service {
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
             notifi = new Notification.Builder(getApplicationContext())
-                    .setContentTitle("Content Title")
-                    .setContentText("Content Text")
+                    .setContentTitle("New")
+                    .setContentText("History data is updated")
                     .setSmallIcon(R.drawable.logo)
-                    .setTicker("알림!!!")
+                    .setTicker("Clipcon Alert !!!")
                     .setContentIntent(pendingIntent)
                     .build();
 
@@ -70,9 +69,6 @@ public class NotificationService extends Service {
 
 
             notifi_M.notify( 777 , notifi);
-
-            //토스트 띄우기
-            Toast.makeText(getApplicationContext(), "뜸?", Toast.LENGTH_LONG).show();
         }
     };
 }

@@ -29,4 +29,8 @@
     <string name="groupKey">Group Key</string>
     <string name="member">Member List</string>
 
+    <!--HistoryAdapter-->
+    <string name="stringAlert">텍스트가 클립보드에 복사되었습니다.</string>
+    <string name="imageAlert">이미지가 갤러리의 Clipcon 폴더에 저장되었습니다.</string>
+
 </resources>

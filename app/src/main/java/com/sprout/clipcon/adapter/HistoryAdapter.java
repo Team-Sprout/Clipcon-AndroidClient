@@ -90,8 +90,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, position + "번째가 클릭됐음", Toast.LENGTH_SHORT).show();
-
                 Contents contents = contentsList.get(position);
 
                 if (contents.getContentsType().equals(Contents.TYPE_STRING)) {
@@ -99,12 +97,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                     ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("text", copiedString);
                     cm.setPrimaryClip(clip);
+                    Toast.makeText(context, R.string.stringAlert, Toast.LENGTH_SHORT).show();
                 } else if (contents.getContentsType().equals(Contents.TYPE_IMAGE)) {
                     Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
 
 
                     new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
-
+                    Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
                     // imageToGallery(tmpBitmap);
                 }
             }
