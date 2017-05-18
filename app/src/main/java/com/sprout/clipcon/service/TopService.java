@@ -126,16 +126,11 @@ public class TopService extends Service {
         } else if (cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
             System.out.println("Image");
 
-            //// TODO: 2017. 5. 5. check again whether we can use Uri or not
             ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
             uri = item.getUri();
             System.out.println(uri);
 
             Toast.makeText(this, "Uri " + uri, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public static String getTextData() {
-        return textData;
     }
 }

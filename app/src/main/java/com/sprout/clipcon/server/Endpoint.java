@@ -93,7 +93,7 @@ public class Endpoint {
     // method name recommendation: callBackToFragment()
     public interface ParticipantCallback {
         // method name onServerResponse()
-        void onParticipantStatus(String newMemeber); // TODO: 17-05-11 may change String to JSONObject
+        void onParticipantStatus(String newMemeber);
     }
     public void setParticipantCallback(ParticipantCallback callback) {
         participantCallback = callback;
@@ -164,7 +164,6 @@ public class Endpoint {
                 case Message.NOTI_ADD_PARTICIPANT:
                     participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME));
                     Log.d("delf", "[CLIENT] \"" + message.get(Message.PARTICIPANT_NAME) + "\" is join in ths group");
-                    // TODO: 17-05-10 pass message object to Fragment or Activity
                     break;
 
                 case Message.NOTI_EXIT_PARTICIPANT:

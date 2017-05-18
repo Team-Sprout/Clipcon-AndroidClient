@@ -101,7 +101,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 // TODO: 17-05-11 add callback(it's may not needed, but natural logic)
                 Log.d("delf", "[CLIENT] send exit request to server");
                 sendMessage(
-                        new Message().setType(Message.REQUEST_EXIT_GROUP) // TODO: 17-05-11 maybe needed user's name
+                        new Message().setType(Message.REQUEST_EXIT_GROUP)
                 );
                 break;
             case "test":
