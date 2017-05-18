@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
-import com.sprout.clipcon.activity.GroupActivity;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Group;
 import com.sprout.clipcon.model.Message;
@@ -94,7 +93,7 @@ public class Endpoint {
     // method name recommendation: callBackToFragment()
     public interface ParticipantCallback {
         // method name onServerResponse()
-        void onParticipantStatus(String newMemeber);
+        void onParticipantStatus(String newMember);
     }
     public void setParticipantCallback(ParticipantCallback callback) {
         participantCallback = callback;
@@ -184,9 +183,7 @@ public class Endpoint {
                     if(!message.get("uploadUserName").equals(user.getName())) {
                         handler.sendEmptyMessage(0);
                     }
-
                     break;
-
                 default:
                     Log.d("delf", "[CLIENT] unknown message");
                     System.out.println("default");

@@ -34,7 +34,7 @@ import java.util.Iterator;
  */
 
 public class InfoFragment extends Fragment {
-
+    
     private RecyclerView recyclerView;
     private MemberAdapter memberAdapter;
 
@@ -135,12 +135,12 @@ public class InfoFragment extends Fragment {
     private void setMemberCallback() {
         Endpoint.ParticipantCallback participantResult = new Endpoint.ParticipantCallback() {
             @Override
-            public void onParticipantStatus(final String newName) {
+            public void onParticipantStatus(final String newMember) {
                 System.out.println("Member List Changed");
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        updateMember(newName);
+                        updateMember(newMember);
                     }
                 });
             }

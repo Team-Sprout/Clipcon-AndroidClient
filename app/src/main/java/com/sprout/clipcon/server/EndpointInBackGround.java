@@ -141,5 +141,6 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
+        Log.d("delf", "[SYSTEM] end AsyncTask.");
     }
 }

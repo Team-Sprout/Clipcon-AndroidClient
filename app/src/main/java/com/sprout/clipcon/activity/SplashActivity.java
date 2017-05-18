@@ -13,7 +13,8 @@ import com.sprout.clipcon.R;
  */
 
 public class SplashActivity extends AppCompatActivity {
-public boolean isConnection = false;
+    public boolean isConnection = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,11 +27,14 @@ public boolean isConnection = false;
 
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+               // while (!isConnection) {
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+               // }
             }
-        }, 2000);
+        }, 1000);
+
     }
 
     private void changeMainAvtivity() {
