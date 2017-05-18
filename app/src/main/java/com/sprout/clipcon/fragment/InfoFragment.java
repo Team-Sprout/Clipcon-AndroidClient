@@ -90,7 +90,6 @@ public class InfoFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        //// TODO: 2017. 5. 11. when Create Group, My nickname is not in Member List. Have to Check it
         memberAdapter = new MemberAdapter(getActivity(), membersArrayList);
         recyclerView.setAdapter(memberAdapter);
 
@@ -164,8 +163,6 @@ public class InfoFragment extends Fragment {
 //                    }
 //                }).show();
         // new EndpointInBackGround().execute(Message.DOWNLOAD);
-
-        // TODO: 17-05-11 right here!! event occurred!!
     }
 
     public boolean isContain(String name) {

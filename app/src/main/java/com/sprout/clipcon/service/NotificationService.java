@@ -12,7 +12,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.activity.GroupActivity;
 import com.sprout.clipcon.activity.MainActivity;
+import com.sprout.clipcon.fragment.HistoryFragment;
 import com.sprout.clipcon.server.Endpoint;
 
 public class NotificationService extends Service {
@@ -48,7 +50,7 @@ public class NotificationService extends Service {
     class myServiceHandler extends Handler {
         @Override
         public void handleMessage(android.os.Message msg) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
             notifi = new Notification.Builder(getApplicationContext())

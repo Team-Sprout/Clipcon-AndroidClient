@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                                         response.put(Message.GROUP_NAME, inputGroupKey.toString());
                                         startGroupActivity(response);
                                     } else { // reject
-                                        //// TODO: 2017. 5. 12. have to put Toast Message
                                         MainActivity.this.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {

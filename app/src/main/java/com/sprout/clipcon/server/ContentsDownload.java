@@ -77,7 +77,6 @@ public class ContentsDownload {
                 switch (requestContents.getContentsType()) {
                     case Contents.TYPE_STRING:
                         String stringData = downloadStringData(httpConn.getInputStream());
-                        // TODO: 17-05-13 insert to clipboard
                         Log.d("delf", "[CLIENT] received test data: " + stringData);
                         break;
 

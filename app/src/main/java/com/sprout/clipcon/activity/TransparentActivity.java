@@ -2,22 +2,32 @@ package com.sprout.clipcon.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by Yongwon on 2017. 5. 1..
@@ -74,26 +84,26 @@ public class TransparentActivity extends Activity {
         System.out.println("투명액티비티 종료");
     }
 
-    /*private void bitmapToImage() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
-        String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
-
-        File newFile = new File(filePath, fileName);
-        OutputStream out;
-        try {
-            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri); // 비트맵 객체 보유
-
-            newFile.createNewFile();
-            out = new FileOutputStream(newFile);
-            bm.compress(Bitmap.CompressFormat.PNG, 100, out);
-
-            out.flush();
-            out.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
+//    private void bitmapToImage() {
+//        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/";
+//        String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
+//
+//        File newFile = new File(filePath, fileName);
+//        OutputStream out;
+//        try {
+//            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri); // 비트맵 객체 보유
+//
+//            newFile.createNewFile();
+//            out = new FileOutputStream(newFile);
+//            bm.compress(Bitmap.CompressFormat.PNG, 100, out);
+//
+//            out.flush();
+//            out.close();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private Bitmap getBitmapByUri(Uri uri) {
         try {
@@ -125,15 +135,14 @@ public class TransparentActivity extends Activity {
                 // result of the request.
             }
         } else {
-            //bitmapToImage();
+//            bitmapToImage();
         }
     }
 
-    private String createName(long dateTaken) {
-        Date date = new Date(dateTaken);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        return dateFormat.format(date);
-    }
-
+//    private String createName(long dateTaken) {
+//        Date date = new Date(dateTaken);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+//        return dateFormat.format(date);
+//    }
 }
 
