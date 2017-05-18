@@ -101,6 +101,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                     cm.setPrimaryClip(clip);
                 } else if (contents.getContentsType().equals(Contents.TYPE_IMAGE)) {
                     Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
+
+
                     new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
 
                     // imageToGallery(tmpBitmap);

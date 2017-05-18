@@ -112,7 +112,8 @@ public class GroupActivity extends AppCompatActivity {
     private void initLayout() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.group_toolbar);
-        toolbar.setTitle(R.string.app_name);
+        toolbar.setTitle("");
+        toolbar.setLogo(R.drawable.title_logo);
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
