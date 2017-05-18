@@ -179,9 +179,11 @@ public class Endpoint {
                     Contents contents = MessageParser.getContentsbyMessage(message);
                     user.getGroup().addContents(contents);
 
-                    handler.sendEmptyMessage(0);
-
                     contentsCallback.onContentsUpdate(contents);
+                    if(!message.get("uploadUserName").equals(user.getName())) {
+                        handler.sendEmptyMessage(0);
+                    }
+
                     break;
 
                 default:

@@ -31,7 +31,8 @@ import com.sprout.clipcon.service.NotificationService;
  */
 
 public class GroupActivity extends AppCompatActivity {
-
+    private Fragment infoFragment;
+    private Fragment historyFragment;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,7 +161,8 @@ public class GroupActivity extends AppCompatActivity {
                 case INFO:
                     return new InfoFragment();
                 case HISTORY:
-                    return new HistoryFragment();
+                    historyFragment = new HistoryFragment();
+                    return historyFragment;
                 default:
                     return null;
             }

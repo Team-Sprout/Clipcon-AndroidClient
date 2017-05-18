@@ -55,20 +55,22 @@ public class UploadData {
 
     public void uploadImageData(Bitmap bitmapImage) {
         try {
+            Log.d("delf", "[SYSTEM] start uploadImageData()");
             MultipartUtility multipart = new MultipartUtility(SERVER_URL + SERVER_SERVLET, charset);
             setCommonParameter(multipart);
 
             multipart.addFormField("createFolder", "FALSE");
             multipart.addImagePart("imageData", bitmapImage);
 
+            Log.d("delf", "[SYSTEM] start generate response");
             List<String> response = multipart.finish();
 
             for (String line : response) {
-                System.out.println(line);
+                Log.d("delf", "[SYSTEM] response line: " + line);
             }
 
         } catch (IOException ex) {
-            System.err.println(ex);
+            Log.e("exception", ex.toString());
         }
     }
 
