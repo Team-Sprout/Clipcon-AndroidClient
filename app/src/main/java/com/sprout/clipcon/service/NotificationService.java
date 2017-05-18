@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.activity.GroupActivity;
-import com.sprout.clipcon.activity.MainActivity;
-import com.sprout.clipcon.fragment.HistoryFragment;
 import com.sprout.clipcon.server.Endpoint;
 
 public class NotificationService extends Service {

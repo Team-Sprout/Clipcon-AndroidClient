@@ -1,6 +1,7 @@
 package com.sprout.clipcon.server;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -124,18 +125,26 @@ public class MultipartUtility {
     * @throws IOException
     */
    public List<String> finish() throws IOException {
+
+      Log.d("delf", "[SYSTEM] start finish()");
       List<String> response = new ArrayList<String>();
 
+      Log.d("delf", "[SYSTEM] writer.append(LINE_FEED).flush();");
       writer.append(LINE_FEED).flush();
+      Log.d("delf", "[SYSTEM] writer.append(\"--\" + boundary + \"--\").append(LINE_FEED);");
       writer.append("--" + boundary + "--").append(LINE_FEED);
+      Log.d("delf", "[SYSTEM] writer.close();");
       writer.close();
 
       // checks server's status code first
+      Log.d("delf", "[SYSTEM] int status = httpConn.getResponseCode();");
       int status = httpConn.getResponseCode();
+      Log.d("delf", "[SYSTEM] response status to client: " + status);
       if (status == HttpURLConnection.HTTP_OK) {
          BufferedReader reader = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
          String line = null;
          while ((line = reader.readLine()) != null) {
+            Log.d("delf", "[SYSTEM] response line: " + line);
             response.add(line);
          }
          reader.close();
@@ -148,6 +157,42 @@ public class MultipartUtility {
 
       return response;
    }
+
+   public List<String> delfFinish() throws IOException {
+
+      Log.d("delf", "[SYSTEM] start finish()");
+      List<String> response = new ArrayList<String>();
+
+      Log.d("delf", "[SYSTEM] writer.append(LINE_FEED).flush();");
+      writer.append(LINE_FEED).flush();
+      Log.d("delf", "[SYSTEM] writer.append(\"--\" + boundary + \"--\").append(LINE_FEED);");
+      writer.append("--" + boundary + "--").append(LINE_FEED);
+      Log.d("delf", "[SYSTEM] writer.close();");
+      writer.close();
+
+      // checks server's status code first
+      Log.d("delf", "[SYSTEM] int status = httpConn.getResponseCode();");
+      int status = httpConn.getResponseCode();
+      Log.d("delf", "[SYSTEM] response status to client: " + status);
+      if (status == HttpURLConnection.HTTP_OK) {
+         BufferedReader reader = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
+         String line = null;
+         while ((line = reader.readLine()) != null) {
+            Log.d("delf", "[SYSTEM] response line: " + line);
+            response.add(line);
+         }
+         reader.close();
+         httpConn.disconnect();
+      } else {
+         throw new IOException("Server returned non-OK status: " + status);
+      }
+
+      System.out.println("======================SERVER REPLIED======================\n");
+
+      return response;
+   }
+
+
 
    public void addImagePart(String fieldName, Bitmap bitmap) throws IOException {
       String imageName = "capturedImage";
@@ -163,10 +208,14 @@ public class MultipartUtility {
       bitmap.compress( Bitmap.CompressFormat.PNG, 100, stream) ;
       byte[] byteArray = stream.toByteArray() ;
 
+      Log.d("delf", "[SYSTEM] before write");
       outputStream.write(byteArray);
       outputStream.flush();
+      Log.d("delf", "[SYSTEM] after write");
+
 
       writer.append(LINE_FEED);
       writer.flush();
+      Log.d("delf", "[SYSTEM] end of addImagePart()");
    }
 }

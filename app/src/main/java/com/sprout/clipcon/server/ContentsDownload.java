@@ -133,7 +133,6 @@ public class ContentsDownload {
     }
 
     // test code
-    // test code
     private File downloadImageData(InputStream inputStream) throws IOException {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png";
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";

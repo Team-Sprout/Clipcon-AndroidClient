@@ -2,32 +2,20 @@ package com.sprout.clipcon.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
 
 /**
  * Created by Yongwon on 2017. 5. 1..
