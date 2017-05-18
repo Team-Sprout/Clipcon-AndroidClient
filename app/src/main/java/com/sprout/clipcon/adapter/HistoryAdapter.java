@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
 import java.io.File;
@@ -48,6 +49,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     public HistoryAdapter(Context context, ArrayList<Contents> contentsList) {
         this.context = context;
         this.contentsList = contentsList;
+        Endpoint.getDownloader().setContext(context);
     }
 
     @Override
@@ -101,8 +103,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                     Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
                     new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
 
-//                    MediaStore.Images.Media.insertImage(context.getContentResolver(), tmpBitmap, "title", "description");
-                    imageToGallery(tmpBitmap);
+                    // imageToGallery(tmpBitmap);
                 }
             }
         });
@@ -136,6 +137,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     private Bitmap getBitmapByBase64String(String imageString) {
         byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    private String createName(long dateTaken) {
+        Date date = new Date(dateTaken);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        return dateFormat.format(date);
     }
 
     private void imageToGallery(Bitmap testBitmap) {
@@ -172,11 +179,5 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         ContentResolver cr = context.getContentResolver();
         cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-    }
-
-    private String createName(long dateTaken) {
-        Date date = new Date(dateTaken);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        return dateFormat.format(date);
     }
 }

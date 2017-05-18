@@ -45,11 +45,7 @@
 
         <service
             android:name=".service.NotificationService"
-<<<<<<< Updated upstream
             android:enabled="true"/>
-=======
-            android:enabled="true" />
->>>>>>> Stashed changes
     </application>
 
 </manifest>
