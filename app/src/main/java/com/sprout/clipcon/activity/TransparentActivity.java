@@ -10,11 +10,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -25,6 +27,11 @@ public class TransparentActivity extends Activity {
 
     private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private Uri uri;
+    private static Bitmap bitmap;
+
+    public static Bitmap getBitmap() {
+        return bitmap;
+    }
 
     //ask user about permission to save image into basic gallery apps.
     @Override
@@ -53,14 +60,28 @@ public class TransparentActivity extends Activity {
         setContentView(R.layout.transparent_activity);
 
         String action = getIntent().getAction();
+        String type = getIntent().getType();
 
         if (Intent.ACTION_SEND.equals(action)) {
+            Toast.makeText(getApplicationContext(), "이미지 전송 완료", Toast.LENGTH_SHORT).show();
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+
+            if(type.startsWith("image/")){
+                System.out.println("이미지임");
+
+            }else{
+                System.out.println("이미지아님");
+                File file = new File(uri.getPath());
+                System.out.println("Checker"+file);
+
+            }
+
+            bitmap = getBitmapByUri(uri);
 
             getPermission();
 
             new EndpointInBackGround() // TODO: 17-05-16 change name
-                    .setSendBitmapImage(getBitmapByUri(uri))
+                    .setSendBitmapImage(bitmap)
                     .execute(Message.UPLOAD, "image");
 
             /*ClipData clip = ClipData.newRawUri("test", uri);

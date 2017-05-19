@@ -78,6 +78,7 @@ public class TopService extends Service {
     public void onClickImageBtn(View v) {
         Log.d("delf", "[SYSTEM] floating button clicked.");
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        Toast.makeText(getApplicationContext(), "텍스트 전송 완료", Toast.LENGTH_SHORT).show();
         /*MyClipboard clipboardManager = MyClipboard.getInstance();
 
         if(clipboardManager.isEmpty()) {
