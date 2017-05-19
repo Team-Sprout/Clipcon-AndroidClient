@@ -23,7 +23,7 @@ import com.sprout.clipcon.fragment.HistoryFragment;
 import com.sprout.clipcon.fragment.InfoFragment;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
-import com.sprout.clipcon.service.MyService;
+import com.sprout.clipcon.service.ClipboardService;
 import com.sprout.clipcon.service.NotificationService;
 
 
@@ -47,7 +47,7 @@ public class GroupActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d("delf", "GroupActivity is destroyed.");
         super.onDestroy();
-        Intent clipIntent = new Intent(getApplicationContext(), MyService.class);
+        Intent clipIntent = new Intent(getApplicationContext(), ClipboardService.class);
         stopService(clipIntent);
 
         Intent notiIntent = new Intent(getApplicationContext(), NotificationService.class);
@@ -88,7 +88,7 @@ public class GroupActivity extends AppCompatActivity {
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         // TODO: 2017. 4. 19. add delete group contents action
                         new EndpointInBackGround().execute(Message.REQUEST_EXIT_GROUP);
-                        Intent intent = new Intent(getApplicationContext(), MyService.class);
+                        Intent intent = new Intent(getApplicationContext(), ClipboardService.class);
                         stopService(intent);
                         GroupActivity.super.onBackPressed();
                     }
@@ -97,9 +97,9 @@ public class GroupActivity extends AppCompatActivity {
     }
 
 
-    // start MyService.class to float always on Top Button when clipboard changed
+    // start ClipboardService.class to float always on Top Button when clipboard changed
     public void checkStart() {
-        Intent clipIntent = new Intent(getApplicationContext(), MyService.class);
+        Intent clipIntent = new Intent(getApplicationContext(), ClipboardService.class);
         startService(clipIntent);
 
         Intent notiIntent = new Intent(getApplicationContext(), NotificationService.class);
@@ -114,7 +114,8 @@ public class GroupActivity extends AppCompatActivity {
     private void initLayout() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.group_toolbar);
-        toolbar.setTitle(R.string.app_name);
+        toolbar.setTitle("");
+        toolbar.setLogo(R.drawable.title_logo);
         setSupportActionBar(toolbar);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);

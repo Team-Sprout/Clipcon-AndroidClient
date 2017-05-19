@@ -192,8 +192,6 @@ public class MultipartUtility {
       return response;
    }
 
-
-
    public void addImagePart(String fieldName, Bitmap bitmap) throws IOException {
       String imageName = "capturedImage";
 

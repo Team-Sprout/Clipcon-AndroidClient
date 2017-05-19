@@ -182,6 +182,7 @@ public class Endpoint {
                     contentsCallback.onContentsUpdate(contents);
                     if(!message.get("uploadUserName").equals(user.getName())) {
                         handler.sendEmptyMessage(0);
+                        handler.notify();
                     }
                     break;
                 default:
@@ -194,7 +195,7 @@ public class Endpoint {
         }
     }
 
-    public void setHandeler(Handler handler) {
+    public void setHandler(Handler handler) {
         this.handler = handler;
     }
 
