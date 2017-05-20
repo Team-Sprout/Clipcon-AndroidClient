@@ -14,7 +14,6 @@ import com.sprout.clipcon.model.History;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -46,6 +45,7 @@ public class ContentsDownload {
     private Contents requestContents; // Contents Info to download
 
     private Context context;
+    private final String appDirectoryName = "Clipcon";
     // private String downloadDataPK; // Contents' Primary Key to download
 
     /**
@@ -100,7 +100,9 @@ public class ContentsDownload {
                         break;
 
                     case Contents.TYPE_FILE:
-                        // downloadFileData();
+                        Log.d("delf", "[CLIENT] received file");
+                        String fileOriginName = requestContents.getContentsValue();
+                        downloadFileData(httpConn.getInputStream(), fileOriginName);
                         break;
 
                     default:
@@ -124,8 +126,7 @@ public class ContentsDownload {
     private String downloadStringData(InputStream inputStream) {
         BufferedReader bufferedReader;
         StringBuilder stringBuilder = null;
-
-        try {
+         try {
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream, charset));
 
             stringBuilder = new StringBuilder();
@@ -172,15 +173,29 @@ public class ContentsDownload {
         return null;
     }
 
-    private File downloadFileData(InputStream inputStream, String fileName) throws FileNotFoundException {
-        return null;
-    }
+    private File downloadFileData(InputStream inputStream, String fileName) throws IOException {
 
-    public byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
+        File file = new File(path,fileName);
+        OutputStream output = new FileOutputStream(file);
+        try {
+            try {
+                byte[] buffer = new byte[4 * 1024]; // or other buffer size
+                int read;
+
+                while ((read = inputStream.read(buffer)) != -1) {
+                    output.write(buffer, 0, read);
+                }
+                output.flush();
+            } finally {
+                output.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // handle exception, define IOException and others
+        } finally {
+            inputStream.close();
+        }
+        return file;
     }
 
     private String generateRequestParameter(String downloadDataPK) {
@@ -191,7 +206,7 @@ public class ContentsDownload {
 
         OutputStream fOut = null;
         String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
-        final String appDirectoryName = "Clipcon";
+
         final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appDirectoryName);
 
         imageRoot.mkdirs();

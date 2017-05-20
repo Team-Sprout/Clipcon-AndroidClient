@@ -2,6 +2,7 @@ package com.sprout.clipcon.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
@@ -66,23 +69,33 @@ public class TransparentActivity extends Activity {
             Toast.makeText(getApplicationContext(), "이미지 전송 완료", Toast.LENGTH_SHORT).show();
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
-            if(type.startsWith("image/")){
+            Log.d("delf", "[DEBUG] shared date type is " + type);
+            ContentResolver cR = getContentResolver();
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String mimeType = mime.getExtensionFromMimeType(cR.getType(uri)); // get "file name extension"
+            Log.d("delf", "[DEBUG] shared date mine type is " + mimeType);
+
+            if (type.startsWith("image/")) {
                 System.out.println("이미지임");
 
-            }else{
+                bitmap = getBitmapByUri(uri);
+                getPermission();
+
+                new EndpointInBackGround() // TODO: 17-05-16 change name
+                        .setSendBitmapImage(bitmap)
+                        .execute(Message.UPLOAD, "image");
+
+            } else {
                 System.out.println("이미지아님");
                 File file = new File(uri.getPath());
-                System.out.println("Checker"+file);
-
+                System.out.println("Checker" + file);
+                Log.d("delf", "[DEBUG] uri.getPath() = " + uri.getPath());
+                new EndpointInBackGround()
+                        .setFilePath(uri.getPath())
+                        .execute(Message.UPLOAD, "file");
             }
 
-            bitmap = getBitmapByUri(uri);
 
-            getPermission();
-
-            new EndpointInBackGround() // TODO: 17-05-16 change name
-                    .setSendBitmapImage(bitmap)
-                    .execute(Message.UPLOAD, "image");
 
             /*ClipData clip = ClipData.newRawUri("test", uri);
             ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);

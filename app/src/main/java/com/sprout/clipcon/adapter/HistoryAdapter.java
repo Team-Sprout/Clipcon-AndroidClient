@@ -78,7 +78,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             case Contents.TYPE_FILE:
                 holder.description.setText(contents.getContentsValue());
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
-                holder.size.setText((int) contents.getContentsSize());
+                holder.size.setText(Long.toString(contents.getContentsSize()));
                 break;
             case Contents.TYPE_STRING:
                 holder.description.setText(contents.getContentsValue());
@@ -91,7 +91,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             @Override
             public void onClick(View v) {
                 Contents contents = contentsList.get(position);
-
+                Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
                 if (contents.getContentsType().equals(Contents.TYPE_STRING)) {
                     String copiedString = contents.getContentsValue();
                     ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -100,11 +100,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                     Toast.makeText(context, R.string.stringAlert, Toast.LENGTH_SHORT).show();
                 } else if (contents.getContentsType().equals(Contents.TYPE_IMAGE)) {
                     Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
-
-
                     new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                     Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
                     // imageToGallery(tmpBitmap);
+                } else if (contents.getContentsType().equals(Contents.TYPE_IMAGE)
+                        || contents.getContentsType().equals(Contents.TYPE_FILE)) {
+                    new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                 }
             }
         });

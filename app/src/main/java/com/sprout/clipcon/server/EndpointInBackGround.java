@@ -24,6 +24,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
     private Bitmap sendBitmapImage;
     private String sendText;
+    private String filePath;
 
     public EndpointInBackGround setSendBitmapImage(Bitmap sendBitmapImage) {
         this.sendBitmapImage = sendBitmapImage;
@@ -32,6 +33,11 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
     public EndpointInBackGround setSendText(String sendText) {
         this.sendText = sendText;
+        return this;
+    }
+
+    public EndpointInBackGround setFilePath(String filePath) {
+        this.filePath = filePath;
         return this;
     }
 
@@ -75,14 +81,15 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 Log.d("delf", "[CLIENT] send upload request to server");
                 switch (msg[1]) {
                     case "text":
-                        Log.d("delf", "[SYSTEM] in upload() upload the string: " + sendText);
+                        Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ text upload /" + sendText);
                         Endpoint.getUploader().upload(sendText);
                         break;
                     case "image":
-                        Log.d("delf", "[SYSTEM] in upload() upload the image");
+                        Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ image upload.");
                         Endpoint.getUploader().upload(sendBitmapImage);
                         break;
                     case "file":
+                        Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ file upload / " + filePath);
                         break;
                 }
                 break;
