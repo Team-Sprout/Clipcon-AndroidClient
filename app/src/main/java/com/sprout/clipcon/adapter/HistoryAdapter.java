@@ -91,8 +91,29 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             @Override
             public void onClick(View v) {
                 Contents contents = contentsList.get(position);
+
                 Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
-                if (contents.getContentsType().equals(Contents.TYPE_STRING)) {
+                switch (contents.getContentsType()) {
+
+                    case Contents.TYPE_STRING:
+                        String copiedString = contents.getContentsValue();
+                        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("text", copiedString);
+                        cm.setPrimaryClip(clip);
+                        Toast.makeText(context, R.string.stringAlert, Toast.LENGTH_SHORT).show();
+
+                        break;
+                    case Contents.TYPE_IMAGE:
+                        new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
+                        Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
+
+                        break;
+                    case Contents.TYPE_FILE:
+                        new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
+                        break;
+                }
+
+                /*if (contents.getContentsType().equals(Contents.TYPE_STRING)) {
                     String copiedString = contents.getContentsValue();
                     ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("text", copiedString);
@@ -106,7 +127,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 } else if (contents.getContentsType().equals(Contents.TYPE_IMAGE)
                         || contents.getContentsType().equals(Contents.TYPE_FILE)) {
                     new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
-                }
+                }*/
             }
         });
 

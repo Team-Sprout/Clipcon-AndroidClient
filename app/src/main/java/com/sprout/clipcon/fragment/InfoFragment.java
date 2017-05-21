@@ -101,10 +101,9 @@ public class InfoFragment extends Fragment {
         Log.d("delf", "[CLIENT] receive name is " + name);
 
         if (isContain(name)) {
-            Log.d("delf", "nothing"); membersArrayList.remove(getIndex(name));
+            membersArrayList.remove(getIndex(name));
 
         } else {
-            Log.d("delf", "something");
             membersArrayList.add(new Member(name));
         }
         memberAdapter = new MemberAdapter(getActivity(), membersArrayList);

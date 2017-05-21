@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,7 +20,6 @@ import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -73,7 +73,7 @@ public class TransparentActivity extends Activity {
             ContentResolver cR = getContentResolver();
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             String mimeType = mime.getExtensionFromMimeType(cR.getType(uri)); // get "file name extension"
-            Log.d("delf", "[DEBUG] shared date mine type is " + mimeType);
+            Log.d("delf", "[DEBUG] shared date mime type is " + mimeType);
 
             if (type.startsWith("image/")) {
                 System.out.println("이미지임");
@@ -87,11 +87,12 @@ public class TransparentActivity extends Activity {
 
             } else {
                 System.out.println("이미지아님");
-                File file = new File(uri.getPath());
-                System.out.println("Checker" + file);
+
                 Log.d("delf", "[DEBUG] uri.getPath() = " + uri.getPath());
+
+                String filePath = getPathFromUri(uri);
                 new EndpointInBackGround()
-                        .setFilePath(uri.getPath())
+                        .setFilePath(filePath)
                         .execute(Message.UPLOAD, "file");
             }
 
@@ -103,6 +104,15 @@ public class TransparentActivity extends Activity {
         }
 
         finish();
+    }
+
+    public String getPathFromUri(Uri uri){
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null );
+        cursor.moveToNext();
+        String path = cursor.getString( cursor.getColumnIndex( "_data" ) );
+        cursor.close();
+
+        return path;
     }
 
 //    private void bitmapToImage() {

@@ -103,6 +103,7 @@ public class ContentsDownload {
                         Log.d("delf", "[CLIENT] received file");
                         String fileOriginName = requestContents.getContentsValue();
                         downloadFileData(httpConn.getInputStream(), fileOriginName);
+                        Log.d("delf", "[CLIENT] complete downloading file.");
                         break;
 
                     default:
@@ -126,7 +127,7 @@ public class ContentsDownload {
     private String downloadStringData(InputStream inputStream) {
         BufferedReader bufferedReader;
         StringBuilder stringBuilder = null;
-         try {
+        try {
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream, charset));
 
             stringBuilder = new StringBuilder();
@@ -154,7 +155,6 @@ public class ContentsDownload {
         // in -> bit -> file
         BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
         Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
-
         imageToGallery(bmp);
 
         /*String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png";
@@ -176,8 +176,27 @@ public class ContentsDownload {
     private File downloadFileData(InputStream inputStream, String fileName) throws IOException {
 
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
-        File file = new File(path,fileName);
-        OutputStream output = new FileOutputStream(file);
+        File file = new File(path, fileName);
+        Log.d("delf", "[SYSTEM] download path: " + path);
+        try {
+            OutputStream outStream = new FileOutputStream(file);
+            // 읽어들일 버퍼크기를 메모리에 생성
+            byte[] buf = new byte[1024];
+            int len = 0;
+            // 끝까지 읽어들이면서 File 객체에 내용들을 쓴다
+            while ((len = inputStream.read(buf)) > 0) {
+                outStream.write(buf, 0, len);
+            }
+            // Stream 객체를 모두 닫는다.
+            outStream.close();
+            inputStream.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*OutputStream output = new FileOutputStream(file);
         try {
             try {
                 byte[] buffer = new byte[4 * 1024]; // or other buffer size
@@ -194,7 +213,7 @@ public class ContentsDownload {
             e.printStackTrace(); // handle exception, define IOException and others
         } finally {
             inputStream.close();
-        }
+        }*/
         return file;
     }
 
@@ -203,7 +222,7 @@ public class ContentsDownload {
     }
 
     private void imageToGallery(Bitmap testBitmap) {
-
+        Log.d("delf", "[SYSTEM] image to gallery");
         OutputStream fOut = null;
         String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
 

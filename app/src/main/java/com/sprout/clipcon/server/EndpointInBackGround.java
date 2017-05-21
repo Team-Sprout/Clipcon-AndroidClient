@@ -8,6 +8,7 @@ import com.sprout.clipcon.model.Message;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -25,6 +26,8 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private Bitmap sendBitmapImage;
     private String sendText;
     private String filePath;
+    private File uploadFile; // test
+
 
     public EndpointInBackGround setSendBitmapImage(Bitmap sendBitmapImage) {
         this.sendBitmapImage = sendBitmapImage;
@@ -38,6 +41,11 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
 
     public EndpointInBackGround setFilePath(String filePath) {
         this.filePath = filePath;
+        return this;
+    }
+
+    public EndpointInBackGround setUploadFile(File uploadFile) {
+        this.uploadFile = uploadFile;
         return this;
     }
 
@@ -90,6 +98,7 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                         break;
                     case "file":
                         Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ file upload / " + filePath);
+                        Endpoint.getUploader().uploadFile(filePath);
                         break;
                 }
                 break;
