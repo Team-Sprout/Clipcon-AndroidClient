@@ -35,9 +35,6 @@ public class HistoryFragment extends Fragment {
 
         System.out.println("히스토리 화면으로 진입");
 
-//        historyArrayList.add(new History("user1", "this is clipboard contents"));
-//        historyArrayList.add(new History("user2", "this is clipboard contents"));
-
         setContentsCallback();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

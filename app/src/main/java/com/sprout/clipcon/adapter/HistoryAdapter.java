@@ -76,7 +76,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 holder.size.setText(Long.toString(contents.getContentsSize()));
                 break;
             case Contents.TYPE_FILE:
-                holder.description.setText(contents.getContentsValue());
+                holder.description.setText(contents.getContentsValue()+"\n");
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
                 holder.size.setText(Long.toString(contents.getContentsSize()));
                 break;
@@ -110,27 +110,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                         break;
                     case Contents.TYPE_FILE:
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
+                        Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
                         break;
                 }
-
-                /*if (contents.getContentsType().equals(Contents.TYPE_STRING)) {
-                    String copiedString = contents.getContentsValue();
-                    ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("text", copiedString);
-                    cm.setPrimaryClip(clip);
-                    Toast.makeText(context, R.string.stringAlert, Toast.LENGTH_SHORT).show();
-                } else if (contents.getContentsType().equals(Contents.TYPE_IMAGE)) {
-                    Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
-                    new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
-                    Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
-                    // imageToGallery(tmpBitmap);
-                } else if (contents.getContentsType().equals(Contents.TYPE_IMAGE)
-                        || contents.getContentsType().equals(Contents.TYPE_FILE)) {
-                    new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
-                }*/
             }
         });
-
     }
 
     @Override

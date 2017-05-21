@@ -66,7 +66,7 @@ public class TransparentActivity extends Activity {
         String type = getIntent().getType();
 
         if (Intent.ACTION_SEND.equals(action)) {
-            Toast.makeText(getApplicationContext(), "이미지 전송 완료", Toast.LENGTH_SHORT).show();
+
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
             Log.d("delf", "[DEBUG] shared date type is " + type);
@@ -76,7 +76,7 @@ public class TransparentActivity extends Activity {
             Log.d("delf", "[DEBUG] shared date mime type is " + mimeType);
 
             if (type.startsWith("image/")) {
-                System.out.println("이미지임");
+                Toast.makeText(getApplicationContext(), R.string.shareImage, Toast.LENGTH_SHORT).show();
 
                 bitmap = getBitmapByUri(uri);
                 getPermission();
@@ -86,7 +86,7 @@ public class TransparentActivity extends Activity {
                         .execute(Message.UPLOAD, "image");
 
             } else {
-                System.out.println("이미지아님");
+                Toast.makeText(getApplicationContext(), R.string.shareFile, Toast.LENGTH_SHORT).show();
 
                 Log.d("delf", "[DEBUG] uri.getPath() = " + uri.getPath());
 
@@ -96,11 +96,6 @@ public class TransparentActivity extends Activity {
                         .execute(Message.UPLOAD, "file");
             }
 
-
-
-            /*ClipData clip = ClipData.newRawUri("test", uri);
-            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setPrimaryClip(clip);*/
         }
 
         finish();

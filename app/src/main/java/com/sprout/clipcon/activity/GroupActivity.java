@@ -87,7 +87,7 @@ public class GroupActivity extends AppCompatActivity {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         // TODO: 2017. 4. 19. add delete group contents action
-                        new EndpointInBackGround().execute(Message.REQUEST_EXIT_GROUP);
+//                        new EndpointInBackGround().execute(Message.REQUEST_EXIT_GROUP);
                         Intent intent = new Intent(getApplicationContext(), ClipboardService.class);
                         stopService(intent);
                         GroupActivity.super.onBackPressed();
