@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.sprout.clipcon.R;
@@ -58,7 +59,6 @@ public class NotificationService extends Service {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
 
             builder = new Notification.Builder(getApplicationContext());
             builder.setSmallIcon(R.drawable.icon_logo);

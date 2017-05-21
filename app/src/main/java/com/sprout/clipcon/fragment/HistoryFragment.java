@@ -41,6 +41,8 @@ public class HistoryFragment extends Fragment {
         setContentsCallback();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_history);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
