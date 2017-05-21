@@ -14,7 +14,6 @@ import com.sprout.clipcon.model.History;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -46,6 +45,7 @@ public class ContentsDownload {
     private Contents requestContents; // Contents Info to download
 
     private Context context;
+    private final String appDirectoryName = "Clipcon";
     // private String downloadDataPK; // Contents' Primary Key to download
 
     /**
@@ -100,7 +100,10 @@ public class ContentsDownload {
                         break;
 
                     case Contents.TYPE_FILE:
-                        // downloadFileData();
+                        Log.d("delf", "[CLIENT] received file");
+                        String fileOriginName = requestContents.getContentsValue();
+                        downloadFileData(httpConn.getInputStream(), fileOriginName);
+                        Log.d("delf", "[CLIENT] complete downloading file.");
                         break;
 
                     default:
@@ -124,7 +127,6 @@ public class ContentsDownload {
     private String downloadStringData(InputStream inputStream) {
         BufferedReader bufferedReader;
         StringBuilder stringBuilder = null;
-
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream, charset));
 
@@ -153,7 +155,6 @@ public class ContentsDownload {
         // in -> bit -> file
         BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
         Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
-
         imageToGallery(bmp);
 
         /*String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png";
@@ -172,15 +173,48 @@ public class ContentsDownload {
         return null;
     }
 
-    private File downloadFileData(InputStream inputStream, String fileName) throws FileNotFoundException {
-        return null;
-    }
+    private File downloadFileData(InputStream inputStream, String fileName) throws IOException {
 
-    public byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
+        File file = new File(path, fileName);
+        Log.d("delf", "[SYSTEM] download path: " + path);
+        try {
+            OutputStream outStream = new FileOutputStream(file);
+            // 읽어들일 버퍼크기를 메모리에 생성
+            byte[] buf = new byte[1024];
+            int len = 0;
+            // 끝까지 읽어들이면서 File 객체에 내용들을 쓴다
+            while ((len = inputStream.read(buf)) > 0) {
+                outStream.write(buf, 0, len);
+            }
+            // Stream 객체를 모두 닫는다.
+            outStream.close();
+            inputStream.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*OutputStream output = new FileOutputStream(file);
+        try {
+            try {
+                byte[] buffer = new byte[4 * 1024]; // or other buffer size
+                int read;
+
+                while ((read = inputStream.read(buffer)) != -1) {
+                    output.write(buffer, 0, read);
+                }
+                output.flush();
+            } finally {
+                output.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // handle exception, define IOException and others
+        } finally {
+            inputStream.close();
+        }*/
+        return file;
     }
 
     private String generateRequestParameter(String downloadDataPK) {
@@ -188,10 +222,10 @@ public class ContentsDownload {
     }
 
     private void imageToGallery(Bitmap testBitmap) {
-
+        Log.d("delf", "[SYSTEM] image to gallery");
         OutputStream fOut = null;
         String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
-        final String appDirectoryName = "Clipcon";
+
         final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appDirectoryName);
 
         imageRoot.mkdirs();

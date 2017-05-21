@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -44,6 +45,7 @@ public class GroupActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Log.d("delf", "GroupActivity is destroyed.");
         super.onDestroy();
         Intent clipIntent = new Intent(getApplicationContext(), ClipboardService.class);
         stopService(clipIntent);
@@ -84,7 +86,7 @@ public class GroupActivity extends AppCompatActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        //// TODO: 2017. 4. 19. add delete group contents action
+                        // TODO: 2017. 4. 19. add delete group contents action
                         new EndpointInBackGround().execute(Message.REQUEST_EXIT_GROUP);
                         Intent intent = new Intent(getApplicationContext(), ClipboardService.class);
                         stopService(intent);

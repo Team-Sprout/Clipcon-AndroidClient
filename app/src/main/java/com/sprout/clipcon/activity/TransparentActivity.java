@@ -2,21 +2,24 @@ package com.sprout.clipcon.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -66,23 +69,34 @@ public class TransparentActivity extends Activity {
             Toast.makeText(getApplicationContext(), "이미지 전송 완료", Toast.LENGTH_SHORT).show();
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
-            if(type.startsWith("image/")){
+            Log.d("delf", "[DEBUG] shared date type is " + type);
+            ContentResolver cR = getContentResolver();
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String mimeType = mime.getExtensionFromMimeType(cR.getType(uri)); // get "file name extension"
+            Log.d("delf", "[DEBUG] shared date mime type is " + mimeType);
+
+            if (type.startsWith("image/")) {
                 System.out.println("이미지임");
 
-            }else{
-                System.out.println("이미지아님");
-                File file = new File(uri.getPath());
-                System.out.println("Checker"+file);
+                bitmap = getBitmapByUri(uri);
+                getPermission();
 
+                new EndpointInBackGround() // TODO: 17-05-16 change name
+                        .setSendBitmapImage(bitmap)
+                        .execute(Message.UPLOAD, "image");
+
+            } else {
+                System.out.println("이미지아님");
+
+                Log.d("delf", "[DEBUG] uri.getPath() = " + uri.getPath());
+
+                String filePath = getPathFromUri(uri);
+                new EndpointInBackGround()
+                        .setFilePath(filePath)
+                        .execute(Message.UPLOAD, "file");
             }
 
-            bitmap = getBitmapByUri(uri);
 
-            getPermission();
-
-            new EndpointInBackGround() // TODO: 17-05-16 change name
-                    .setSendBitmapImage(bitmap)
-                    .execute(Message.UPLOAD, "image");
 
             /*ClipData clip = ClipData.newRawUri("test", uri);
             ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -90,6 +104,15 @@ public class TransparentActivity extends Activity {
         }
 
         finish();
+    }
+
+    public String getPathFromUri(Uri uri){
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null );
+        cursor.moveToNext();
+        String path = cursor.getString( cursor.getColumnIndex( "_data" ) );
+        cursor.close();
+
+        return path;
     }
 
 //    private void bitmapToImage() {
