@@ -12,8 +12,6 @@ import android.util.Log;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.activity.GroupActivity;
-import com.sprout.clipcon.activity.MainActivity;
-import com.sprout.clipcon.activity.TransparentActivity;
 import com.sprout.clipcon.server.Endpoint;
 
 public class NotificationService extends Service {
@@ -22,10 +20,10 @@ public class NotificationService extends Service {
     Endpoint endpoint = Endpoint.getInstance();
 //    Notification notifi;
 
-    NotificationManager nm;
+    NotificationManager notificationManager;
     Notification.Builder builder;
-    Intent push;
-    PendingIntent fullScreenPendingIntent;
+    Intent intent;
+    PendingIntent pendingIntent;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -54,31 +52,26 @@ public class NotificationService extends Service {
     class myServiceHandler extends Handler {
         @Override
         public void handleMessage(android.os.Message msg) {
+            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            intent = new Intent(getApplicationContext(), GroupActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
 
             builder = new Notification.Builder(getApplicationContext());
-            builder.setLargeIcon(TransparentActivity.getBitmap());
             builder.setSmallIcon(R.drawable.icon_logo);
-            builder.setTicker("Test1"); //** 이 부분은 확인 필요
+            builder.setTicker("new Clipcon"); //** 이 부분은 확인 필요
             builder.setWhen(System.currentTimeMillis());
             builder.setContentTitle("Clipcon Alert"); //** 큰 텍스트로 표시
             builder.setContentText("History data is updated"); //** 작은 텍스트로 표시
             builder.setAutoCancel(true);
-            builder.setDefaults(Notification.DEFAULT_SOUND | Notification.FLAG_ONLY_ALERT_ONCE);
             builder.setPriority(Notification.PRIORITY_MAX); //** MAX 나 HIGH로 줘야 가능함
+            builder.setDefaults(Notification.DEFAULT_SOUND | Notification.FLAG_ONLY_ALERT_ONCE);
+            builder.setContentIntent(pendingIntent);
 
-
-            nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            //** Intent와 PendingIntent를 추가해 주는 것으로 헤드업 알림이 가능
-            //** 없을 경우 이전 버전의 Notification과 동일
-            push = new Intent(getApplicationContext(), GroupActivity.class);
-            push.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            push.setClass(getApplicationContext(), GroupActivity.class);
-
-            fullScreenPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, push, PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.setFullScreenIntent(fullScreenPendingIntent, true);
-
-            nm.notify(123456, builder.build());
+            notificationManager.notify(1, builder.build());
 
 //            Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
 //            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
