@@ -181,11 +181,12 @@ public class ContentsDownload {
         try {
             OutputStream outStream = new FileOutputStream(file);
             // 읽어들일 버퍼크기를 메모리에 생성
-            byte[] buf = new byte[1024];
+            byte[] buf = new byte[1024]; // 충돌 시, 이전 숫자로 바꿀 것
             int len = 0;
             // 끝까지 읽어들이면서 File 객체에 내용들을 쓴다
             while ((len = inputStream.read(buf)) > 0) {
                 outStream.write(buf, 0, len);
+                outStream.flush();
             }
             // Stream 객체를 모두 닫는다.
             outStream.close();

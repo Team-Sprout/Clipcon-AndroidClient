@@ -1,6 +1,5 @@
 package com.sprout.clipcon.server;
 
-import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
@@ -31,13 +30,12 @@ import javax.websocket.Session;
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
-
     //private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
     private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
+
     private Session session;
     private static User user;
-    //    private static String userName;
-//    private static String groupKey;
+
     private static Endpoint uniqueEndpoint;
     private static ContentsUpload uniqueUploader;
     private static ContentsDownload uniqueDownloader;
@@ -46,11 +44,6 @@ public class Endpoint {
     private ContentsCallback contentsCallback;
 
     private Handler handler;
-
-    private Context context;
-    public void setContext(Context context) {
-        this.context = context;
-    }
 
     public static String lastContentsPK; // [delf] tep field
 
@@ -209,11 +202,14 @@ public class Endpoint {
 
     @OnClose
     public void onClose() {
-        // new EndpointInBackGround().execute(Message.Exit);
+        this.session = null;
         Log.d("delf", "session closed.");
     }
 
     public static User getUser() {
         return user;
+    }
+    public Session getSesion() {
+        return session;
     }
 }
