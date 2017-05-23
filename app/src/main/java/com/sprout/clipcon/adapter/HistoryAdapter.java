@@ -1,14 +1,12 @@
 package com.sprout.clipcon.adapter;
 
+import android.app.NotificationManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
@@ -22,18 +20,13 @@ import android.widget.Toast;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.ContentsDownload;
 import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Yongwon on 2017. 4. 30..
@@ -113,6 +106,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                         Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
                         break;
                 }
+
+                progressNoti();
             }
         });
     }
@@ -152,39 +147,67 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return dateFormat.format(date);
     }
 
-    private void imageToGallery(Bitmap testBitmap) {
+    private void progressNoti() {
+        final NotificationManager mNotifyManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+        mBuilder.setContentTitle("Picture Download")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.mipmap.ic_launcher);
+// Start a lengthy operation in a background thread
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        int incr;
+                        // Do the "lengthy" operation 20 times
 
-        OutputStream fOut = null;
-        String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
-        final String appDirectoryName = "Clipcon";
-        final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appDirectoryName);
 
-        imageRoot.mkdirs();
-        final File file = new File(imageRoot, fileName);
+//                        for (incr = 0; incr <= 100; incr+=20) {
+                            // Sets the progress indicator to a max value, the
+                            // current completion percentage, and "determinate"
+                            // state
+                            mBuilder.setProgress(0, 0, true);
+                            // Displays the progress bar for the first time.
+                            mNotifyManager.notify(0, mBuilder.build());
+                            // Sleeps the thread, simulating an operation
+                            // that takes time
 
-        try {
-            fOut = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+//                            try {
+//                                Thread.sleep(5*1000);
+//                            } catch (InterruptedException e) {
+//                            }
+//                        }
+                        // When the loop is finished, updates the notification
 
-        testBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-        try {
-            fOut.flush();
-            fOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                        Log.d("choi", "Progress 1");
 
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, fileName);
-        values.put(MediaStore.Images.Media.DESCRIPTION, "clipcon description");
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.ImageColumns.BUCKET_ID, file.toString().toLowerCase(Locale.US).hashCode());
-        values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, file.getName().toLowerCase(Locale.US));
-        values.put("_data", file.getAbsolutePath());
+                        ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d("choi", "Progress 2");
+                                mBuilder.setContentText("Download complete")
+                                        // Removes the progress bar
+                                        .setProgress(0,0,false);
 
-        ContentResolver cr = context.getContentResolver();
-        cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                                mNotifyManager.notify(6, mBuilder.build());
+                                Log.d("choi", "Progress 3");
+                            }
+                        };
+                        Endpoint.getDownloader().setDownloadCallback(downloadCallback);
+
+                    }
+                }
+// Starts the thread by calling the run() method in its Runnable
+        ).start();
+    }
+
+    private void download() {
+        ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
+            @Override
+            public void onSuccess() {
+
+            }
+        };
     }
 }

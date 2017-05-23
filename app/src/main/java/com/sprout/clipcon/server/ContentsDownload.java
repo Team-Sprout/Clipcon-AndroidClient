@@ -48,6 +48,16 @@ public class ContentsDownload {
     private final String appDirectoryName = "Clipcon";
     // private String downloadDataPK; // Contents' Primary Key to download
 
+    private DownloadCallback downloadCallback;
+
+    public interface DownloadCallback {
+        void onSuccess();
+    }
+
+    public void setDownloadCallback(DownloadCallback downloadCallback) {
+        this.downloadCallback = downloadCallback;
+    }
+
     /**
      * Constructor
      * Setting userName and groupPK
@@ -115,7 +125,11 @@ public class ContentsDownload {
                 throw new IOException("Server returned non-OK status: " + status);
             }
             httpConn.disconnect();
+            Log.d("choi", "progress 10");
 
+            downloadCallback.onSuccess();
+
+            Log.d("choi", "progress 11");
         } catch (IOException e) {
             e.printStackTrace();
         }
