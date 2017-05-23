@@ -24,6 +24,7 @@ import com.sprout.clipcon.server.ContentsDownload;
 import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,12 +67,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 holder.description.setText("image\n");
                 holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 holder.thumbnail.setImageBitmap(tmpBitmap);
-                holder.size.setText(Long.toString(contents.getContentsSize()));
+                holder.size.setText(convertContentsSize(contents.getContentsSize()));
                 break;
             case Contents.TYPE_FILE:
                 holder.description.setText(contents.getContentsValue()+"\n");
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
-                holder.size.setText(Long.toString(contents.getContentsSize()));
+                holder.size.setText(convertContentsSize(contents.getContentsSize()));
                 break;
             case Contents.TYPE_STRING:
                 holder.description.setText(contents.getContentsValue());
@@ -99,15 +100,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                     case Contents.TYPE_IMAGE:
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
-
+                        progressNoti();
                         break;
                     case Contents.TYPE_FILE:
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
+                        progressNoti();
                         break;
                 }
 
-                progressNoti();
+
             }
         });
     }
@@ -141,73 +143,59 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
-    private String createName(long dateTaken) {
-        Date date = new Date(dateTaken);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        return dateFormat.format(date);
-    }
-
     private void progressNoti() {
+
+        final int id=1;
         final NotificationManager mNotifyManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-        mBuilder.setContentTitle("Picture Download")
+        mBuilder.setContentTitle("Data Download")
                 .setContentText("Download in progress")
-                .setSmallIcon(R.mipmap.ic_launcher);
-// Start a lengthy operation in a background thread
+                .setSmallIcon(R.drawable.icon_logo);
+
         new Thread(
                 new Runnable() {
                     @Override
                     public void run() {
-                        int incr;
-                        // Do the "lengthy" operation 20 times
-
-
-//                        for (incr = 0; incr <= 100; incr+=20) {
-                            // Sets the progress indicator to a max value, the
-                            // current completion percentage, and "determinate"
-                            // state
                             mBuilder.setProgress(0, 0, true);
-                            // Displays the progress bar for the first time.
-                            mNotifyManager.notify(0, mBuilder.build());
-                            // Sleeps the thread, simulating an operation
-                            // that takes time
-
-//                            try {
-//                                Thread.sleep(5*1000);
-//                            } catch (InterruptedException e) {
-//                            }
-//                        }
-                        // When the loop is finished, updates the notification
-
-                        Log.d("choi", "Progress 1");
+                            mNotifyManager.notify(id, mBuilder.build());
 
                         ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
                             @Override
                             public void onSuccess() {
-                                Log.d("choi", "Progress 2");
-                                mBuilder.setContentText("Download complete")
-                                        // Removes the progress bar
-                                        .setProgress(0,0,false);
-
-                                mNotifyManager.notify(6, mBuilder.build());
-                                Log.d("choi", "Progress 3");
+                                mBuilder.setProgress(0,0,false);
+                                mBuilder.setContentText("Download complete");
+                                mNotifyManager.notify(id, mBuilder.build());
                             }
                         };
                         Endpoint.getDownloader().setDownloadCallback(downloadCallback);
 
                     }
                 }
-// Starts the thread by calling the run() method in its Runnable
         ).start();
     }
 
-    private void download() {
-        ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
-            @Override
-            public void onSuccess() {
+    public String convertContentsSize(long size) {
+        String contentsConvertedSize;
 
-            }
-        };
+        double b = size;
+        double k = size / 1024.0;
+        double m = ((size / 1024.0) / 1024.0);
+        double g = (((size / 1024.0) / 1024.0) / 1024.0);
+        double t = ((((size / 1024.0) / 1024.0) / 1024.0) / 1024.0);
+
+        DecimalFormat dec = new DecimalFormat("0.00");
+        if (t > 1) {
+            contentsConvertedSize = dec.format(t).concat(" TB");
+        } else if (g > 1) {
+            contentsConvertedSize = dec.format(g).concat(" GB");
+        } else if (m > 1) {
+            contentsConvertedSize = dec.format(m).concat(" MB");
+        } else if (k > 1) {
+            contentsConvertedSize = dec.format(k).concat(" KB");
+        } else {
+            contentsConvertedSize = dec.format(b).concat(" Bytes");
+        }
+        return contentsConvertedSize;
     }
 }

@@ -17,7 +17,7 @@
 
     <!--TransparentActivity-->
     <string name="shareString">텍스트 전송 완료</string>
-    <string name="shareImage">파일 전송 완료</string>
+    <string name="shareImage">이미지 전송 완료</string>
 
     <!--Topservice-->
     <string name="shareFile">파일 전송 완료</string>
@@ -37,9 +37,9 @@
     <string name="member">Member List</string>
 
     <!--HistoryAdapter-->
-    <string name="stringAlert">해당 텍스트가 클립보드에 복사되었습니다.</string>
-    <string name="imageAlert">해당 이미지가 갤러리의 Clipcon 폴더에 저장되었습니다.</string>
-    <string name="fileAlert">해당 파일이 download 폴더에 저장되었습니다.</string>
+    <string name="stringAlert">해당 텍스트를 클립보드에 복사합니다.</string>
+    <string name="imageAlert">해당 이미지를 갤러리의 Clipcon 폴더에 저장합니다.</string>
+    <string name="fileAlert">해당 파일을 download 폴더에 저장합니다.</string>
 
     <!--Settings-->
     <string name="settings_notice">Notice</string>
