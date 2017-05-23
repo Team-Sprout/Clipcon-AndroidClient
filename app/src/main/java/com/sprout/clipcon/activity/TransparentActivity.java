@@ -80,7 +80,7 @@ public class TransparentActivity extends Activity {
                 Toast.makeText(getApplicationContext(), R.string.shareImage, Toast.LENGTH_SHORT).show();
 
                 bitmap = getBitmapByUri(uri);
-                new EndpointInBackGround() // TODO: 17-05-16 change name
+                new EndpointInBackGround()
                         .setSendBitmapImage(bitmap)
                         .execute(Message.UPLOAD, "image");
 

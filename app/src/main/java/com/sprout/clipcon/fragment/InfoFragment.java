@@ -150,18 +150,7 @@ public class InfoFragment extends Fragment {
     // method name recommendation: showChangeNameDialog()
     public void changeName() {
         Log.d("delf", "[SYSTEM] \"change name\" button clicked");
-//        new MaterialDialog.Builder(getContext())
-//                .title(R.string.changeName)
-//                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-//                .positiveText(R.string.confirm)
-//                .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
-//                    // TODO: 17-05-10 add server callback
-//                    @Override
-//                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence newName) {
-//                        Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }).show();
-        // new EndpointInBackGround().execute(Message.DOWNLOAD);
+        //// TODO: 2017. 5. 23. do change Nickname part
     }
 
     public boolean isContain(String name) {

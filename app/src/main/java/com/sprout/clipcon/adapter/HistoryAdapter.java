@@ -1,9 +1,11 @@
 package com.sprout.clipcon.adapter;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.activity.GroupActivity;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.ContentsDownload;
@@ -100,11 +103,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                     case Contents.TYPE_IMAGE:
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
+
                         progressNoti();
                         break;
                     case Contents.TYPE_FILE:
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
+
                         progressNoti();
                         break;
                 }
@@ -163,8 +168,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                         ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
                             @Override
                             public void onSuccess() {
+                                Intent intent = new Intent(context, GroupActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                                 mBuilder.setProgress(0,0,false);
                                 mBuilder.setContentText("Download complete");
+
+                                mBuilder.setContentIntent(pendingIntent);
+
                                 mNotifyManager.notify(id, mBuilder.build());
                             }
                         };
