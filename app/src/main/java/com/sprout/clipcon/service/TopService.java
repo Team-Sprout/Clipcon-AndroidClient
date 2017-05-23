@@ -28,7 +28,6 @@ public class TopService extends Service {
     private static String textData;
     private static Uri uri;
     public static boolean isRunning = false;
-    private boolean tmpFlag = true;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -79,6 +78,7 @@ public class TopService extends Service {
     public void onClickImageBtn(View v) {
         Log.d("delf", "[SYSTEM] floating button clicked.");
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        Toast.makeText(getApplicationContext(), R.string.shareString, Toast.LENGTH_SHORT).show();
         /*MyClipboard clipboardManager = MyClipboard.getInstance();
 
         if(clipboardManager.isEmpty()) {
@@ -105,13 +105,11 @@ public class TopService extends Service {
 
 
         if (!cm.hasPrimaryClip()) {
-            Toast.makeText(this, "empty", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Clipboard is empty", Toast.LENGTH_LONG).show();
             return;
         }
 
         if (cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
-            System.out.println("Text");
-            String temp = cm.getPrimaryClipDescription().getMimeType(0);
 
             ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
             textData = item.getText().toString();
@@ -121,21 +119,11 @@ public class TopService extends Service {
                     .setSendText(textData)
                     .execute(Message.UPLOAD, "text");
 
-            Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
-
         } else if (cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
-            System.out.println("Image");
 
-            //// TODO: 2017. 5. 5. check again whether we can use Uri or not
             ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
             uri = item.getUri();
             System.out.println(uri);
-
-            Toast.makeText(this, "Uri " + uri, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public static String getTextData() {
-        return textData;
     }
 }

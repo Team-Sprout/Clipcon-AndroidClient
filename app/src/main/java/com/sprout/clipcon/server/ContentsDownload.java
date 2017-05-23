@@ -1,14 +1,19 @@
 package com.sprout.clipcon.server;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.History;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -22,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class ContentsDownload {
@@ -37,7 +43,20 @@ public class ContentsDownload {
     private String groupPK = null;
 
     private Contents requestContents; // Contents Info to download
+
+    private Context context;
+    private final String appDirectoryName = "Clipcon";
     // private String downloadDataPK; // Contents' Primary Key to download
+
+    private DownloadCallback downloadCallback;
+
+    public interface DownloadCallback {
+        void onSuccess();
+    }
+
+    public void setDownloadCallback(DownloadCallback downloadCallback) {
+        this.downloadCallback = downloadCallback;
+    }
 
     /**
      * Constructor
@@ -46,6 +65,11 @@ public class ContentsDownload {
     public ContentsDownload(String userName, String groupPK) {
         this.userName = userName;
         this.groupPK = groupPK;
+        // this.context = context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     /**
@@ -77,7 +101,6 @@ public class ContentsDownload {
                 switch (requestContents.getContentsType()) {
                     case Contents.TYPE_STRING:
                         String stringData = downloadStringData(httpConn.getInputStream());
-                        // TODO: 17-05-13 insert to clipboard
                         Log.d("delf", "[CLIENT] received test data: " + stringData);
                         break;
 
@@ -87,7 +110,10 @@ public class ContentsDownload {
                         break;
 
                     case Contents.TYPE_FILE:
-                        // downloadFileData();
+                        Log.d("delf", "[CLIENT] received file");
+                        String fileOriginName = requestContents.getContentsValue();
+                        downloadFileData(httpConn.getInputStream(), fileOriginName);
+                        Log.d("delf", "[CLIENT] complete downloading file.");
                         break;
 
                     default:
@@ -99,7 +125,11 @@ public class ContentsDownload {
                 throw new IOException("Server returned non-OK status: " + status);
             }
             httpConn.disconnect();
+            Log.d("choi", "progress 10");
 
+            downloadCallback.onSuccess();
+
+            Log.d("choi", "progress 11");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -111,7 +141,6 @@ public class ContentsDownload {
     private String downloadStringData(InputStream inputStream) {
         BufferedReader bufferedReader;
         StringBuilder stringBuilder = null;
-
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream, charset));
 
@@ -134,9 +163,15 @@ public class ContentsDownload {
     }
 
     // test code
-    // test code
     private File downloadImageData(InputStream inputStream) throws IOException {
-        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png";
+
+        // in -> file
+        // in -> bit -> file
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+        Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+        imageToGallery(bmp);
+
+        /*String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png";
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
         Log.d("delf", "[SYSTEM] download path: " + path);
         File file = new File(path, fileName);
@@ -148,23 +183,97 @@ public class ContentsDownload {
         }
         out.flush();
         out.close();
-        Log.d("delf", "[SYSTEM] complete download file.");
-
+        Log.d("delf", "[SYSTEM] complete download file.");*/
         return null;
     }
 
-    private File downloadFileData(InputStream inputStream, String fileName) throws FileNotFoundException {
-        return null;
-    }
+    private File downloadFileData(InputStream inputStream, String fileName) throws IOException {
 
-    public byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
+        File file = new File(path, fileName);
+        Log.d("delf", "[SYSTEM] download path: " + path);
+        try {
+            OutputStream outStream = new FileOutputStream(file);
+            // 읽어들일 버퍼크기를 메모리에 생성
+            byte[] buf = new byte[1024];
+            int len = 0;
+            // 끝까지 읽어들이면서 File 객체에 내용들을 쓴다
+            while ((len = inputStream.read(buf)) > 0) {
+                outStream.write(buf, 0, len);
+            }
+            // Stream 객체를 모두 닫는다.
+            outStream.close();
+            inputStream.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*OutputStream output = new FileOutputStream(file);
+        try {
+            try {
+                byte[] buffer = new byte[4 * 1024]; // or other buffer size
+                int read;
+
+                while ((read = inputStream.read(buffer)) != -1) {
+                    output.write(buffer, 0, read);
+                }
+                output.flush();
+            } finally {
+                output.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // handle exception, define IOException and others
+        } finally {
+            inputStream.close();
+        }*/
+        return file;
     }
 
     private String generateRequestParameter(String downloadDataPK) {
         return SERVER_URL + SERVER_SERVLET + "?" + "userName=" + userName + "&" + "groupPK=" + groupPK + "&" + "downloadDataPK=" + downloadDataPK;
+    }
+
+    private void imageToGallery(Bitmap testBitmap) {
+        Log.d("delf", "[SYSTEM] image to gallery");
+        OutputStream fOut = null;
+        String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
+
+        final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appDirectoryName);
+
+        imageRoot.mkdirs();
+        final File file = new File(imageRoot, fileName);
+
+        try {
+            fOut = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        testBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+        try {
+            fOut.flush();
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, fileName);
+        values.put(MediaStore.Images.Media.DESCRIPTION, "clipcon description");
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.ImageColumns.BUCKET_ID, file.toString().toLowerCase(Locale.US).hashCode());
+        values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, file.getName().toLowerCase(Locale.US));
+        values.put("_data", file.getAbsolutePath());
+
+        ContentResolver cr = context.getContentResolver();
+        cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
+
+    private String createName(long dateTaken) {
+        Date date = new Date(dateTaken);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        return dateFormat.format(date);
     }
 }

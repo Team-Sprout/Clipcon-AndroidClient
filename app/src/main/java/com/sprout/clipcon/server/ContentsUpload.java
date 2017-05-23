@@ -12,7 +12,12 @@ public class ContentsUpload {
     public void upload(Bitmap bitmap) {
         uploader.uploadImageData(bitmap);
     }
+
     public void upload(String text) {
         uploader.uploadStringData(text);
+    }
+
+    public void uploadFile(String filePath) {
+        uploader.uploadMultipartData(filePath);
     }
 }

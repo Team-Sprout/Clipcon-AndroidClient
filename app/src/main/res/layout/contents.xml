@@ -29,8 +29,7 @@
                 android:ellipsize="end"
                 android:textSize="14sp"
                 android:layout_gravity="end"
-                android:textAlignment="textEnd"
-                android:text="testestesttestestesttestestesttestestesttestestesttestestesttestestesttestestesttestestesttestestest"/>
+                android:textAlignment="textEnd"/>
 
             <TextView
                 android:id="@+id/contents_sender"
@@ -38,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:textSize="14sp"
-                android:text="sender"
                 android:layout_gravity="end"/>
 
             <RelativeLayout
@@ -52,14 +50,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:text="time"
                     android:layout_alignParentEnd="true"/>
 
                 <TextView
                     android:id="@+id/contents_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="size"
                     android:textSize="12sp"
                     android:layout_alignParentStart="true"/>
 

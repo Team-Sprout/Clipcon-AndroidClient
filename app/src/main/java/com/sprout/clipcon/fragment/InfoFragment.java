@@ -34,7 +34,7 @@ import java.util.Iterator;
  */
 
 public class InfoFragment extends Fragment {
-
+    
     private RecyclerView recyclerView;
     private MemberAdapter memberAdapter;
 
@@ -90,7 +90,6 @@ public class InfoFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        //// TODO: 2017. 5. 11. when Create Group, My nickname is not in Member List. Have to Check it
         memberAdapter = new MemberAdapter(getActivity(), membersArrayList);
         recyclerView.setAdapter(memberAdapter);
 
@@ -102,10 +101,9 @@ public class InfoFragment extends Fragment {
         Log.d("delf", "[CLIENT] receive name is " + name);
 
         if (isContain(name)) {
-            Log.d("delf", "nothing"); membersArrayList.remove(getIndex(name));
+            membersArrayList.remove(getIndex(name));
 
         } else {
-            Log.d("delf", "something");
             membersArrayList.add(new Member(name));
         }
         memberAdapter = new MemberAdapter(getActivity(), membersArrayList);
@@ -136,12 +134,12 @@ public class InfoFragment extends Fragment {
     private void setMemberCallback() {
         Endpoint.ParticipantCallback participantResult = new Endpoint.ParticipantCallback() {
             @Override
-            public void onParticipantStatus(final String newName) {
+            public void onParticipantStatus(final String newMember) {
                 System.out.println("Member List Changed");
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        updateMember(newName);
+                        updateMember(newMember);
                     }
                 });
             }
@@ -152,20 +150,7 @@ public class InfoFragment extends Fragment {
     // method name recommendation: showChangeNameDialog()
     public void changeName() {
         Log.d("delf", "[SYSTEM] \"change name\" button clicked");
-//        new MaterialDialog.Builder(getContext())
-//                .title(R.string.changeName)
-//                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-//                .positiveText(R.string.confirm)
-//                .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
-//                    // TODO: 17-05-10 add server callback
-//                    @Override
-//                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence newName) {
-//                        Toast.makeText(getContext(), newName.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }).show();
-        // new EndpointInBackGround().execute(Message.DOWNLOAD);
-
-        // TODO: 17-05-11 right here!! event occurred!!
+        //// TODO: 2017. 5. 23. do change Nickname part
     }
 
     public boolean isContain(String name) {

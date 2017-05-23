@@ -7,17 +7,14 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.Toast;
 
 /**
  * Created by Yongwon on 2017. 4. 17..
  */
 
-public class MyService extends Service {
+public class ClipboardService extends Service {
 
     private ClipboardManager mClipboardManager;
-    private Thread mThread = null; // test code
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -59,10 +56,10 @@ public class MyService extends Service {
         @Override
         public void onPrimaryClipChanged() {
             Log.d("delf", "[SYSTEM] clipboard changing detected");
-            Toast toast = Toast.makeText(getApplicationContext(), "Clipboard changed", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-            toast.show();
 
+//            Toast toast = Toast.makeText(getApplicationContext(), "Clipboard changed", Toast.LENGTH_SHORT);
+//            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
+//            toast.show();
             showTopButton();
         }
     };

@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         new MaterialDialog.Builder(this)
                 .title(R.string.inputKey)
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                .positiveText(R.string.joinKo)
+                .positiveText(R.string.joinEn)
                 .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupKey) {
@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                                         response.put(Message.GROUP_NAME, inputGroupKey.toString());
                                         startGroupActivity(response);
                                     } else { // reject
-                                        //// TODO: 2017. 5. 12. have to put Toast Message
                                         MainActivity.this.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
@@ -101,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void showBasicNoTitle() {
         new MaterialDialog.Builder(this)
-                .content("해당 그룹키를 가진 그룹이 존재하지 않습니다. 그룹키를 확인하세요.")
-                .positiveText("확인")
+                .content(R.string.checkKey)
+                .positiveText(R.string.confirm)
                 .show();
     }
 }

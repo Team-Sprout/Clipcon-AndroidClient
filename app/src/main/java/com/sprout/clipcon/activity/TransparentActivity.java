@@ -2,22 +2,25 @@ package com.sprout.clipcon.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by Yongwon on 2017. 5. 1..
@@ -27,6 +30,11 @@ public class TransparentActivity extends Activity {
 
     private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     private Uri uri;
+    private static Bitmap bitmap;
+
+    public static Bitmap getBitmap() {
+        return bitmap;
+    }
 
     //ask user about permission to save image into basic gallery apps.
     @Override
@@ -54,46 +62,61 @@ public class TransparentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transparent_activity);
 
-        System.out.println("투명액티비티 시작");
         String action = getIntent().getAction();
+        String type = getIntent().getType();
 
         if (Intent.ACTION_SEND.equals(action)) {
-            uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+
             getPermission();
+            uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
-            new EndpointInBackGround() // TODO: 17-05-16 change name
-                    .setSendBitmapImage(getBitmapByUri(uri))
-                    .execute(Message.UPLOAD, "image");
+            Log.d("delf", "[DEBUG] shared date type is " + type);
+            ContentResolver cR = getContentResolver();
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            String mimeType = mime.getExtensionFromMimeType(cR.getType(uri)); // get "file name extension"
+            Log.d("delf", "[DEBUG] shared date mime type is " + mimeType);
 
-            /*ClipData clip = ClipData.newRawUri("test", uri);
-            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setPrimaryClip(clip);*/
+            if (type.startsWith("image/")) {
+                Toast.makeText(getApplicationContext(), R.string.shareImage, Toast.LENGTH_SHORT).show();
+
+                bitmap = getBitmapByUri(uri);
+                new EndpointInBackGround()
+                        .setSendBitmapImage(bitmap)
+                        .execute(Message.UPLOAD, "image");
+
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.shareFile, Toast.LENGTH_SHORT).show();
+                Log.d("delf", "[DEBUG] uri.getPath() = " + uri.getPath());
+
+                String filePath = getPathFromUri(uri);
+                new EndpointInBackGround()
+                        .setFilePath(filePath)
+                        .execute(Message.UPLOAD, "file");
+            }
+
         }
 
         finish();
-        System.out.println("투명액티비티 종료");
     }
 
-    /*private void bitmapToImage() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
-        String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
-
-        File newFile = new File(filePath, fileName);
-        OutputStream out;
+    public String getPathFromUri(Uri uri){
+        Log.d("choi", "URI 테스트"+uri);
+        String path;
         try {
-            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri); // 비트맵 객체 보유
 
-            newFile.createNewFile();
-            out = new FileOutputStream(newFile);
-            bm.compress(Bitmap.CompressFormat.PNG, 100, out);
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null );
+            cursor.moveToNext();
+            path = cursor.getString( cursor.getColumnIndex( "_data" ) );
+            cursor.close();
 
-            out.flush();
-            out.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (NullPointerException e) {
+            path = uri.getPath();
         }
-    }*/
+
+        Log.d("choi", "URI string = " + path);
+
+        return path;
+    }
 
     private Bitmap getBitmapByUri(Uri uri) {
         try {
@@ -125,15 +148,7 @@ public class TransparentActivity extends Activity {
                 // result of the request.
             }
         } else {
-            //bitmapToImage();
         }
     }
-
-    private String createName(long dateTaken) {
-        Date date = new Date(dateTaken);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        return dateFormat.format(date);
-    }
-
 }
 

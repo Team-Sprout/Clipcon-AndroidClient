@@ -39,10 +39,6 @@ public class MyClipboard extends Service {
         return cm.getPrimaryClip().getItemAt(0).getText().toString();
     }
 
-    public Bitmap getImageInClipboard() {
-        // TODO: 17-05-13 iamge
-        return null;
-    }
 
     public boolean isEmpty() {
         return !cm.hasPrimaryClip();

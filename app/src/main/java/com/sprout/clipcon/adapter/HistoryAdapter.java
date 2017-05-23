@@ -1,10 +1,14 @@
 package com.sprout.clipcon.adapter;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
@@ -16,11 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.activity.GroupActivity;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.ContentsDownload;
+import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Yongwon on 2017. 4. 30..
@@ -31,9 +41,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     private Context context;
     private ArrayList<Contents> contentsList;
 
+    private Bitmap tmpBitmap;
+
     public HistoryAdapter(Context context, ArrayList<Contents> contentsList) {
         this.context = context;
         this.contentsList = contentsList;
+        Endpoint.getDownloader().setContext(context);
     }
 
     @Override
@@ -52,17 +65,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         switch (contents.getContentsType()) {
             case Contents.TYPE_IMAGE:
-                Bitmap tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
+//                Bitmap tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
+                tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 holder.description.setText("image\n");
                 holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 holder.thumbnail.setImageBitmap(tmpBitmap);
-                holder.size.setText(Long.toString(contents.getContentsSize()));
-                // TODO: 2017. 5. 16. should use glide
+                holder.size.setText(convertContentsSize(contents.getContentsSize()));
                 break;
             case Contents.TYPE_FILE:
-                holder.description.setText(contents.getContentsValue());
+                holder.description.setText(contents.getContentsValue()+"\n");
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
-                holder.size.setText((int) contents.getContentsSize());
+                holder.size.setText(convertContentsSize(contents.getContentsSize()));
                 break;
             case Contents.TYPE_STRING:
                 holder.description.setText(contents.getContentsValue());
@@ -74,23 +87,36 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, position + "번째가 클릭됐음", Toast.LENGTH_SHORT).show();
-
                 Contents contents = contentsList.get(position);
 
-                if (contents.getContentsType().equals(Contents.TYPE_STRING)) {
-                    String copiedString = contents.getContentsValue();
-                    ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("text", copiedString);
-                    cm.setPrimaryClip(clip);
-                } else if (contents.getContentsType().equals(Contents.TYPE_IMAGE)) {
-                    Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
-                    new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
+                Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
+                switch (contents.getContentsType()) {
 
+                    case Contents.TYPE_STRING:
+                        String copiedString = contents.getContentsValue();
+                        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("text", copiedString);
+                        cm.setPrimaryClip(clip);
+                        Toast.makeText(context, R.string.stringAlert, Toast.LENGTH_SHORT).show();
+
+                        break;
+                    case Contents.TYPE_IMAGE:
+                        new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
+                        Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
+
+                        progressNoti();
+                        break;
+                    case Contents.TYPE_FILE:
+                        new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
+                        Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
+
+                        progressNoti();
+                        break;
                 }
+
+
             }
         });
-
     }
 
     @Override
@@ -117,9 +143,71 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         }
     }
 
-
     private Bitmap getBitmapByBase64String(String imageString) {
         byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    private void progressNoti() {
+
+        final int id=1;
+        final NotificationManager mNotifyManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+        mBuilder.setContentTitle("Data Download")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.drawable.icon_logo);
+
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                            mBuilder.setProgress(0, 0, true);
+                            mNotifyManager.notify(id, mBuilder.build());
+
+                        ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Intent intent = new Intent(context, GroupActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                                mBuilder.setProgress(0,0,false);
+                                mBuilder.setContentText("Download complete");
+
+                                mBuilder.setContentIntent(pendingIntent);
+
+                                mNotifyManager.notify(id, mBuilder.build());
+                            }
+                        };
+                        Endpoint.getDownloader().setDownloadCallback(downloadCallback);
+
+                    }
+                }
+        ).start();
+    }
+
+    public String convertContentsSize(long size) {
+        String contentsConvertedSize;
+
+        double b = size;
+        double k = size / 1024.0;
+        double m = ((size / 1024.0) / 1024.0);
+        double g = (((size / 1024.0) / 1024.0) / 1024.0);
+        double t = ((((size / 1024.0) / 1024.0) / 1024.0) / 1024.0);
+
+        DecimalFormat dec = new DecimalFormat("0.00");
+        if (t > 1) {
+            contentsConvertedSize = dec.format(t).concat(" TB");
+        } else if (g > 1) {
+            contentsConvertedSize = dec.format(g).concat(" GB");
+        } else if (m > 1) {
+            contentsConvertedSize = dec.format(m).concat(" MB");
+        } else if (k > 1) {
+            contentsConvertedSize = dec.format(k).concat(" KB");
+        } else {
+            contentsConvertedSize = dec.format(b).concat(" Bytes");
+        }
+        return contentsConvertedSize;
     }
 }
