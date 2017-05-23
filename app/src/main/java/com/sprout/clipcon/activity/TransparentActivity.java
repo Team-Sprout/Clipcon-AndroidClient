@@ -101,10 +101,19 @@ public class TransparentActivity extends Activity {
 
     public String getPathFromUri(Uri uri){
         Log.d("choi", "URI 테스트"+uri);
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null );
-        cursor.moveToNext();
-        String path = cursor.getString( cursor.getColumnIndex( "_data" ) );
-        cursor.close();
+        String path;
+        try {
+
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null );
+            cursor.moveToNext();
+            path = cursor.getString( cursor.getColumnIndex( "_data" ) );
+            cursor.close();
+
+        } catch (NullPointerException e) {
+            path = uri.getPath();
+        }
+
+        Log.d("choi", "URI string = " + path);
 
         return path;
     }
