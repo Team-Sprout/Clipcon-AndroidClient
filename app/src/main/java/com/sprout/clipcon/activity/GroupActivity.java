@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.adapter.HistoryAdapter;
 import com.sprout.clipcon.fragment.HistoryFragment;
 import com.sprout.clipcon.fragment.InfoFragment;
 import com.sprout.clipcon.model.Message;
@@ -34,6 +35,10 @@ import com.sprout.clipcon.service.NotificationService;
 public class GroupActivity extends AppCompatActivity {
     private Fragment infoFragment;
     private Fragment historyFragment;
+
+    private TabLayout tabLayout;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,19 @@ public class GroupActivity extends AppCompatActivity {
 
         initLayout();
         checkStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            if(NotificationService.intent != null) {
+                TabLayout.Tab tab = tabLayout.getTabAt(1);
+                tab.select();
+            }
+        }
     }
 
     @Override
@@ -117,15 +135,19 @@ public class GroupActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.title_logo);
         setSupportActionBar(toolbar);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+//        TabLayout
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.info));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.history));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override

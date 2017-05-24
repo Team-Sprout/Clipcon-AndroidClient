@@ -65,7 +65,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         switch (contents.getContentsType()) {
             case Contents.TYPE_IMAGE:
-//                Bitmap tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 holder.description.setText("image\n");
                 holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -169,12 +168,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                             @Override
                             public void onSuccess() {
                                 Intent intent = new Intent(context, GroupActivity.class);
+                                intent.putExtra("History", "test");
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                                 mBuilder.setProgress(0,0,false);
                                 mBuilder.setContentText("Download complete");
-
+                                mBuilder.setAutoCancel(true);
                                 mBuilder.setContentIntent(pendingIntent);
 
                                 mNotifyManager.notify(id, mBuilder.build());
