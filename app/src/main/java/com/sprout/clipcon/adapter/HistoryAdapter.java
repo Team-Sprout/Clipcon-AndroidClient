@@ -1,14 +1,14 @@
 package com.sprout.clipcon.adapter;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
@@ -20,20 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.activity.GroupActivity;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.ContentsDownload;
 import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Yongwon on 2017. 4. 30..
@@ -68,17 +65,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         switch (contents.getContentsType()) {
             case Contents.TYPE_IMAGE:
-//                Bitmap tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 holder.description.setText("image\n");
                 holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 holder.thumbnail.setImageBitmap(tmpBitmap);
-                holder.size.setText(Long.toString(contents.getContentsSize()));
+                holder.size.setText(convertContentsSize(contents.getContentsSize()));
                 break;
             case Contents.TYPE_FILE:
                 holder.description.setText(contents.getContentsValue()+"\n");
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
-                holder.size.setText(Long.toString(contents.getContentsSize()));
+                holder.size.setText(convertContentsSize(contents.getContentsSize()));
                 break;
             case Contents.TYPE_STRING:
                 holder.description.setText(contents.getContentsValue());
@@ -107,12 +103,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
 
+                        progressNoti();
                         break;
                     case Contents.TYPE_FILE:
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
+
+                        progressNoti();
                         break;
                 }
+
+
             }
         });
     }
@@ -146,45 +147,67 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
-    private String createName(long dateTaken) {
-        Date date = new Date(dateTaken);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        return dateFormat.format(date);
+    private void progressNoti() {
+
+        final int id=1;
+        final NotificationManager mNotifyManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+        mBuilder.setContentTitle("Data Download")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.drawable.icon_logo);
+
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                            mBuilder.setProgress(0, 0, true);
+                            mNotifyManager.notify(id, mBuilder.build());
+
+                        ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Intent intent = new Intent(context, GroupActivity.class);
+                                intent.putExtra("History", "test");
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                                mBuilder.setProgress(0,0,false);
+                                mBuilder.setContentText("Download complete");
+                                mBuilder.setAutoCancel(true);
+                                mBuilder.setContentIntent(pendingIntent);
+
+                                mNotifyManager.notify(id, mBuilder.build());
+                            }
+                        };
+                        Endpoint.getDownloader().setDownloadCallback(downloadCallback);
+
+                    }
+                }
+        ).start();
     }
 
-    private void imageToGallery(Bitmap testBitmap) {
+    public String convertContentsSize(long size) {
+        String contentsConvertedSize;
 
-        OutputStream fOut = null;
-        String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
-        final String appDirectoryName = "Clipcon";
-        final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appDirectoryName);
+        double b = size;
+        double k = size / 1024.0;
+        double m = ((size / 1024.0) / 1024.0);
+        double g = (((size / 1024.0) / 1024.0) / 1024.0);
+        double t = ((((size / 1024.0) / 1024.0) / 1024.0) / 1024.0);
 
-        imageRoot.mkdirs();
-        final File file = new File(imageRoot, fileName);
-
-        try {
-            fOut = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        DecimalFormat dec = new DecimalFormat("0.00");
+        if (t > 1) {
+            contentsConvertedSize = dec.format(t).concat(" TB");
+        } else if (g > 1) {
+            contentsConvertedSize = dec.format(g).concat(" GB");
+        } else if (m > 1) {
+            contentsConvertedSize = dec.format(m).concat(" MB");
+        } else if (k > 1) {
+            contentsConvertedSize = dec.format(k).concat(" KB");
+        } else {
+            contentsConvertedSize = dec.format(b).concat(" Bytes");
         }
-
-        testBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-        try {
-            fOut.flush();
-            fOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, fileName);
-        values.put(MediaStore.Images.Media.DESCRIPTION, "clipcon description");
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.ImageColumns.BUCKET_ID, file.toString().toLowerCase(Locale.US).hashCode());
-        values.put(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, file.getName().toLowerCase(Locale.US));
-        values.put("_data", file.getAbsolutePath());
-
-        ContentResolver cr = context.getContentResolver();
-        cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        return contentsConvertedSize;
     }
 }

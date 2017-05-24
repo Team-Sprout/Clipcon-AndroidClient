@@ -67,6 +67,7 @@ public class TransparentActivity extends Activity {
 
         if (Intent.ACTION_SEND.equals(action)) {
 
+            getPermission();
             uri = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
 
             Log.d("delf", "[DEBUG] shared date type is " + type);
@@ -79,15 +80,12 @@ public class TransparentActivity extends Activity {
                 Toast.makeText(getApplicationContext(), R.string.shareImage, Toast.LENGTH_SHORT).show();
 
                 bitmap = getBitmapByUri(uri);
-                getPermission();
-
-                new EndpointInBackGround() // TODO: 17-05-16 change name
+                new EndpointInBackGround()
                         .setSendBitmapImage(bitmap)
                         .execute(Message.UPLOAD, "image");
 
             } else {
                 Toast.makeText(getApplicationContext(), R.string.shareFile, Toast.LENGTH_SHORT).show();
-
                 Log.d("delf", "[DEBUG] uri.getPath() = " + uri.getPath());
 
                 String filePath = getPathFromUri(uri);
@@ -102,34 +100,23 @@ public class TransparentActivity extends Activity {
     }
 
     public String getPathFromUri(Uri uri){
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null );
-        cursor.moveToNext();
-        String path = cursor.getString( cursor.getColumnIndex( "_data" ) );
-        cursor.close();
+        Log.d("choi", "URI 테스트"+uri);
+        String path;
+        try {
+
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null );
+            cursor.moveToNext();
+            path = cursor.getString( cursor.getColumnIndex( "_data" ) );
+            cursor.close();
+
+        } catch (NullPointerException e) {
+            path = uri.getPath();
+        }
+
+        Log.d("choi", "URI string = " + path);
 
         return path;
     }
-
-//    private void bitmapToImage() {
-//        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
-//        String fileName = "Image" + createName(System.currentTimeMillis()) + ".png";
-//
-//        File newFile = new File(filePath, fileName);
-//        OutputStream out;
-//        try {
-//            Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri); // 비트맵 객체 보유
-//
-//            newFile.createNewFile();
-//            out = new FileOutputStream(newFile);
-//            bm.compress(Bitmap.CompressFormat.PNG, 100, out);
-//
-//            out.flush();
-//            out.close();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     private Bitmap getBitmapByUri(Uri uri) {
         try {
@@ -161,14 +148,7 @@ public class TransparentActivity extends Activity {
                 // result of the request.
             }
         } else {
-//            bitmapToImage();
         }
     }
-
-//    private String createName(long dateTaken) {
-//        Date date = new Date(dateTaken);
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-//        return dateFormat.format(date);
-//    }
 }
 
