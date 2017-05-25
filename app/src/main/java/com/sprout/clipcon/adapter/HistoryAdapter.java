@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
@@ -27,6 +28,7 @@ import com.sprout.clipcon.server.ContentsDownload;
 import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,6 +66,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.time.setText(contents.getUploadTime());
 
         switch (contents.getContentsType()) {
+            case Contents.TYPE_STRING:
+                holder.description.setText(contents.getContentsValue());
+                holder.thumbnail.setImageResource(R.drawable.text_icon);
+                holder.size.setText("-");
+                break;
             case Contents.TYPE_IMAGE:
                 tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 holder.description.setText("image\n");
@@ -75,11 +82,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 holder.description.setText(contents.getContentsValue()+"\n");
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
                 holder.size.setText(convertContentsSize(contents.getContentsSize()));
-                break;
-            case Contents.TYPE_STRING:
-                holder.description.setText(contents.getContentsValue());
-                holder.thumbnail.setImageResource(R.drawable.text_icon);
-                holder.size.setText("-");
                 break;
         }
 
@@ -164,6 +166,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                             mBuilder.setProgress(0, 0, true);
                             mNotifyManager.notify(id, mBuilder.build());
 
+                        //// TODO: 2017. 5. 25. Download Part. Have to put file open
                         ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
                             @Override
                             public void onSuccess() {

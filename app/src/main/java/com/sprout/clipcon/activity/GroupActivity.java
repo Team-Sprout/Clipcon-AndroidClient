@@ -1,7 +1,12 @@
 package com.sprout.clipcon.activity;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +25,6 @@ import android.view.MenuItem;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
-import com.sprout.clipcon.adapter.HistoryAdapter;
 import com.sprout.clipcon.fragment.HistoryFragment;
 import com.sprout.clipcon.fragment.InfoFragment;
 import com.sprout.clipcon.service.ClipboardService;
@@ -35,6 +40,10 @@ public class GroupActivity extends AppCompatActivity {
     private Fragment historyFragment;
 
     private TabLayout tabLayout;
+
+    Sensor accelerometer;
+    SensorManager sm;
+    String checkType;
 
 
     @Override
@@ -52,11 +61,15 @@ public class GroupActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent != null) {
-            if(NotificationService.intent != null) {
+            Log.d("Choi", "Type Check 1 = "+checkType);
+            if(checkType != null) {
+                Log.d("Choi", "Type Check 2 = "+checkType);
                 TabLayout.Tab tab = tabLayout.getTabAt(1);
                 tab.select();
             }
         }
+
+        LocalBroadcastManager.getInstance(GroupActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
     }
 
     @Override
@@ -117,13 +130,8 @@ public class GroupActivity extends AppCompatActivity {
 
         Intent notiIntent = new Intent(getApplicationContext(), NotificationService.class);
         startService(notiIntent);
-
-//        Toast toast = Toast.makeText(getApplicationContext(), "Start Clipboard Check", Toast.LENGTH_SHORT);
-//        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-//        toast.show();
     }
 
-    // make Toolbar, Tablayout, ViewPager
     private void initLayout() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.group_toolbar);
@@ -131,7 +139,6 @@ public class GroupActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.title_logo);
         setSupportActionBar(toolbar);
 
-//        TabLayout
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.info));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.history));
@@ -193,4 +200,19 @@ public class GroupActivity extends AppCompatActivity {
             return TAB_COUNT;
         }
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String type = intent.getStringExtra("History");  //get the type of message from MyGcmListenerService 1 - lock or 0 -Unlock
+            sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+            accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            Log.d("Choi", "Type Check 4 = "+type);
+            if (type.equals("test")) // 1 == lock
+            {
+                checkType = type;
+                Log.d("Choi", "Type Check 3 = "+checkType);
+            }
+        }
+    };
 }
