@@ -4,10 +4,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +18,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.activity.MainActivity;
 import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Member;
 import com.sprout.clipcon.model.Message;
 import com.sprout.clipcon.server.Endpoint;
+import com.sprout.clipcon.server.EndpointInBackGround;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,7 +107,6 @@ public class InfoFragment extends Fragment {
 
         if (isContain(name)) {
             membersArrayList.remove(getIndex(name));
-
         } else {
             membersArrayList.add(new Member(name));
         }
@@ -151,6 +155,8 @@ public class InfoFragment extends Fragment {
     public void changeName() {
         Log.d("delf", "[SYSTEM] \"change name\" button clicked");
         //// TODO: 2017. 5. 23. do change Nickname part
+
+
     }
 
     public boolean isContain(String name) {

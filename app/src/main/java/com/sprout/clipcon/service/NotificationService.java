@@ -22,7 +22,7 @@ public class NotificationService extends Service {
     private NotificationManager notificationManager;
     private Notification.Builder builder;
     private PendingIntent pendingIntent;
-    public static Intent intent;
+    public Intent intent;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -55,7 +55,10 @@ public class NotificationService extends Service {
 
             intent = new Intent(getApplicationContext(), GroupActivity.class);
             intent.putExtra("History", "test");
+            intent.setAction("NOW");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
             pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 

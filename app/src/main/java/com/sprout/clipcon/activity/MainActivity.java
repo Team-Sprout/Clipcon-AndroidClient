@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                                         MainActivity.this.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                showBasicNoTitle();
+                                                alertDialog();
                                             }
                                         });
                                     }
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void showBasicNoTitle() {
+    public void alertDialog() {
         new MaterialDialog.Builder(this)
                 .content(R.string.checkKey)
                 .positiveText(R.string.confirm)

@@ -81,9 +81,8 @@ public class ContentsDownload {
         Log.d("delf", "[CLIENT] requestDataDownload(), pk is " + downloadDataPK);
         History myHistory = Endpoint.getUser().getGroup().getHistory();
         requestContents = myHistory.getContentsByPK(downloadDataPK);
-        if (requestContents == null) {
-            Log.d("delf", "[SYSTEM] requestContents is null");
-        }
+
+        File file = null;
 
         try {
             URL url = new URL(generateRequestParameter(downloadDataPK));
@@ -112,7 +111,7 @@ public class ContentsDownload {
                     case Contents.TYPE_FILE:
                         Log.d("delf", "[CLIENT] received file");
                         String fileOriginName = requestContents.getContentsValue();
-                        downloadFileData(httpConn.getInputStream(), fileOriginName);
+                        file = downloadFileData(httpConn.getInputStream(), fileOriginName);
                         Log.d("delf", "[CLIENT] complete downloading file.");
                         break;
 
