@@ -82,8 +82,6 @@ public class ContentsDownload {
         History myHistory = Endpoint.getUser().getGroup().getHistory();
         requestContents = myHistory.getContentsByPK(downloadDataPK);
 
-        File file = null;
-
         try {
             URL url = new URL(generateRequestParameter(downloadDataPK));
             httpConn = (HttpURLConnection) url.openConnection();
@@ -111,7 +109,7 @@ public class ContentsDownload {
                     case Contents.TYPE_FILE:
                         Log.d("delf", "[CLIENT] received file");
                         String fileOriginName = requestContents.getContentsValue();
-                        file = downloadFileData(httpConn.getInputStream(), fileOriginName);
+                         downloadFileData(httpConn.getInputStream(), fileOriginName);
                         Log.d("delf", "[CLIENT] complete downloading file.");
                         break;
 
@@ -210,24 +208,6 @@ public class ContentsDownload {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*OutputStream output = new FileOutputStream(file);
-        try {
-            try {
-                byte[] buffer = new byte[4 * 1024]; // or other buffer size
-                int read;
-
-                while ((read = inputStream.read(buffer)) != -1) {
-                    output.write(buffer, 0, read);
-                }
-                output.flush();
-            } finally {
-                output.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // handle exception, define IOException and others
-        } finally {
-            inputStream.close();
-        }*/
         return file;
     }
 

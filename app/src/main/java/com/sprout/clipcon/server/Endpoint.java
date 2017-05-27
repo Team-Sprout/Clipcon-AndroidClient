@@ -3,6 +3,7 @@ package com.sprout.clipcon.server;
 import android.os.Handler;
 import android.util.Log;
 
+import com.sprout.clipcon.fragment.InfoFragment;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Group;
 import com.sprout.clipcon.model.Message;
@@ -42,6 +43,7 @@ public class Endpoint {
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
     private ContentsCallback contentsCallback;
+    // private ChangeNicknameCallback changeNicknameCallback;
 
     private Handler handler;
 
@@ -74,18 +76,14 @@ public class Endpoint {
         return uniqueDownloader;
     }
 
-    // method name recommendation: callBackToWorkThread(), callBackToAsyncTask(), callBackToBackGround()
     public interface SecondCallback {
         void onEndpointResponse(JSONObject result); // define at EndpointInBackground
     }
-
     public void setSecondCallback(SecondCallback callback) {
         secondCallback = callback;
     }
 
-    // method name recommendation: callBackToFragment()
     public interface ParticipantCallback {
-        // method name onServerResponse()
         void onParticipantStatus(String newMember);
     }
     public void setParticipantCallback(ParticipantCallback callback) {
@@ -177,6 +175,11 @@ public class Endpoint {
                         handler.sendEmptyMessage(0);
                         handler.notify();
                     }
+                    break;
+                case Message.NOTI_CHANGE_NAME:
+                    Log.d("delf", "[DEBUG] receive Message: RESPONSE_CHANGE_NAME");
+                    InfoFragment.getInstance().changeNickname(message.get(Message.NAME), message.get(Message.CHANGE_NAME));
+
                     break;
                 default:
                     Log.d("delf", "[CLIENT] unknown message");

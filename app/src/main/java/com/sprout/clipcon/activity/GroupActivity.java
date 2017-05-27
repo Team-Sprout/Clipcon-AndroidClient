@@ -27,6 +27,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.fragment.HistoryFragment;
 import com.sprout.clipcon.fragment.InfoFragment;
+import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.EndpointInBackGround;
 import com.sprout.clipcon.service.ClipboardService;
 import com.sprout.clipcon.service.NotificationService;
 
@@ -123,6 +125,7 @@ public class GroupActivity extends AppCompatActivity {
                 })
                 .show();
     }
+
     // start ClipboardService.class to float always on Top Button when clipboard changed
     public void checkStart() {
         Intent clipIntent = new Intent(getApplicationContext(), ClipboardService.class);
@@ -139,6 +142,7 @@ public class GroupActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.title_logo);
         setSupportActionBar(toolbar);
 
+        // TabLayout
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.info));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.history));
@@ -186,7 +190,8 @@ public class GroupActivity extends AppCompatActivity {
 
             switch (position) {
                 case INFO:
-                    return new InfoFragment();
+                    infoFragment = InfoFragment.getInstance();
+                    return infoFragment;
                 case HISTORY:
                     historyFragment = new HistoryFragment();
                     return historyFragment;
