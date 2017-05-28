@@ -3,7 +3,6 @@ package com.sprout.clipcon.server;
 import android.os.Handler;
 import android.util.Log;
 
-import com.sprout.clipcon.fragment.InfoFragment;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Group;
 import com.sprout.clipcon.model.Message;
@@ -42,6 +41,7 @@ public class Endpoint {
     private static ContentsDownload uniqueDownloader;
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
+    private NameChangeCallback nameChangeCallback;
     private ContentsCallback contentsCallback;
     // private ChangeNicknameCallback changeNicknameCallback;
 
@@ -88,6 +88,13 @@ public class Endpoint {
     }
     public void setParticipantCallback(ParticipantCallback callback) {
         participantCallback = callback;
+    }
+
+    public interface NameChangeCallback {
+        void onSuccess(String newMember);
+    }
+    public void setNameChangeCallback(NameChangeCallback callback) {
+        nameChangeCallback = callback;
     }
 
     public interface ContentsCallback {
@@ -177,8 +184,9 @@ public class Endpoint {
                     }
                     break;
                 case Message.NOTI_CHANGE_NAME:
+                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME));
                     Log.d("delf", "[DEBUG] receive Message: RESPONSE_CHANGE_NAME");
-                    InfoFragment.getInstance().changeNickname(message.get(Message.NAME), message.get(Message.CHANGE_NAME));
+                    // InfoFragment.getInstance().changeNickname(message.get(Message.NAME), message.get(Message.CHANGE_NAME));
 
                     break;
                 default:
