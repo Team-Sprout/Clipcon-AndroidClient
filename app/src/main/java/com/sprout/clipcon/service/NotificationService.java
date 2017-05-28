@@ -33,10 +33,8 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("delf", "[SYSTEM] NotificationService: onStartCommand()");
-//        notifi_M = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         myServiceHandler handler = new myServiceHandler();
         endpoint.setHandler(handler);
-        // thread.start();
         return START_STICKY;
     }
 
@@ -44,8 +42,6 @@ public class NotificationService extends Service {
 
     public void onDestroy() {
         Log.d("delf", "[SYSTEM] NotificationService: onDestroyed()");
-        // thread.stopForever();
-        // thread = null;//쓰레기 값을 만들어서 빠르게 회수하라고 null을 넣어줌.
     }
 
     class myServiceHandler extends Handler {

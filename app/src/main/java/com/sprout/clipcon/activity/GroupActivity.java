@@ -57,6 +57,8 @@ public class GroupActivity extends AppCompatActivity {
         checkStart();
     }
 
+
+
     @Override
     protected void onResume() {
         super.onResume();

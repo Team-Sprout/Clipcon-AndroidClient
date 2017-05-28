@@ -19,26 +19,16 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-        // new EndpointInBackGround().execute(Message.CONNECT); // connect
-
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
-               // while (!isConnection) {
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-               // }
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         }, 1000);
 
-    }
-
-    private void changeMainAvtivity() {
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

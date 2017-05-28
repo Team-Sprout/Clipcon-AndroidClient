@@ -32,10 +32,6 @@ public class TransparentActivity extends Activity {
     private Uri uri;
     private static Bitmap bitmap;
 
-    public static Bitmap getBitmap() {
-        return bitmap;
-    }
-
     //ask user about permission to save image into basic gallery apps.
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -99,7 +95,7 @@ public class TransparentActivity extends Activity {
         finish();
     }
 
-    public String getPathFromUri(Uri uri){
+    private String getPathFromUri(Uri uri){
         Log.d("choi", "URI 테스트"+uri);
         String path;
         try {

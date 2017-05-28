@@ -122,11 +122,7 @@ public class ContentsDownload {
                 throw new IOException("Server returned non-OK status: " + status);
             }
             httpConn.disconnect();
-            Log.d("choi", "progress 10");
-
             downloadCallback.onSuccess();
-
-            Log.d("choi", "progress 11");
         } catch (IOException e) {
             e.printStackTrace();
         }

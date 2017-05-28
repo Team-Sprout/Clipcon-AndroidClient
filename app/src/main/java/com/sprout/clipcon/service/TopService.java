@@ -50,7 +50,7 @@ public class TopService extends Service {
                 WindowManager.LayoutParams.TYPE_TOAST,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        m_Params.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        m_Params.gravity = Gravity.END | Gravity.BOTTOM;
         m_Params.horizontalMargin = 0.1f;
         m_Params.verticalMargin = 0.05f;
 
