@@ -53,14 +53,14 @@ public class InfoFragment extends Fragment {
 
     private ArrayList<Member> membersArrayList = new ArrayList<>();
 
-    private static InfoFragment uniqueInfoFragment;
+    private InfoFragment uniqueInfoFragment;
 
-    public static InfoFragment getInstance() {
+   /* public static InfoFragment getInstance() {
         if (uniqueInfoFragment == null) {
             uniqueInfoFragment = new InfoFragment();
         }
         return uniqueInfoFragment;
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -143,7 +143,6 @@ public class InfoFragment extends Fragment {
                 Toast.makeText(getContext(), "Copy Key", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private void showEditDialog() {

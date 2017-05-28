@@ -85,6 +85,8 @@ public class GroupActivity extends AppCompatActivity {
 
         Intent notiIntent = new Intent(getApplicationContext(), NotificationService.class);
         stopService(notiIntent);
+
+
     }
 
     // create menu in Toolbar
@@ -192,7 +194,7 @@ public class GroupActivity extends AppCompatActivity {
 
             switch (position) {
                 case INFO:
-                    infoFragment = InfoFragment.getInstance();
+                    infoFragment = new InfoFragment();
                     return infoFragment;
                 case HISTORY:
                     historyFragment = new HistoryFragment();
