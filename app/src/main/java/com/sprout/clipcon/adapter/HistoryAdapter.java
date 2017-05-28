@@ -147,7 +147,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     private void progressNoti() {
 
-        final int id=1;
+        final int id = 2;
         final NotificationManager mNotifyManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);

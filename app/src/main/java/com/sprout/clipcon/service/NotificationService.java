@@ -45,6 +45,8 @@ public class NotificationService extends Service {
     }
 
     class myServiceHandler extends Handler {
+
+        int id = 1;
         @Override
         public void handleMessage(android.os.Message msg) {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -69,7 +71,7 @@ public class NotificationService extends Service {
             builder.setDefaults(Notification.DEFAULT_SOUND | Notification.FLAG_ONLY_ALERT_ONCE);
             builder.setContentIntent(pendingIntent);
 
-            notificationManager.notify(1, builder.build());
+            notificationManager.notify(id, builder.build());
         }
     };
 }
