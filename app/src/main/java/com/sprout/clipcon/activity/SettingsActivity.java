@@ -25,6 +25,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.settings_toolbar);
         LinearLayout teamLayout = (LinearLayout)findViewById(R.id.settings_team);
+        LinearLayout tutorialLayout = (LinearLayout)findViewById(R.id.settings_tutorial);
+        LinearLayout faqLayout = (LinearLayout)findViewById(R.id.settings_faq);
 
         toolbar.setTitle(R.string.setting);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
@@ -39,6 +41,22 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SettingsActivity.this, SettingsTeamActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        tutorialLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, SettingsTutorialActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        faqLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, SettingsFaqActivity.class);
                 startActivity(intent);
             }
         });

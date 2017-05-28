@@ -35,6 +35,8 @@
         </activity>
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.SettingsTeamActivity" />
+        <activity android:name=".activity.SettingsTutorialActivity" />
+        <activity android:name=".activity.SettingsFaqActivity" />
 
         <service android:name=".service.ClipboardService" />
         <service android:name=".service.TopService" />

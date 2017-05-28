@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/settings_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/toolbarColor"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="1. 메인화면에서 Create 버튼을 눌러 그룹을 생성할 수 있습니다. 그룹이 생성되면 6자리의 그룹 키가 만들어집니다."
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="2. 메인화면에서 Join 버튼을 눌러 그룹에 참여할 수 있습니다. 이 때, 그룹키를 입력해야 합니다."
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="3. 그룹을 만들고 그룹원이 들어오면 이때부터 텍스트, 이미지, 파일을 보내고 받을 수 있습니다."
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="4. 텍스트를 '복사'하면 우측 하단에 전송 버튼이 나타납니다. 이 버튼을 누르면 그룹원들에게 텍스트가 전송됩니다."
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="5. 이미지, 파일을 선택하고 '공유'를 누르면 공유 목록에 Clipcon 앱이 나타납니다. 앱 아이콘을 누르면 이미지, 파일이 전송됩니다."
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="6. 그룹원이 새로운 자료를 보내면 알림이 나타납니다."
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="7. 본인이 보낸 자료, 그룹원으로부터 받은 자료는 모두 History에 보관됩니다."
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="8. History에서 원하는 데이터를 선택하면, 언제든지 해당 데이터를 다시 사용할 수 있습니다."
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="9. 텍스트는 바로 클립보드에 들어가며, 이미지는 앨범에 Clipcon 폴더가 자동으로 만들어져 해당 경로로 저장됩니다. 파일은 내부 저장소의 Download 폴더로 저장됩니다."
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="10. 그룹원이 모두 나갈 경우 그룹은 없어지며 히스토리 내용도 사라집니다."
+                android:layout_marginBottom="8dp"/>
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+</LinearLayout>
