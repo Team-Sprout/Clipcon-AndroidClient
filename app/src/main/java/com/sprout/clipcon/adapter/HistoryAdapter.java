@@ -101,13 +101,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
 
-                        progressNoti();
+                        downloadProgressNoti();
                         break;
                     case Contents.TYPE_FILE:
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
 
-                        progressNoti();
+                        downloadProgressNoti();
                         break;
                 }
 
@@ -145,7 +145,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
-    private void progressNoti() {
+    private void downloadProgressNoti() {
 
         final int id = 2;
         final NotificationManager mNotifyManager =
@@ -162,7 +162,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                             mBuilder.setProgress(0, 0, true);
                             mNotifyManager.notify(id, mBuilder.build());
 
-                        //// TODO: 2017. 5. 25. Download Part. Have to put file open
                         ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
                             @Override
                             public void onSuccess() {
