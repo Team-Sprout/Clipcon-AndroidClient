@@ -82,8 +82,6 @@ public class ContentsDownload {
         History myHistory = Endpoint.getUser().getGroup().getHistory();
         requestContents = myHistory.getContentsByPK(downloadDataPK);
 
-        File file = null;
-
         try {
             URL url = new URL(generateRequestParameter(downloadDataPK));
             httpConn = (HttpURLConnection) url.openConnection();
@@ -111,7 +109,7 @@ public class ContentsDownload {
                     case Contents.TYPE_FILE:
                         Log.d("delf", "[CLIENT] received file");
                         String fileOriginName = requestContents.getContentsValue();
-                        file = downloadFileData(httpConn.getInputStream(), fileOriginName);
+                         downloadFileData(httpConn.getInputStream(), fileOriginName);
                         Log.d("delf", "[CLIENT] complete downloading file.");
                         break;
 
@@ -194,11 +192,12 @@ public class ContentsDownload {
         try {
             OutputStream outStream = new FileOutputStream(file);
             // 읽어들일 버퍼크기를 메모리에 생성
-            byte[] buf = new byte[1024];
+            byte[] buf = new byte[1024]; // 충돌 시, 이전 숫자로 바꿀 것
             int len = 0;
             // 끝까지 읽어들이면서 File 객체에 내용들을 쓴다
             while ((len = inputStream.read(buf)) > 0) {
                 outStream.write(buf, 0, len);
+                outStream.flush();
             }
             // Stream 객체를 모두 닫는다.
             outStream.close();
@@ -209,24 +208,6 @@ public class ContentsDownload {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*OutputStream output = new FileOutputStream(file);
-        try {
-            try {
-                byte[] buffer = new byte[4 * 1024]; // or other buffer size
-                int read;
-
-                while ((read = inputStream.read(buffer)) != -1) {
-                    output.write(buffer, 0, read);
-                }
-                output.flush();
-            } finally {
-                output.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // handle exception, define IOException and others
-        } finally {
-            inputStream.close();
-        }*/
         return file;
     }
 

@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
-import com.sprout.clipcon.activity.MainActivity;
 import com.sprout.clipcon.adapter.MemberAdapter;
 import com.sprout.clipcon.model.Member;
 import com.sprout.clipcon.model.Message;
@@ -39,7 +38,7 @@ import java.util.Iterator;
  */
 
 public class InfoFragment extends Fragment {
-    
+
     private RecyclerView recyclerView;
     private MemberAdapter memberAdapter;
 
@@ -49,7 +48,19 @@ public class InfoFragment extends Fragment {
     private ImageView copyGroupKey;
     private ImageView editNickName;
 
+    private TextView infoGroupKey;
+    private TextView myNickName;
+
     private ArrayList<Member> membersArrayList = new ArrayList<>();
+
+    private static InfoFragment uniqueInfoFragment;
+
+    public static InfoFragment getInstance() {
+        if (uniqueInfoFragment == null) {
+            uniqueInfoFragment = new InfoFragment();
+        }
+        return uniqueInfoFragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,8 +68,8 @@ public class InfoFragment extends Fragment {
 
         System.out.println("그룹화면으로 진입");
 
-        final TextView infoGroupKey = (TextView) view.findViewById(R.id.group_key);
-        final TextView myNickName = (TextView) view.findViewById(R.id.my_nickname);
+        infoGroupKey = (TextView) view.findViewById(R.id.group_key);
+        myNickName = (TextView) view.findViewById(R.id.my_nickname);
 
         copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
         editNickName = (ImageView) view.findViewById(R.id.editNickName);
@@ -114,8 +125,15 @@ public class InfoFragment extends Fragment {
         recyclerView.setAdapter(memberAdapter);
     }
 
-    // method name recommendation: setCopyGroupKeyButtonListener()
     private void setButtonListener() {
+        editNickName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditDialog();
+
+            }
+        });
+
         copyGroupKey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,13 +144,19 @@ public class InfoFragment extends Fragment {
             }
         });
 
-        editNickName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeName();
-            }
-        });
+    }
 
+    private void showEditDialog() {
+        new MaterialDialog.Builder(getContext())
+                .title("Input new your new name")
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
+                .positiveText("OK")
+                .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence changedNickname) {
+                        new EndpointInBackGround().execute(Message.REQUEST_CHANGE_NAME, changedNickname.toString());
+                    }
+                }).show();
     }
 
     private void setMemberCallback() {
@@ -155,8 +179,6 @@ public class InfoFragment extends Fragment {
     public void changeName() {
         Log.d("delf", "[SYSTEM] \"change name\" button clicked");
         //// TODO: 2017. 5. 23. do change Nickname part
-
-
     }
 
     public boolean isContain(String name) {
@@ -179,5 +201,27 @@ public class InfoFragment extends Fragment {
             }
         }
         return -1;
+    }
+
+    public void changeNickname(final String originName, final String changedName) {
+        Log.d("delf", "originName = " + originName + ", changedName = " + changedName);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(myNickName.getText().equals(originName)) {
+                    myNickName.setText(changedName);
+                }
+                for (int i = 0; i < membersArrayList.size(); i++) {
+                    if (membersArrayList.get(i).getNickname().equals(originName)) {
+                        Member changedMember = membersArrayList.remove(i);
+                        changedMember.setName(changedName);
+                        membersArrayList.add(i, changedMember);
+                        memberAdapter = new MemberAdapter(getActivity(), membersArrayList);
+                        recyclerView.setAdapter(memberAdapter);
+                        return;
+                    }
+                }
+            }
+        });
     }
 }

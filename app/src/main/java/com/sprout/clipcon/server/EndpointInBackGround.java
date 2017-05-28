@@ -28,7 +28,6 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private String filePath;
     private File uploadFile; // test
 
-
     public EndpointInBackGround setSendBitmapImage(Bitmap sendBitmapImage) {
         this.sendBitmapImage = sendBitmapImage;
         return this;
@@ -123,6 +122,13 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 Log.d("delf", "send test request");
                 sendMessage(
                         new Message().setType("test: hansung")
+                );
+                break;
+            case Message.REQUEST_CHANGE_NAME:
+                Log.d("delf", "[DEBUG] nickname: " + msg[1]);
+                sendMessage(
+                        new Message().setType(Message.REQUEST_CHANGE_NAME)
+                                .add(Message.CHANGE_NAME, msg[1])
                 );
                 break;
 

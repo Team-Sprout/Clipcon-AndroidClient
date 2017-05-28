@@ -13,7 +13,6 @@ import com.sprout.clipcon.R;
  */
 
 public class SplashActivity extends AppCompatActivity {
-    public boolean isConnection = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

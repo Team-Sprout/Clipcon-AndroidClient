@@ -1,9 +1,9 @@
 package com.sprout.clipcon.server;
 
-import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
+import com.sprout.clipcon.fragment.InfoFragment;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Group;
 import com.sprout.clipcon.model.Message;
@@ -31,26 +31,21 @@ import javax.websocket.Session;
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
-
     //private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
     private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
+
     private Session session;
     private static User user;
-    //    private static String userName;
-//    private static String groupKey;
+
     private static Endpoint uniqueEndpoint;
     private static ContentsUpload uniqueUploader;
     private static ContentsDownload uniqueDownloader;
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
     private ContentsCallback contentsCallback;
+    // private ChangeNicknameCallback changeNicknameCallback;
 
     private Handler handler;
-
-    private Context context;
-    public void setContext(Context context) {
-        this.context = context;
-    }
 
     public static String lastContentsPK; // [delf] tep field
 
@@ -81,18 +76,14 @@ public class Endpoint {
         return uniqueDownloader;
     }
 
-    // method name recommendation: callBackToWorkThread(), callBackToAsyncTask(), callBackToBackGround()
     public interface SecondCallback {
         void onEndpointResponse(JSONObject result); // define at EndpointInBackground
     }
-
     public void setSecondCallback(SecondCallback callback) {
         secondCallback = callback;
     }
 
-    // method name recommendation: callBackToFragment()
     public interface ParticipantCallback {
-        // method name onServerResponse()
         void onParticipantStatus(String newMember);
     }
     public void setParticipantCallback(ParticipantCallback callback) {
@@ -185,6 +176,11 @@ public class Endpoint {
                         handler.notify();
                     }
                     break;
+                case Message.NOTI_CHANGE_NAME:
+                    Log.d("delf", "[DEBUG] receive Message: RESPONSE_CHANGE_NAME");
+                    InfoFragment.getInstance().changeNickname(message.get(Message.NAME), message.get(Message.CHANGE_NAME));
+
+                    break;
                 default:
                     Log.d("delf", "[CLIENT] unknown message");
                     System.out.println("default");
@@ -209,11 +205,14 @@ public class Endpoint {
 
     @OnClose
     public void onClose() {
-        // new EndpointInBackGround().execute(Message.Exit);
+        this.session = null;
         Log.d("delf", "session closed.");
     }
 
     public static User getUser() {
         return user;
+    }
+    public Session getSesion() {
+        return session;
     }
 }

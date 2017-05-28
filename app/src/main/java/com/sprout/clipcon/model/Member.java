@@ -12,4 +12,8 @@ public class Member {
     public String getNickname() {
         return nickname;
     }
+
+    public void setName(String name) {
+        this.nickname = name;
+    }
 }
