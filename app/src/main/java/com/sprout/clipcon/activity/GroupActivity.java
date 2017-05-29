@@ -43,10 +43,7 @@ public class GroupActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
 
-    Sensor accelerometer;
-    SensorManager sm;
     String checkType;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +53,8 @@ public class GroupActivity extends AppCompatActivity {
         initLayout();
         checkStart();
     }
+
+
 
     @Override
     protected void onResume() {
@@ -212,8 +211,8 @@ public class GroupActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String type = intent.getStringExtra("History");  //get the type of message from MyGcmListenerService 1 - lock or 0 -Unlock
-            sm = (SensorManager) getSystemService(SENSOR_SERVICE);
-            accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//            SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+//            Sensor accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             Log.d("Choi", "Type Check 4 = "+type);
             if (type.equals("test")) // 1 == lock
             {

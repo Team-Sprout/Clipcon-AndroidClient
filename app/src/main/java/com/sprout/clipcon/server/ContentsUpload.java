@@ -5,19 +5,32 @@ import android.graphics.Bitmap;
 public class ContentsUpload {
     public UploadData uploader;
 
+    private UploadCallback uploadCallback;
+
+    public interface UploadCallback {
+        void onSuccess();
+    }
+
+    public void setUploadCallback(UploadCallback uploadCallback) {
+        this.uploadCallback = uploadCallback;
+    }
+
+
     public ContentsUpload(String userName, String groupKey) {
         uploader = new UploadData(userName, groupKey);
     }
 
-    public void upload(Bitmap bitmap) {
-        uploader.uploadImageData(bitmap);
+    public void uploadText(String text) {
+        uploader.uploadStringData(text);
     }
 
-    public void upload(String text) {
-        uploader.uploadStringData(text);
+    public void uploadImage(Bitmap bitmap) {
+        uploader.uploadImageData(bitmap);
+        uploadCallback.onSuccess();
     }
 
     public void uploadFile(String filePath) {
         uploader.uploadMultipartData(filePath);
+        uploadCallback.onSuccess();
     }
 }

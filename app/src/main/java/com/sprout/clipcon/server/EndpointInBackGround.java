@@ -89,11 +89,11 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 switch (msg[1]) {
                     case "text":
                         Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ text upload /" + sendText);
-                        Endpoint.getUploader().upload(sendText);
+                        Endpoint.getUploader().uploadText(sendText);
                         break;
                     case "image":
                         Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ image upload.");
-                        Endpoint.getUploader().upload(sendBitmapImage);
+                        Endpoint.getUploader().uploadImage(sendBitmapImage);
                         break;
                     case "file":
                         Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ file upload / " + filePath);
@@ -159,6 +159,8 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
         };
         Endpoint.getInstance().setSecondCallback(secondResult);
     }
+
+
 
     @Override
     protected void onPostExecute(String s) {
