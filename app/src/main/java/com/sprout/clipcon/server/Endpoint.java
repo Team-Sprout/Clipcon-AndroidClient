@@ -91,7 +91,7 @@ public class Endpoint {
     }
 
     public interface NameChangeCallback {
-        void onSuccess(String newMember);
+        void onSuccess(String origin, String changed);
     }
     public void setNameChangeCallback(NameChangeCallback callback) {
         nameChangeCallback = callback;
@@ -184,7 +184,7 @@ public class Endpoint {
                     }
                     break;
                 case Message.NOTI_CHANGE_NAME:
-                    participantCallback.onParticipantStatus(message.get(Message.PARTICIPANT_NAME));
+                    nameChangeCallback.onSuccess(message.get(Message.NAME), message.get(Message.CHANGE_NAME));
                     Log.d("delf", "[DEBUG] receive Message: RESPONSE_CHANGE_NAME");
                     // InfoFragment.getInstance().changeNickname(message.get(Message.NAME), message.get(Message.CHANGE_NAME));
 

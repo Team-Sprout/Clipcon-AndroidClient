@@ -100,6 +100,7 @@ public class InfoFragment extends Fragment {
 
         setButtonListener();
         setMemberCallback();
+        setNicknameCallback();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_item);
@@ -174,6 +175,17 @@ public class InfoFragment extends Fragment {
         Endpoint.getInstance().setParticipantCallback(participantResult);
     }
 
+    private void setNicknameCallback() {
+        Endpoint.NameChangeCallback nameChangeCallback = new Endpoint.NameChangeCallback() {
+            @Override
+            public void onSuccess(String origin, String changed) {
+                Log.d("delf", "setNickName(): onSuccess.");
+                changeNickname(origin, changed);
+            }
+        };
+        Endpoint.getInstance().setNameChangeCallback(nameChangeCallback);
+    }
+
     // method name recommendation: showChangeNameDialog()
     public void changeName() {
         Log.d("delf", "[SYSTEM] \"change name\" button clicked");
@@ -207,7 +219,7 @@ public class InfoFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(myNickName.getText().equals(originName)) {
+                if (myNickName.getText().equals(originName)) {
                     myNickName.setText(changedName);
                 }
                 for (int i = 0; i < membersArrayList.size(); i++) {
