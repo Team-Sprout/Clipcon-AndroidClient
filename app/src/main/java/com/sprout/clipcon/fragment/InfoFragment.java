@@ -179,6 +179,7 @@ public class InfoFragment extends Fragment {
         Endpoint.NameChangeCallback nameChangeCallback = new Endpoint.NameChangeCallback() {
             @Override
             public void onSuccess(String origin, String changed) {
+                Log.d("delf", "setNickName(): onSuccess.");
                 changeNickname(origin, changed);
             }
         };
