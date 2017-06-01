@@ -33,7 +33,10 @@ import java.util.Locale;
 public class ContentsDownload {
 
     // 다운로드 파일을 임시로 저장할 위치
-    private final static String SERVER_URL = "http://delf.gonetis.com:8080/websocketServerModule";
+
+
+    private final static String SERVER_URL = "http://223.194.159.121:8080/websocketServerModule";
+//    private final static String SERVER_URL = "http://delf.gonetis.com:8080/websocketServerModule";
     private final static String SERVER_SERVLET = "/DownloadServlet";
 
     private final String charset = "UTF-8";
@@ -46,7 +49,6 @@ public class ContentsDownload {
 
     private Context context;
     private final String appDirectoryName = "Clipcon";
-    // private String downloadDataPK; // Contents' Primary Key to download
 
     private DownloadCallback downloadCallback;
 
@@ -65,7 +67,6 @@ public class ContentsDownload {
     public ContentsDownload(String userName, String groupPK) {
         this.userName = userName;
         this.groupPK = groupPK;
-        // this.context = context;
     }
 
     public void setContext(Context context) {

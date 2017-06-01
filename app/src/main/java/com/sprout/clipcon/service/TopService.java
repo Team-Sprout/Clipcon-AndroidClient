@@ -80,7 +80,6 @@ public class TopService extends Service {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         Toast.makeText(getApplicationContext(), R.string.shareString, Toast.LENGTH_SHORT).show();
 
-
         if (!cm.hasPrimaryClip()) {
             Toast.makeText(this, "Clipboard is empty", Toast.LENGTH_LONG).show();
             return;

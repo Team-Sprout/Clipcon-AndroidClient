@@ -47,33 +47,19 @@ public class InfoFragment extends Fragment {
 
     private ImageView copyGroupKey;
     private ImageView editNickName;
-
     private TextView infoGroupKey;
     private TextView myNickName;
 
     private ArrayList<Member> membersArrayList = new ArrayList<>();
 
-    private InfoFragment uniqueInfoFragment;
-
-   /* public static InfoFragment getInstance() {
-        if (uniqueInfoFragment == null) {
-            uniqueInfoFragment = new InfoFragment();
-        }
-        return uniqueInfoFragment;
-    }*/
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
 
-        System.out.println("그룹화면으로 진입");
-
         infoGroupKey = (TextView) view.findViewById(R.id.group_key);
         myNickName = (TextView) view.findViewById(R.id.my_nickname);
-
         copyGroupKey = (ImageView) view.findViewById(R.id.copyGroupKey);
         editNickName = (ImageView) view.findViewById(R.id.editNickName);
-
 
         try {
             JSONObject response = new JSONObject(getActivity().getIntent().getStringExtra("response"));
@@ -113,7 +99,6 @@ public class InfoFragment extends Fragment {
         return view;
     }
 
-    // method name recommendation: addParticipant() / addMember() / updateParticipant() / updateMember()
     private void updateMember(String name) {
         Log.d("delf", "[CLIENT] receive name is " + name);
 
@@ -184,12 +169,6 @@ public class InfoFragment extends Fragment {
             }
         };
         Endpoint.getInstance().setNameChangeCallback(nameChangeCallback);
-    }
-
-    // method name recommendation: showChangeNameDialog()
-    public void changeName() {
-        Log.d("delf", "[SYSTEM] \"change name\" button clicked");
-        //// TODO: 2017. 5. 23. do change Nickname part
     }
 
     public boolean isContain(String name) {

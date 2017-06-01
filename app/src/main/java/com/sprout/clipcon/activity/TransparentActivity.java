@@ -49,16 +49,13 @@ public class TransparentActivity extends Activity {
             case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // permission was granted, yay! Do the contacts-related task you need to do.
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied, boo! Disable the functionality that depends on this permission.
                 }
                 return;
             }
-            // other 'case' lines to check for other
-            // permissions this app might request
+            // other 'case' lines to check for other permissions this app might request
         }
     }
 
@@ -109,21 +106,15 @@ public class TransparentActivity extends Activity {
     }
 
     private String getPathFromUri(Uri uri){
-        Log.d("choi", "URI 테스트"+uri);
         String path;
         try {
-
             Cursor cursor = getContentResolver().query(uri, null, null, null, null );
             cursor.moveToNext();
             path = cursor.getString( cursor.getColumnIndex( "_data" ) );
             cursor.close();
-
         } catch (NullPointerException e) {
             path = uri.getPath();
         }
-
-        Log.d("choi", "URI string = " + path);
-
         return path;
     }
 
@@ -148,7 +139,6 @@ public class TransparentActivity extends Activity {
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             } else {
-
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 

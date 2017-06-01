@@ -30,11 +30,12 @@ import javax.websocket.Session;
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
-    //private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
-    private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
+//    private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
+    private String uri = "ws://223.194.159.121:8080/websocketServerModule/ServerEndpoint";
 
     private Session session;
     private static User user;
+    private Handler handler;
 
     private static Endpoint uniqueEndpoint;
     private static ContentsUpload uniqueUploader;
@@ -43,9 +44,6 @@ public class Endpoint {
     private ParticipantCallback participantCallback;
     private NameChangeCallback nameChangeCallback;
     private ContentsCallback contentsCallback;
-    // private ChangeNicknameCallback changeNicknameCallback;
-
-    private Handler handler;
 
     public static String lastContentsPK; // [delf] tep field
 
@@ -153,6 +151,18 @@ public class Endpoint {
                             break;
                     }
                     user = new User(message.get(Message.NAME), new Group(message.get(Message.GROUP_PK)));
+                    break;
+
+                case Message.RESPONSE_CHANGE_NAME:
+                    switch (message.get(Message.RESULT)) {
+                        case Message.CONFIRM:
+                            System.out.println("change nickname confirm");
+                            break;
+
+                        case Message.REJECT:
+                            System.out.println("change nickname reject");
+                            break;
+                    }
                     break;
 
                 case Message.RESPONSE_EXIT_GROUP:

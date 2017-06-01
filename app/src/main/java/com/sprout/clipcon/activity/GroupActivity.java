@@ -42,7 +42,6 @@ public class GroupActivity extends AppCompatActivity {
     private Fragment historyFragment;
 
     private TabLayout tabLayout;
-
     String checkType;
 
     @Override
@@ -54,17 +53,13 @@ public class GroupActivity extends AppCompatActivity {
         checkStart();
     }
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
 
         Intent intent = getIntent();
         if(intent != null) {
-            Log.d("Choi", "Type Check 1 = "+checkType);
             if(checkType != null) {
-                Log.d("Choi", "Type Check 2 = "+checkType);
                 TabLayout.Tab tab = tabLayout.getTabAt(1);
                 tab.select();
             }
@@ -175,7 +170,7 @@ public class GroupActivity extends AppCompatActivity {
         });
     }
 
-    // adapter for ViewPager to create two view (INFO, HISTORY)
+    // adapter for ViewPager to create two page (INFO, HISTORY)
     public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
         private final int TAB_COUNT = 2;
@@ -213,11 +208,9 @@ public class GroupActivity extends AppCompatActivity {
             String type = intent.getStringExtra("History");  //get the type of message from MyGcmListenerService 1 - lock or 0 -Unlock
 //            SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 //            Sensor accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            Log.d("Choi", "Type Check 4 = "+type);
             if (type.equals("test")) // 1 == lock
             {
                 checkType = type;
-                Log.d("Choi", "Type Check 3 = "+checkType);
             }
         }
     };

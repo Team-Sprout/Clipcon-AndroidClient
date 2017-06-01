@@ -38,7 +38,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     private Context context;
     private ArrayList<Contents> contentsList;
-
     private Bitmap tmpBitmap;
 
     public HistoryAdapter(Context context, ArrayList<Contents> contentsList) {
@@ -110,8 +109,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                         downloadProgressNoti();
                         break;
                 }
-
-
             }
         });
     }

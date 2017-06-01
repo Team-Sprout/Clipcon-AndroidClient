@@ -48,18 +48,10 @@ public class HistoryFragment extends Fragment {
         return view;
     }
 
-    private void updateHistory(Contents contents) {
-        contentsArrayList.add(contents);
-
-        historyAdapter = new HistoryAdapter(getActivity(), contentsArrayList);
-        recyclerView.setAdapter(historyAdapter);
-    }
-
     private void setContentsCallback() {
         Endpoint.ContentsCallback contentsResult = new Endpoint.ContentsCallback() {
             @Override
             public void onContentsUpdate(final Contents contents) {
-                System.out.println("History List Changed");
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -70,5 +62,12 @@ public class HistoryFragment extends Fragment {
             }
         };
         Endpoint.getInstance().setContentsCallback(contentsResult);
+    }
+
+    private void updateHistory(Contents contents) {
+        contentsArrayList.add(contents);
+
+        historyAdapter = new HistoryAdapter(getActivity(), contentsArrayList);
+        recyclerView.setAdapter(historyAdapter);
     }
 }
