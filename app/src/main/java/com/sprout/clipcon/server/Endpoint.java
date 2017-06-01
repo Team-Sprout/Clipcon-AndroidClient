@@ -30,8 +30,8 @@ import javax.websocket.Session;
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
-//    private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
-    private String uri = "ws://223.194.159.121:8080/websocketServerModule/ServerEndpoint";
+    // private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
+    private String uri = "ws://223.194.152.247:8080/websocketServerModule/ServerEndpoint";
 
     private Session session;
     private static User user;
@@ -153,17 +153,7 @@ public class Endpoint {
                     user = new User(message.get(Message.NAME), new Group(message.get(Message.GROUP_PK)));
                     break;
 
-                case Message.RESPONSE_CHANGE_NAME:
-                    switch (message.get(Message.RESULT)) {
-                        case Message.CONFIRM:
-                            System.out.println("change nickname confirm");
-                            break;
 
-                        case Message.REJECT:
-                            System.out.println("change nickname reject");
-                            break;
-                    }
-                    break;
 
                 case Message.RESPONSE_EXIT_GROUP:
                     Log.d("delf", "[CLIENT] exit the group");
@@ -198,6 +188,20 @@ public class Endpoint {
                     Log.d("delf", "[DEBUG] receive Message: RESPONSE_CHANGE_NAME");
                     // InfoFragment.getInstance().changeNickname(message.get(Message.NAME), message.get(Message.CHANGE_NAME));
 
+                    break;
+
+                case Message.RESPONSE_CHANGE_NAME:
+                    switch (message.get(Message.RESULT)) {
+                        case Message.CONFIRM:
+                            nameChangeCallback.onSuccess(user.getName(), message.get(Message.CHANGE_NAME));
+                            user.setName(message.get(Message.CHANGE_NAME));
+                            System.out.println("change nickname confirm");
+                            break;
+
+                        case Message.REJECT:
+                            System.out.println("change nickname reject");
+                            break;
+                    }
                     break;
                 default:
                     Log.d("delf", "[CLIENT] unknown message");
