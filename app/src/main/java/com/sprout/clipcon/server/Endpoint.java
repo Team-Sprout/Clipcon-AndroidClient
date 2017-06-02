@@ -30,7 +30,7 @@ import javax.websocket.Session;
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
-    // private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
+//     private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
     private String uri = "ws://223.194.152.247:8080/websocketServerModule/ServerEndpoint";
 
     private Session session;
@@ -172,6 +172,10 @@ public class Endpoint {
 
                 case Message.NOTI_UPLOAD_DATA:
 
+                    if(message.get("contentsType").equals(Message.MULTIPLE_CONTENTS_INFO)) {
+                        Log.d("Choi", "type is multi");
+                        break;
+                    }
                     Log.d("delf", "[CLIENT] \"" + message.get("uploadUserName") + "\" is upload the data");
                     lastContentsPK  = message.get("contentsPKName");
                     Contents contents = MessageParser.getContentsbyMessage(message);

@@ -12,8 +12,7 @@
             android:id="@+id/thumbnail"
             android:layout_width="76dp"
             android:layout_height="80dp"
-            android:layout_margin="14dp"
-            android:src="@drawable/text_icon"/>
+            android:layout_margin="14dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"

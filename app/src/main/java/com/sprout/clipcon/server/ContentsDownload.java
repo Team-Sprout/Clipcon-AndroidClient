@@ -35,7 +35,8 @@ public class ContentsDownload {
     // 다운로드 파일을 임시로 저장할 위치
 
 
-    private final static String SERVER_URL = "http://223.194.159.121:8080/websocketServerModule";
+//    private final static String SERVER_URL = "http://223.194.159.121:8080/websocketServerModule";
+    private final static String SERVER_URL = "http://223.194.152.247:8080/websocketServerModule";
 //    private final static String SERVER_URL = "http://delf.gonetis.com:8080/websocketServerModule";
     private final static String SERVER_SERVLET = "/DownloadServlet";
 

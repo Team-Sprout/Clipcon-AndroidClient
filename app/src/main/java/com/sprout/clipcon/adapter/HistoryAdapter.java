@@ -78,6 +78,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
                 holder.size.setText(convertContentsSize(contents.getContentsSize()));
                 break;
+
+            default:
+                break;
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

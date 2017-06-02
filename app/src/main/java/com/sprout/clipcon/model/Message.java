@@ -112,7 +112,7 @@ public class Message {
 
     public final static String LOG_UPLOAD_INFO = "log/upload info";
     public final static String UPLOAD_START_TIME = "upload start time";
-    public final static String MULTIPLE_CONTENTS_INFO = "multiple contents info";
+    public final static String MULTIPLE_CONTENTS_INFO = "MULTIPLE_FILE";
 
     public final static String RESULT = "result";
     public final static String CONFIRM = "confirm";
