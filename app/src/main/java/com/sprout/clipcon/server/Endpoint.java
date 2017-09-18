@@ -1,6 +1,5 @@
 package com.sprout.clipcon.server;
 
-import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
@@ -31,26 +30,20 @@ import javax.websocket.Session;
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
 
+//     private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
+    private String uri = "ws://223.194.152.247:8080/websocketServerModule/ServerEndpoint";
 
-    //private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
-    private String uri = "ws://118.176.16.163:8080/websocketServerModule/ServerEndpoint";
     private Session session;
     private static User user;
-    //    private static String userName;
-//    private static String groupKey;
+    private Handler handler;
+
     private static Endpoint uniqueEndpoint;
     private static ContentsUpload uniqueUploader;
     private static ContentsDownload uniqueDownloader;
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
+    private NameChangeCallback nameChangeCallback;
     private ContentsCallback contentsCallback;
-
-    private Handler handler;
-
-    private Context context;
-    public void setContext(Context context) {
-        this.context = context;
-    }
 
     public static String lastContentsPK; // [delf] tep field
 
@@ -81,22 +74,25 @@ public class Endpoint {
         return uniqueDownloader;
     }
 
-    // method name recommendation: callBackToWorkThread(), callBackToAsyncTask(), callBackToBackGround()
     public interface SecondCallback {
         void onEndpointResponse(JSONObject result); // define at EndpointInBackground
     }
-
     public void setSecondCallback(SecondCallback callback) {
         secondCallback = callback;
     }
 
-    // method name recommendation: callBackToFragment()
     public interface ParticipantCallback {
-        // method name onServerResponse()
         void onParticipantStatus(String newMember);
     }
     public void setParticipantCallback(ParticipantCallback callback) {
         participantCallback = callback;
+    }
+
+    public interface NameChangeCallback {
+        void onSuccess(String origin, String changed);
+    }
+    public void setNameChangeCallback(NameChangeCallback callback) {
+        nameChangeCallback = callback;
     }
 
     public interface ContentsCallback {
@@ -157,6 +153,8 @@ public class Endpoint {
                     user = new User(message.get(Message.NAME), new Group(message.get(Message.GROUP_PK)));
                     break;
 
+
+
                 case Message.RESPONSE_EXIT_GROUP:
                     Log.d("delf", "[CLIENT] exit the group");
                     break;
@@ -174,6 +172,10 @@ public class Endpoint {
 
                 case Message.NOTI_UPLOAD_DATA:
 
+                    if(message.get("contentsType").equals(Message.MULTIPLE_CONTENTS_INFO)) {
+                        Log.d("Choi", "type is multi");
+                        break;
+                    }
                     Log.d("delf", "[CLIENT] \"" + message.get("uploadUserName") + "\" is upload the data");
                     lastContentsPK  = message.get("contentsPKName");
                     Contents contents = MessageParser.getContentsbyMessage(message);
@@ -183,6 +185,26 @@ public class Endpoint {
                     if(!message.get("uploadUserName").equals(user.getName())) {
                         handler.sendEmptyMessage(0);
                         handler.notify();
+                    }
+                    break;
+                case Message.NOTI_CHANGE_NAME:
+                    nameChangeCallback.onSuccess(message.get(Message.NAME), message.get(Message.CHANGE_NAME));
+                    Log.d("delf", "[DEBUG] receive Message: RESPONSE_CHANGE_NAME");
+                    // InfoFragment.getInstance().changeNickname(message.get(Message.NAME), message.get(Message.CHANGE_NAME));
+
+                    break;
+
+                case Message.RESPONSE_CHANGE_NAME:
+                    switch (message.get(Message.RESULT)) {
+                        case Message.CONFIRM:
+                            nameChangeCallback.onSuccess(user.getName(), message.get(Message.CHANGE_NAME));
+                            user.setName(message.get(Message.CHANGE_NAME));
+                            System.out.println("change nickname confirm");
+                            break;
+
+                        case Message.REJECT:
+                            System.out.println("change nickname reject");
+                            break;
                     }
                     break;
                 default:
@@ -209,11 +231,14 @@ public class Endpoint {
 
     @OnClose
     public void onClose() {
-        // new EndpointInBackGround().execute(Message.Exit);
+        this.session = null;
         Log.d("delf", "session closed.");
     }
 
     public static User getUser() {
         return user;
+    }
+    public Session getSesion() {
+        return session;
     }
 }

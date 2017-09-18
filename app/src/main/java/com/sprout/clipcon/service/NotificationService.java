@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.sprout.clipcon.R;
@@ -16,15 +17,12 @@ import com.sprout.clipcon.activity.GroupActivity;
 import com.sprout.clipcon.server.Endpoint;
 
 public class NotificationService extends Service {
-//    NotificationManager notifi_M;
-//    // ServiceThread thread;
     Endpoint endpoint = Endpoint.getInstance();
-//    Notification notifi;
 
-    NotificationManager notificationManager;
-    Notification.Builder builder;
-    Intent intent;
-    PendingIntent pendingIntent;
+    private NotificationManager notificationManager;
+    private Notification.Builder builder;
+    private PendingIntent pendingIntent;
+    public Intent intent;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -35,10 +33,8 @@ public class NotificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("delf", "[SYSTEM] NotificationService: onStartCommand()");
-//        notifi_M = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         myServiceHandler handler = new myServiceHandler();
         endpoint.setHandler(handler);
-        // thread.start();
         return START_STICKY;
     }
 
@@ -46,17 +42,21 @@ public class NotificationService extends Service {
 
     public void onDestroy() {
         Log.d("delf", "[SYSTEM] NotificationService: onDestroyed()");
-        // thread.stopForever();
-        // thread = null;//쓰레기 값을 만들어서 빠르게 회수하라고 null을 넣어줌.
     }
 
     class myServiceHandler extends Handler {
+
+        int id = 1;
         @Override
         public void handleMessage(android.os.Message msg) {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
             intent = new Intent(getApplicationContext(), GroupActivity.class);
+            intent.putExtra("History", "test");
+            intent.setAction("NOW");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
             pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -71,30 +71,7 @@ public class NotificationService extends Service {
             builder.setDefaults(Notification.DEFAULT_SOUND | Notification.FLAG_ONLY_ALERT_ONCE);
             builder.setContentIntent(pendingIntent);
 
-            notificationManager.notify(1, builder.build());
-
-//            Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
-//            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//            notifi = new Notification.Builder(getApplicationContext())
-//                    .setContentTitle("New")
-//                    .setContentText("History data is updated")
-//                    .setSmallIcon(R.drawable.logo)
-//                    .setTicker("Clipcon Alert !!!")
-//                    .setContentIntent(pendingIntent)
-//                    .build();
-//
-//            //소리추가
-//            notifi.defaults = Notification.DEFAULT_SOUND;
-//
-//            //알림 소리를 한번만 내도록
-//            notifi.flags = Notification.FLAG_ONLY_ALERT_ONCE;
-//
-//            //확인하면 자동으로 알림이 제거 되도록
-//            notifi.flags = Notification.FLAG_AUTO_CANCEL;
-//
-//
-//            notifi_M.notify( 777 , notifi);
+            notificationManager.notify(id, builder.build());
         }
     };
 }

@@ -43,11 +43,6 @@ public class ClipboardService extends Service {
         mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         mClipboardManager.addPrimaryClipChangedListener(changedListener);
 
-//        String action = intent.getAction();
-//        if(Intent.ACTION_SEND.equals(action)){
-//            System.out.println("adfsafadf");
-//        }
-
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -57,9 +52,6 @@ public class ClipboardService extends Service {
         public void onPrimaryClipChanged() {
             Log.d("delf", "[SYSTEM] clipboard changing detected");
 
-//            Toast toast = Toast.makeText(getApplicationContext(), "Clipboard changed", Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-//            toast.show();
             showTopButton();
         }
     };

@@ -1,7 +1,12 @@
 package com.sprout.clipcon.activity;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +40,10 @@ import com.sprout.clipcon.service.NotificationService;
 public class GroupActivity extends AppCompatActivity {
     private Fragment infoFragment;
     private Fragment historyFragment;
+
+    private TabLayout tabLayout;
+    String checkType;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +51,21 @@ public class GroupActivity extends AppCompatActivity {
 
         initLayout();
         checkStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            if(checkType != null) {
+                TabLayout.Tab tab = tabLayout.getTabAt(1);
+                tab.select();
+            }
+        }
+
+        LocalBroadcastManager.getInstance(GroupActivity.this).registerReceiver(broadcastReceiver, new IntentFilter("NOW"));
     }
 
     @Override
@@ -52,6 +77,8 @@ public class GroupActivity extends AppCompatActivity {
 
         Intent notiIntent = new Intent(getApplicationContext(), NotificationService.class);
         stopService(notiIntent);
+
+
     }
 
     // create menu in Toolbar
@@ -95,7 +122,6 @@ public class GroupActivity extends AppCompatActivity {
                 .show();
     }
 
-
     // start ClipboardService.class to float always on Top Button when clipboard changed
     public void checkStart() {
         Intent clipIntent = new Intent(getApplicationContext(), ClipboardService.class);
@@ -103,13 +129,8 @@ public class GroupActivity extends AppCompatActivity {
 
         Intent notiIntent = new Intent(getApplicationContext(), NotificationService.class);
         startService(notiIntent);
-
-//        Toast toast = Toast.makeText(getApplicationContext(), "Start Clipboard Check", Toast.LENGTH_SHORT);
-//        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-//        toast.show();
     }
 
-    // make Toolbar, Tablayout, ViewPager
     private void initLayout() {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.group_toolbar);
@@ -117,15 +138,19 @@ public class GroupActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.title_logo);
         setSupportActionBar(toolbar);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        // TabLayout
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.info));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.history));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
@@ -145,7 +170,7 @@ public class GroupActivity extends AppCompatActivity {
         });
     }
 
-    // adapter for ViewPager to create two view (INFO, HISTORY)
+    // adapter for ViewPager to create two page (INFO, HISTORY)
     public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
         private final int TAB_COUNT = 2;
@@ -161,7 +186,8 @@ public class GroupActivity extends AppCompatActivity {
 
             switch (position) {
                 case INFO:
-                    return new InfoFragment();
+                    infoFragment = new InfoFragment();
+                    return infoFragment;
                 case HISTORY:
                     historyFragment = new HistoryFragment();
                     return historyFragment;
@@ -175,4 +201,17 @@ public class GroupActivity extends AppCompatActivity {
             return TAB_COUNT;
         }
     }
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String type = intent.getStringExtra("History");  //get the type of message from MyGcmListenerService 1 - lock or 0 -Unlock
+//            SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+//            Sensor accelerometer = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            if (type.equals("test")) // 1 == lock
+            {
+                checkType = type;
+            }
+        }
+    };
 }

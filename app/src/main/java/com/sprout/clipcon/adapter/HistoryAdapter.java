@@ -28,9 +28,7 @@ import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Yongwon on 2017. 4. 30..
@@ -40,7 +38,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     private Context context;
     private ArrayList<Contents> contentsList;
-
     private Bitmap tmpBitmap;
 
     public HistoryAdapter(Context context, ArrayList<Contents> contentsList) {
@@ -64,8 +61,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         holder.time.setText(contents.getUploadTime());
 
         switch (contents.getContentsType()) {
+            case Contents.TYPE_STRING:
+                holder.description.setText(contents.getContentsValue());
+                holder.thumbnail.setImageResource(R.drawable.text_icon);
+                holder.size.setText("-");
+                break;
             case Contents.TYPE_IMAGE:
-//                Bitmap tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 tmpBitmap = getBitmapByBase64String(contents.getContentsValue());
                 holder.description.setText("image\n");
                 holder.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -77,10 +78,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
                 holder.size.setText(convertContentsSize(contents.getContentsSize()));
                 break;
-            case Contents.TYPE_STRING:
-                holder.description.setText(contents.getContentsValue());
-                holder.thumbnail.setImageResource(R.drawable.text_icon);
-                holder.size.setText("-");
+
+            default:
                 break;
         }
 
@@ -104,17 +103,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
 
-                        progressNoti();
+                        downloadProgressNoti();
                         break;
                     case Contents.TYPE_FILE:
                         new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
 
-                        progressNoti();
+                        downloadProgressNoti();
                         break;
                 }
-
-
             }
         });
     }
@@ -148,9 +145,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
-    private void progressNoti() {
+    private void downloadProgressNoti() {
 
-        final int id=1;
+        final int id = 2;
         final NotificationManager mNotifyManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
@@ -169,12 +166,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                             @Override
                             public void onSuccess() {
                                 Intent intent = new Intent(context, GroupActivity.class);
+                                intent.putExtra("History", "test");
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                                 mBuilder.setProgress(0,0,false);
                                 mBuilder.setContentText("Download complete");
-
+                                mBuilder.setAutoCancel(true);
                                 mBuilder.setContentIntent(pendingIntent);
 
                                 mNotifyManager.notify(id, mBuilder.build());

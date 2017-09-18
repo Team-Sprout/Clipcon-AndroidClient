@@ -24,17 +24,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 연결
         Button createBtn = (Button) findViewById(R.id.main_create);
         Button joinBtn = (Button) findViewById(R.id.main_join);
 
         new EndpointInBackGround().execute(Message.CONNECT); // connect
+
         // create group
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("delf", "[SYSTEM] create group button clicked");
-                // TODO: 17-05-08 show loading screen and block the input until changing screen.
                 final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
                     @Override
                     public void onSuccess(JSONObject response) {
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                                         MainActivity.this.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                showBasicNoTitle();
+                                                alertDialog();
                                             }
                                         });
                                     }
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void showBasicNoTitle() {
+    public void alertDialog() {
         new MaterialDialog.Builder(this)
                 .content(R.string.checkKey)
                 .positiveText(R.string.confirm)

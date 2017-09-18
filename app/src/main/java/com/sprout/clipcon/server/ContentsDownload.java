@@ -33,7 +33,11 @@ import java.util.Locale;
 public class ContentsDownload {
 
     // 다운로드 파일을 임시로 저장할 위치
-    private final static String SERVER_URL = "http://delf.gonetis.com:8080/websocketServerModule";
+
+
+//    private final static String SERVER_URL = "http://223.194.159.121:8080/websocketServerModule";
+    private final static String SERVER_URL = "http://223.194.152.247:8080/websocketServerModule";
+//    private final static String SERVER_URL = "http://delf.gonetis.com:8080/websocketServerModule";
     private final static String SERVER_SERVLET = "/DownloadServlet";
 
     private final String charset = "UTF-8";
@@ -46,7 +50,6 @@ public class ContentsDownload {
 
     private Context context;
     private final String appDirectoryName = "Clipcon";
-    // private String downloadDataPK; // Contents' Primary Key to download
 
     private DownloadCallback downloadCallback;
 
@@ -65,7 +68,6 @@ public class ContentsDownload {
     public ContentsDownload(String userName, String groupPK) {
         this.userName = userName;
         this.groupPK = groupPK;
-        // this.context = context;
     }
 
     public void setContext(Context context) {
@@ -81,9 +83,6 @@ public class ContentsDownload {
         Log.d("delf", "[CLIENT] requestDataDownload(), pk is " + downloadDataPK);
         History myHistory = Endpoint.getUser().getGroup().getHistory();
         requestContents = myHistory.getContentsByPK(downloadDataPK);
-        if (requestContents == null) {
-            Log.d("delf", "[SYSTEM] requestContents is null");
-        }
 
         try {
             URL url = new URL(generateRequestParameter(downloadDataPK));
@@ -112,7 +111,7 @@ public class ContentsDownload {
                     case Contents.TYPE_FILE:
                         Log.d("delf", "[CLIENT] received file");
                         String fileOriginName = requestContents.getContentsValue();
-                        downloadFileData(httpConn.getInputStream(), fileOriginName);
+                         downloadFileData(httpConn.getInputStream(), fileOriginName);
                         Log.d("delf", "[CLIENT] complete downloading file.");
                         break;
 
@@ -125,11 +124,7 @@ public class ContentsDownload {
                 throw new IOException("Server returned non-OK status: " + status);
             }
             httpConn.disconnect();
-            Log.d("choi", "progress 10");
-
             downloadCallback.onSuccess();
-
-            Log.d("choi", "progress 11");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -195,11 +190,12 @@ public class ContentsDownload {
         try {
             OutputStream outStream = new FileOutputStream(file);
             // 읽어들일 버퍼크기를 메모리에 생성
-            byte[] buf = new byte[1024];
+            byte[] buf = new byte[1024]; // 충돌 시, 이전 숫자로 바꿀 것
             int len = 0;
             // 끝까지 읽어들이면서 File 객체에 내용들을 쓴다
             while ((len = inputStream.read(buf)) > 0) {
                 outStream.write(buf, 0, len);
+                outStream.flush();
             }
             // Stream 객체를 모두 닫는다.
             outStream.close();
@@ -210,24 +206,6 @@ public class ContentsDownload {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*OutputStream output = new FileOutputStream(file);
-        try {
-            try {
-                byte[] buffer = new byte[4 * 1024]; // or other buffer size
-                int read;
-
-                while ((read = inputStream.read(buffer)) != -1) {
-                    output.write(buffer, 0, read);
-                }
-                output.flush();
-            } finally {
-                output.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // handle exception, define IOException and others
-        } finally {
-            inputStream.close();
-        }*/
         return file;
     }
 

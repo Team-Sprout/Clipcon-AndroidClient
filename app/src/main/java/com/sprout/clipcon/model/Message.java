@@ -95,21 +95,31 @@ public class Message {
 
     public final static String REQUEST_CREATE_GROUP = "request/create group";
     public final static String REQUEST_JOIN_GROUP = "request/join group";
+    public final static String REQUEST_CHANGE_NAME = "request/change name";
     public final static String REQUEST_EXIT_GROUP = "request/exit group";
+    public final static String REQUEST_TEST = "request/test";
 
     public final static String RESPONSE_CREATE_GROUP = "response/create group";
     public final static String RESPONSE_JOIN_GROUP = "response/join group";
+    public final static String RESPONSE_CHANGE_NAME = "response/change name";
     public final static String RESPONSE_EXIT_GROUP = "response/exit group";
+    public final static String RESPONSE_UPLOAD_INFO = "response/upload info";
 
     public final static String NOTI_ADD_PARTICIPANT = "noti/add participant";
+    public final static String NOTI_CHANGE_NAME = "noti/change name";
     public final static String NOTI_EXIT_PARTICIPANT = "noti/exit participant";
     public final static String NOTI_UPLOAD_DATA = "noti/upload data";
+
+    public final static String LOG_UPLOAD_INFO = "log/upload info";
+    public final static String UPLOAD_START_TIME = "upload start time";
+    public final static String MULTIPLE_CONTENTS_INFO = "MULTIPLE_FILE";
 
     public final static String RESULT = "result";
     public final static String CONFIRM = "confirm";
     public final static String REJECT = "reject";
 
     public final static String NAME = "name";
+    public final static String CHANGE_NAME = "change name";
     public final static String CONTENTS = "contents";
     public final static String LIST = "list";
     public final static String USER_INFO = "user information";
@@ -118,9 +128,10 @@ public class Message {
     public final static String GROUP_INFO = "group information";
     public final static String PARTICIPANT_NAME = "participant name";
 
-    public final static String TEST_DEBUG_MODE = "debug";
-
     public final static String CONNECT = "connect";
+
     public final static String UPLOAD = "upload";
     public final static String DOWNLOAD = "download";
+
+    public final static String TEST_DEBUG_MODE = "debug";
 }

@@ -28,7 +28,6 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
     private String filePath;
     private File uploadFile; // test
 
-
     public EndpointInBackGround setSendBitmapImage(Bitmap sendBitmapImage) {
         this.sendBitmapImage = sendBitmapImage;
         return this;
@@ -90,11 +89,11 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                 switch (msg[1]) {
                     case "text":
                         Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ text upload /" + sendText);
-                        Endpoint.getUploader().upload(sendText);
+                        Endpoint.getUploader().uploadText(sendText);
                         break;
                     case "image":
                         Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ image upload.");
-                        Endpoint.getUploader().upload(sendBitmapImage);
+                        Endpoint.getUploader().uploadImage(sendBitmapImage);
                         break;
                     case "file":
                         Log.d("delf", "[DEBUG] EndpointBackground: uplaod()/ file upload / " + filePath);
@@ -125,6 +124,13 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
                         new Message().setType("test: hansung")
                 );
                 break;
+            case Message.REQUEST_CHANGE_NAME:
+                Log.d("delf", "[DEBUG] nickname: " + msg[1]);
+                sendMessage(
+                        new Message().setType(Message.REQUEST_CHANGE_NAME)
+                                .add(Message.CHANGE_NAME, msg[1])
+                );
+                break;
 
             default:
                 Log.d("delf", "do nothing in doInBackground()");
@@ -153,6 +159,8 @@ public class EndpointInBackGround extends AsyncTask<String, Void, String> {
         };
         Endpoint.getInstance().setSecondCallback(secondResult);
     }
+
+
 
     @Override
     protected void onPostExecute(String s) {

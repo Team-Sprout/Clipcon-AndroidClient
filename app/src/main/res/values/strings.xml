@@ -16,11 +16,11 @@
     <string name="setting">Settings</string>
 
     <!--TransparentActivity-->
-    <string name="shareString">텍스트 전송 완료</string>
-    <string name="shareImage">이미지 전송 완료</string>
+    <string name="shareString">텍스트를 전송합니다.</string>
+    <string name="shareImage">이미지를 전송합니다.</string>
 
     <!--Topservice-->
-    <string name="shareFile">파일 전송 완료</string>
+    <string name="shareFile">파일을 전송합니다.</string>
 
     <!--infoFragment-->
     <string name="changeName">Edit your nickname.</string>
@@ -49,6 +49,8 @@
     <string name="settings_version">Version</string>
     <string name="settings_version_no">1.0</string>
     <string name="settings_team">Team</string>
+
+
 
 
 

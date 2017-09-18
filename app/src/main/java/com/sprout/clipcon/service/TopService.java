@@ -50,7 +50,7 @@ public class TopService extends Service {
                 WindowManager.LayoutParams.TYPE_TOAST,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        m_Params.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        m_Params.gravity = Gravity.END | Gravity.BOTTOM;
         m_Params.horizontalMargin = 0.1f;
         m_Params.verticalMargin = 0.05f;
 
@@ -79,30 +79,6 @@ public class TopService extends Service {
         Log.d("delf", "[SYSTEM] floating button clicked.");
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         Toast.makeText(getApplicationContext(), R.string.shareString, Toast.LENGTH_SHORT).show();
-        /*MyClipboard clipboardManager = MyClipboard.getInstance();
-
-        if(clipboardManager.isEmpty()) {
-            Log.d("delf", "[SYSTEM] clipboard is empty.");
-            Toast.makeText(this, "empty", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (clipboardManager.isStringType()) {
-            Log.d("delf", "[SYSTEM] clipboard data is text type.");
-            textData = clipboardManager.getTextInClipboard();
-            new EndpointInBackGround().execute(Message.UPLOAD, "text");
-            Toast.makeText(this, "Text ( plain + html ) " + textData, Toast.LENGTH_SHORT).show();
-
-        } else if(clipboardManager.isImageType()) {
-            Log.d("delf", "[SYSTEM] clipboard data is image type.");
-            Bitmap image = clipboardManager.getImageInClipboard();
-            Toast.makeText(this, "Uri " + uri, Toast.LENGTH_SHORT).show();
-
-        } else {
-            Log.d("delf", "[SYSTEM] clipboard data type is unknown.");
-            // exception
-        }*/
-
 
         if (!cm.hasPrimaryClip()) {
             Toast.makeText(this, "Clipboard is empty", Toast.LENGTH_LONG).show();

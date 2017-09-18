@@ -32,5 +32,6 @@ public class MyHttpURLConnection extends HttpURLConnection {
 
     @Override
     public void connect() throws IOException {
+        Log.d("delf", "connect() in MyHttpURLConnection is called");
     }
 }
