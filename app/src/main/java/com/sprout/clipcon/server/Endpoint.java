@@ -10,6 +10,8 @@ import com.sprout.clipcon.model.MessageDecoder;
 import com.sprout.clipcon.model.MessageEncoder;
 import com.sprout.clipcon.model.MessageParser;
 import com.sprout.clipcon.model.User;
+import com.sprout.clipcon.transfer.ContentsUploadAdapter;
+import com.sprout.clipcon.transfer.RetrofitDownloadData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,17 +31,15 @@ import javax.websocket.Session;
 
 @ClientEndpoint(decoders = {MessageDecoder.class}, encoders = {MessageEncoder.class})
 public class Endpoint {
-
-//     private String uri = "ws://delf.gonetis.com:8080/websocketServerModule/ServerEndpoint";
-    private String uri = "ws://223.194.152.247:8080/websocketServerModule/ServerEndpoint";
+    private String uri = "ws://" + ServerInfo.SERVER_URL_PART + "/ServerEndpoint";
 
     private Session session;
     private static User user;
     private Handler handler;
 
     private static Endpoint uniqueEndpoint;
-    private static ContentsUpload uniqueUploader;
-    private static ContentsDownload uniqueDownloader;
+    private static ContentsUploadAdapter uniqueUploader;
+    private static RetrofitDownloadData uniqueDownloader;
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
     private NameChangeCallback nameChangeCallback;
@@ -59,17 +59,17 @@ public class Endpoint {
         return uniqueEndpoint;
     }
 
-    public static ContentsUpload getUploader() {
+    public static ContentsUploadAdapter getUploader() {
         if (uniqueUploader == null) {
             Log.d("delf", "[SYSTEM] uploader is create. the name is " + user.getName() + " and group key is " + user.getGroup().getPrimaryKey());
-            uniqueUploader = new ContentsUpload(user.getName(), user.getGroup().getPrimaryKey());
+            uniqueUploader = new ContentsUploadAdapter(user.getName(), user.getGroup().getPrimaryKey());
         }
         return uniqueUploader;
     }
 
-    public static ContentsDownload getDownloader() {
+    public static RetrofitDownloadData getDownloader() {
         if (uniqueDownloader == null) {
-            uniqueDownloader = new ContentsDownload(user.getName(), user.getGroup().getPrimaryKey());
+            uniqueDownloader = new RetrofitDownloadData(user.getName(), user.getGroup().getPrimaryKey());
         }
         return uniqueDownloader;
     }
