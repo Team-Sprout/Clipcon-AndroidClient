@@ -23,9 +23,9 @@ import com.sprout.clipcon.R;
 import com.sprout.clipcon.activity.GroupActivity;
 import com.sprout.clipcon.model.Contents;
 import com.sprout.clipcon.model.Message;
-import com.sprout.clipcon.server.ContentsDownload;
 import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
+import com.sprout.clipcon.transfer.RetrofitDownloadData;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -162,7 +162,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                             mBuilder.setProgress(0, 0, true);
                             mNotifyManager.notify(id, mBuilder.build());
 
-                        ContentsDownload.DownloadCallback downloadCallback = new ContentsDownload.DownloadCallback() {
+                        RetrofitDownloadData.DownloadCallback downloadCallback = new RetrofitDownloadData.DownloadCallback() {
                             @Override
                             public void onSuccess() {
                                 Intent intent = new Intent(context, GroupActivity.class);

@@ -1,9 +1,9 @@
-package com.sprout.clipcon.server;
+package com.sprout.clipcon.transfer;
 
 import android.graphics.Bitmap;
 
-public class ContentsUpload {
-    public UploadData uploader;
+public class ContentsUploadAdapter {
+    public RetrofitUploadData uploader;
 
     private UploadCallback uploadCallback;
 
@@ -11,26 +11,24 @@ public class ContentsUpload {
         void onSuccess();
     }
 
+    /** Setter */
     public void setUploadCallback(UploadCallback uploadCallback) {
         this.uploadCallback = uploadCallback;
     }
 
-
-    public ContentsUpload(String userName, String groupKey) {
-        uploader = new UploadData(userName, groupKey);
+    public ContentsUploadAdapter(String userName, String groupKey) {
+        uploader = new RetrofitUploadData(userName, groupKey);
     }
 
     public void uploadText(String text) {
         uploader.uploadStringData(text);
     }
-
     public void uploadImage(Bitmap bitmap) {
         uploader.uploadImageData(bitmap);
-        uploadCallback.onSuccess();
+//        uploadCallback.onSuccess();
     }
-
     public void uploadFile(String filePath) {
         uploader.uploadMultipartData(filePath);
-        uploadCallback.onSuccess();
+//        uploadCallback.onSuccess();
     }
 }

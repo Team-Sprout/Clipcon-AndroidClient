@@ -24,8 +24,7 @@ import android.widget.Toast;
 
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
-import com.sprout.clipcon.server.ContentsDownload;
-import com.sprout.clipcon.server.ContentsUpload;
+import com.sprout.clipcon.transfer.ContentsUploadAdapter;
 import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
@@ -93,6 +92,8 @@ public class TransparentActivity extends Activity {
                 Log.d("delf", "[DEBUG] uri.getPath() = " + uri.getPath());
 
                 String filePath = getPathFromUri(uri);
+                Log.d("hee", "[DEBUG] filePath = " + filePath);
+
                 new EndpointInBackGround()
                         .setFilePath(filePath)
                         .execute(Message.UPLOAD, "file");
@@ -111,6 +112,7 @@ public class TransparentActivity extends Activity {
             Cursor cursor = getContentResolver().query(uri, null, null, null, null );
             cursor.moveToNext();
             path = cursor.getString( cursor.getColumnIndex( "_data" ) );
+            Log.d("hee", "[DEBUG] path: " + path);
             cursor.close();
         } catch (NullPointerException e) {
             path = uri.getPath();
@@ -166,7 +168,7 @@ public class TransparentActivity extends Activity {
                         mBuilder.setProgress(0, 0, true);
                         mNotifyManager.notify(id, mBuilder.build());
 
-                        ContentsUpload.UploadCallback uploadCallback = new ContentsUpload.UploadCallback() {
+                        ContentsUploadAdapter.UploadCallback uploadCallback = new ContentsUploadAdapter.UploadCallback() {
                             @Override
                             public void onSuccess() {
                                 Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
