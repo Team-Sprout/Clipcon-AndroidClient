@@ -5,14 +5,15 @@ package com.sprout.clipcon.model;
  */
 
 public class Member {
-
     private String nickname;
-
     public Member(String nickname) {
         this.nickname = nickname;
     }
-
     public String getNickname() {
         return nickname;
+    }
+
+    public void setName(String name) {
+        this.nickname = name;
     }
 }

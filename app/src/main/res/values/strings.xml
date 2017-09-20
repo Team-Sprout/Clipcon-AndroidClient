@@ -1,3 +1,57 @@
 <resources>
     <string name="app_name">Clipcon</string>
+
+    <!--GroupActivity-->
+    <string name="exitAlert">Are you sure to exit group? History will be deleted.</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="info">INFO</string>
+    <string name="history">HISTORY</string>
+
+    <!--MainActivity-->
+    <string name="inputKey">Group Key..</string>
+    <string name="checkKey">Group Key is not exists. Try again.</string>
+
+    <!--SettingsActivity-->
+    <string name="setting">Settings</string>
+
+    <!--TransparentActivity-->
+    <string name="shareString">텍스트를 전송합니다.</string>
+    <string name="shareImage">이미지를 전송합니다.</string>
+
+    <!--Topservice-->
+    <string name="shareFile">파일을 전송합니다.</string>
+
+    <!--infoFragment-->
+    <string name="changeName">Edit your nickname.</string>
+    <string name="confirm">OK</string>
+    <string name="empty"> </string>
+
+    <!--activity_main.xml-->
+    <string name="joinEn">JOIN</string>
+    <string name="create">CREATE</string>
+
+    <!--fragment_info.xml-->
+    <string name="nickName">Nickname</string>
+    <string name="groupKey">Group Key</string>
+    <string name="member">Member List</string>
+
+    <!--HistoryAdapter-->
+    <string name="stringAlert">해당 텍스트를 클립보드에 복사합니다.</string>
+    <string name="imageAlert">해당 이미지를 갤러리의 Clipcon 폴더에 저장합니다.</string>
+    <string name="fileAlert">해당 파일을 download 폴더에 저장합니다.</string>
+
+    <!--Settings-->
+    <string name="settings_notice">Notice</string>
+    <string name="settings_tutorial">How to use?</string>
+    <string name="settings_faq">FAQ</string>
+    <string name="settings_info">Info</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_version_no">1.0</string>
+    <string name="settings_team">Team</string>
+
+
+
+
+
 </resources>

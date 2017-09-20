@@ -5,19 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.sprout.clipcon.R;
 import com.sprout.clipcon.model.Message;
-import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 
-import java.io.IOException;
-
-import javax.websocket.EncodeException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,18 +23,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // 연결
+
         Button createBtn = (Button) findViewById(R.id.main_create);
         Button joinBtn = (Button) findViewById(R.id.main_join);
+
+        new EndpointInBackGround().execute(Message.CONNECT); // connect
 
         // create group
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCreateDialog();
+                Log.d("delf", "[SYSTEM] create group button clicked");
+                final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
+                    @Override
+                    public void onSuccess(JSONObject response) {
+                        try {
+                            startGroupActivity(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                new EndpointInBackGround(result).execute(Message.REQUEST_CREATE_GROUP);
             }
         });
-
         // join group
         joinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,50 +54,53 @@ public class MainActivity extends AppCompatActivity {
                 showJoinDialog();
             }
         });
-
-        new EndpointInBackGround().execute("connect");
-    }
-
-    public void showCreateDialog() {
-        // new EndpointInBackGround().doInBackground(this, "create_group");
-        new MaterialDialog.Builder(this)
-                .title("그룹명을 입력하세요")
-                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                .positiveText("생성")
-                .input("Group 1", "Group 1", false, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        Toast.makeText(getApplicationContext(), "만들어진 그룹명은 " + input.toString() + " 입니다", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), GroupActivity.class));
-                    }
-                }).show();
-
-
-        // way to sending message of request "create group"
-        Message req = new Message()
-                .setType(Message.REQUEST_CREATE_GROUP) // 1. add type
-                .add(Message.GROUP_NAME, "그룹 이름");  // 2. add contents
-        try {
-            // if exist this reference, use that
-            Endpoint.getIntance().sendMessage(req); // 3. send
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (EncodeException e) {
-            e.printStackTrace();
-        }
     }
 
     public void showJoinDialog() {
+        Log.d("delf", "join group button clicked");
         new MaterialDialog.Builder(this)
-                .title("고유키를 입력하세요")
+                .title(R.string.inputKey)
                 .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
-                .positiveText("참여")
-                .input("", "", false, new MaterialDialog.InputCallback() {
+                .positiveText(R.string.joinEn)
+                .input(R.string.empty, R.string.empty, false, new MaterialDialog.InputCallback() {
                     @Override
-                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        Toast.makeText(getApplicationContext(), "고유키는 " + input.toString() + " 입니다", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), GroupActivity.class));
+                    public void onInput(@NonNull MaterialDialog dialog, final CharSequence inputGroupKey) {
+                        final EndpointInBackGround.BackgroundCallback result = new EndpointInBackGround.BackgroundCallback() {
+                            @Override
+                            public void onSuccess(JSONObject response) {
+                                try {
+                                    if (response.get(Message.RESULT).equals(Message.CONFIRM)) {
+                                        response.put(Message.GROUP_NAME, inputGroupKey.toString());
+                                        startGroupActivity(response);
+                                    } else { // reject
+                                        MainActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                alertDialog();
+                                            }
+                                        });
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        new EndpointInBackGround(result).execute(Message.REQUEST_JOIN_GROUP, inputGroupKey.toString());
                     }
                 }).show();
+    }
+
+    private void startGroupActivity(JSONObject response) throws JSONException {
+        Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+
+        intent.putExtra("response", response.toString()); // send response to GroupActivity
+        startActivity(intent);
+    }
+
+    public void alertDialog() {
+        new MaterialDialog.Builder(this)
+                .content(R.string.checkKey)
+                .positiveText(R.string.confirm)
+                .show();
     }
 }

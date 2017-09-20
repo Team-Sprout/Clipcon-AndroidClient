@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,13 +18,16 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.sprout.clipcon.R;
+import com.sprout.clipcon.model.Message;
+import com.sprout.clipcon.server.EndpointInBackGround;
 
 public class TopService extends Service {
     private View m_View;
     private WindowManager m_WindowManager;
-    private WindowManager.LayoutParams  m_Params;
-
+    private WindowManager.LayoutParams m_Params;
+    private static String textData;
     private static Uri uri;
+    public static boolean isRunning = false;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -33,7 +37,8 @@ public class TopService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Log.d("delf", "[SYSTEM] TopService was created.");
+        isRunning = true;
         // create <top_view> layout on Top
         LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         m_View = mInflater.inflate(R.layout.top_button, null);
@@ -45,75 +50,56 @@ public class TopService extends Service {
                 WindowManager.LayoutParams.TYPE_TOAST,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
-        m_Params.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        m_Params.gravity = Gravity.END | Gravity.BOTTOM;
         m_Params.horizontalMargin = 0.1f;
         m_Params.verticalMargin = 0.05f;
 
         m_WindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         m_WindowManager.addView(m_View, m_Params);
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        // delete layout
         m_WindowManager.removeView(m_View);
         m_WindowManager = null;
+        Log.d("delf", "[SYSTEM] TopService is destroyed.");
+        isRunning = false;
     }
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            switch(event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    break;
-
-                case MotionEvent.ACTION_MOVE:
-                    break;
-
-                case MotionEvent.ACTION_UP:
-                    break;
-            }
-
             return false;
         }
     };
 
     // event occurs when Top button pressed after clipboard changing
-    public void onImageBtnTest(View v) {
+    public void onClickImageBtn(View v) {
+        Log.d("delf", "[SYSTEM] floating button clicked.");
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        Toast.makeText(getApplicationContext(), R.string.shareString, Toast.LENGTH_SHORT).show();
 
-        System.out.println("Button Pressed");
-
-        ClipboardManager cm = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-
-        if(!cm.hasPrimaryClip()) {
-            Toast.makeText(this, "empty", Toast.LENGTH_LONG).show();
+        if (!cm.hasPrimaryClip()) {
+            Toast.makeText(this, "Clipboard is empty", Toast.LENGTH_LONG).show();
             return;
         }
 
-        //// TODO: 2017. 5. 2. upload date to server for each dataType at this part
-        if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
-            System.out.println("Text");
-            String temp = cm.getPrimaryClipDescription().getMimeType(0);
+        if (cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) || cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
 
             ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
-            String textData = item.getText().toString();
+            textData = item.getText().toString();
             System.out.println(textData);
 
-            Toast.makeText(this, "Text ( plain + html ) " + temp, Toast.LENGTH_SHORT).show();
-        }else if(cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
-            System.out.println("Image");
+            new EndpointInBackGround()
+                    .setSendText(textData)
+                    .execute(Message.UPLOAD, "text");
 
+        } else if (cm.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_URILIST)) {
 
-            //// TODO: 2017. 5. 5. check again whether we can use Uri or not
             ClipData.Item item = cm.getPrimaryClip().getItemAt(0);
             uri = item.getUri();
             System.out.println(uri);
-
-            System.out.println(" Bitmap to File Test 333 ");
-            Toast.makeText(this, "Uri "+uri, Toast.LENGTH_SHORT).show();
         }
     }
 }

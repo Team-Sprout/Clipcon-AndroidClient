@@ -18,15 +18,109 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Settings"
-            android:textSize="40dp"/>
+            android:text="@string/settings_notice"
+            android:textSize="14sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginTop="19dp"
+            android:layout_marginBottom="19dp"/>
+
+        <LinearLayout
+            android:id="@+id/settings_tutorial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_tutorial"
+                android:textSize="16sp"
+                android:layout_marginTop="19dp"
+                android:layout_marginBottom="19dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/settings_faq"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_faq"
+                android:textSize="16sp"
+                android:layout_marginTop="19dp"
+                android:layout_marginBottom="19dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#d1d1d1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:id="@+id/settings_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_info"
+            android:textSize="16sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginTop="19dp"
+            android:layout_marginBottom="19dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_version"
+                android:textSize="16sp"
+                android:layout_marginTop="19dp"
+                android:layout_marginBottom="19dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_version_no"
+                android:textSize="16sp"
+                android:layout_marginTop="19dp"
+                android:layout_marginBottom="19dp"
+                android:layout_alignParentEnd="true"
+                android:gravity="end"/>
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/settings_team"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_team"
+                android:textSize="16sp"
+                android:layout_marginTop="19dp"
+                android:layout_marginBottom="19dp"/>
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -6,9 +6,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:orientation="vertical"
-        android:layout_margin="16dp"
+        android:layout_margin="10dp"
         android:weightSum="2">
 
         <RelativeLayout
@@ -19,19 +19,27 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GroupName"
+                android:text="@string/nickName"
                 android:textSize="16sp"
-                android:id="@+id/textView"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
 
-            <TextView
+            <ImageView
+                android:id="@+id/editNickName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0000"
-                android:textSize="16sp"
                 android:layout_alignParentEnd="true"
+                android:src="@drawable/edit"
                 android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/my_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:layout_toStartOf="@id/editNickName"/>
 
         </RelativeLayout>
 
@@ -43,18 +51,27 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GroupKey"
+                android:text="@string/groupKey"
                 android:textSize="16sp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
 
-            <TextView
+            <ImageView
+                android:id="@+id/copyGroupKey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0000"
-                android:textSize="16sp"
                 android:layout_alignParentEnd="true"
+                android:src="@drawable/copy"
                 android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/group_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:layout_toStartOf="@id/copyGroupKey"/>
 
         </RelativeLayout>
 
@@ -67,14 +84,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_margin="16dp">
+        android:layout_height="40dp"
+        android:background="@color/toolbarColor"
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Members"
-            android:textSize="16sp" />
+            android:text="@string/member"
+            android:textColor="#ffffff"
+            android:textSize="16sp"/>
 
     </LinearLayout>
 
@@ -89,12 +108,5 @@
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
-
-    <!--<ImageView-->
-        <!--android:id="@+id/testImageView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"/>-->
-
-
 
 </LinearLayout>

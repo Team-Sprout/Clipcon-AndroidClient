@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@drawable/upload_red"
-        android:onClick="onImageBtnTest" />
+        android:src="@drawable/copy"
+        android:onClick="onClickImageBtn" />
 
 </LinearLayout>
