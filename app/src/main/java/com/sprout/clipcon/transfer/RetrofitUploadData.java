@@ -5,6 +5,7 @@ package com.sprout.clipcon.transfer;
  */
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,10 +22,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUploadData {
 
+    private UploadCallback uploadCallback;
+
+    public interface UploadCallback {
+        void onUpload(long fileSizeDownloaded, long fileSize, double progressValue);
+        void onComplete();
+    }
+
     private String userName = null;
     private String groupPK = null;
-
-    // private String charset = "UTF-8";
 
     // create Retrofit instance
     public Retrofit.Builder builder = new Retrofit.Builder().baseUrl(RetrofitInterface.BASE_URL).addConverterFactory(GsonConverterFactory.create());
@@ -40,6 +46,15 @@ public class RetrofitUploadData {
     public RetrofitUploadData(String userName, String groupPK) {
         this.userName = userName;
         this.groupPK = groupPK;
+    }
+
+    /** Setter */
+    public void setUploadCallback(UploadCallback uploadCallback) {
+        this.uploadCallback = uploadCallback;
+    }
+
+    public UploadCallback getUploadCallback() {
+        return this.uploadCallback;
     }
 
     /** Upload String Data */
@@ -101,6 +116,7 @@ public class RetrofitUploadData {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 System.out.println("Upload success");
+                uploadCallback.onComplete();
             }
 
             @Override
@@ -109,6 +125,4 @@ public class RetrofitUploadData {
             }
         });
     }
-
-
 }
