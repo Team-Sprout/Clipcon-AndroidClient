@@ -10,8 +10,8 @@ import com.sprout.clipcon.model.MessageDecoder;
 import com.sprout.clipcon.model.MessageEncoder;
 import com.sprout.clipcon.model.MessageParser;
 import com.sprout.clipcon.model.User;
-import com.sprout.clipcon.transfer.ContentsUploadAdapter;
 import com.sprout.clipcon.transfer.RetrofitDownloadData;
+import com.sprout.clipcon.transfer.RetrofitUploadData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +38,7 @@ public class Endpoint {
     private Handler handler;
 
     private static Endpoint uniqueEndpoint;
-    private static ContentsUploadAdapter uniqueUploader;
+    private static RetrofitUploadData uniqueUploader;
     private static RetrofitDownloadData uniqueDownloader;
     private SecondCallback secondCallback;
     private ParticipantCallback participantCallback;
@@ -59,10 +59,10 @@ public class Endpoint {
         return uniqueEndpoint;
     }
 
-    public static ContentsUploadAdapter getUploader() {
+    public static RetrofitUploadData getUploader() {
         if (uniqueUploader == null) {
             Log.d("delf", "[SYSTEM] uploader is create. the name is " + user.getName() + " and group key is " + user.getGroup().getPrimaryKey());
-            uniqueUploader = new ContentsUploadAdapter(user.getName(), user.getGroup().getPrimaryKey());
+            uniqueUploader = new RetrofitUploadData(user.getName(), user.getGroup().getPrimaryKey());
         }
         return uniqueUploader;
     }

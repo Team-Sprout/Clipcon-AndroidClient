@@ -1,5 +1,7 @@
 package com.sprout.clipcon.transfer;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,6 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -50,15 +53,14 @@ public class RetrofitDownloadData {
     private final int CHUNKSIZE = 0xFFFF; // 65536
     private String charset = "UTF-8";
 
-    // public static boolean isDownloading = false;
-
     // (check add field)
     private Context context;
     private DownloadCallback downloadCallback;
     private final String appDirectoryName = "Clipcon";
 
     public interface DownloadCallback {
-        void onSuccess();
+        void onDownload(long fileSizeDownloaded, long fileSize, double progressValue);
+        void onComplete();
     }
 
     /** Constructor
@@ -112,18 +114,20 @@ public class RetrofitDownloadData {
                     switch (requestContents.getContentsType()) {
                         case Contents.TYPE_STRING:
                             // Get String Object in Response Body
-                            String stringData = downloadStringData(response.body().byteStream());
-                            Log.d("heee", "[DEBUG] get string data -----------");
+                            new Thread() {
+                                public void run() {
+                                    downloadStringData(response.body().byteStream());
+                                }
+                            }.start();
                             break;
 
                         case Contents.TYPE_IMAGE:
                             // Get Image Object in Response Body
                             new Thread() {
                                 public void run() {
-                                    Bitmap imageData = downloadCapturedImageData(response.body().byteStream());
+                                    downloadCapturedImageData(response.body().byteStream());
                                 }
                             }.start();
-                            Log.d("heee", "[DEBUG] get image data -----------");
                             break;
 
                         case Contents.TYPE_FILE:
@@ -131,22 +135,19 @@ public class RetrofitDownloadData {
                             new Thread() {
                                 public void run() {
                                     String fileOriginName = requestContents.getContentsValue();
-                                    File fileData = downloadFileData(response.body().byteStream(), fileOriginName);
+                                    downloadFileData(response.body().byteStream(), fileOriginName, response.body().contentLength());
                                 }
                             }.start();
-                            Log.d("heee", "[DEBUG] get file data -----------");
                             break;
 
                         default:
                             break;
                     }
                 }
-                downloadCallback.onSuccess(); // check
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable arg1) {
-                // TODO Auto-generated method stub
                 System.out.println("Download onFailure");
             }
 
@@ -154,7 +155,7 @@ public class RetrofitDownloadData {
     }
 
     /** Download String Data */
-    private String downloadStringData(InputStream inputStream) {
+    private void downloadStringData(InputStream inputStream) {
         BufferedReader bufferedReader;
         StringBuilder stringBuilder = null;
 
@@ -178,41 +179,55 @@ public class RetrofitDownloadData {
         }
 
         String deleteNewLineString = stringBuilder.toString();
-        deleteNewLineString = deleteNewLineString.substring(0, deleteNewLineString.length() - 2); // \n\n �젣嫄�
+        deleteNewLineString = deleteNewLineString.substring(0, deleteNewLineString.length() - 2); // \n\n 제거
 
-        return deleteNewLineString;
+        stringToClipboard(deleteNewLineString);
+
+        downloadCallback.onComplete();
     }
 
     /**
      * Download Captured Image Data
      * Change to Image object from file form of Image data
      */
-    private Bitmap downloadCapturedImageData(InputStream inputStream) {
+    private void downloadCapturedImageData(InputStream inputStream) {
        // inputStream -> bitmap -> file
         BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
         Bitmap imageBitmapData = BitmapFactory.decodeStream(bufferedInputStream);
 
         imageToGallery(imageBitmapData);
 
-        return imageBitmapData;
+        downloadCallback.onComplete();
     }
 
-    /** Download File Data to Temporary folder
-     * @return File object */
-    private File downloadFileData(InputStream inputStream, String fileName) {
+    /** Download File Data to Temporary folder */
+    private void downloadFileData(InputStream inputStream, String fileName, long fileLength) {
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
         File file = new File(path, fileName);
+
         Log.d("delf", "[SYSTEM] download path: " + path);
 
         try {
             OutputStream outStream = new FileOutputStream(file);
             // 읽어들일 버퍼크기를 메모리에 생성
             byte[] buf = new byte[CHUNKSIZE];
-            int len = 0;
+            int bytesRead = -1;
+
+            long downloaded = 0;
+
             // 끝까지 읽어들이면서 File 객체에 내용들을 쓴다
-            while ((len = inputStream.read(buf)) > 0) {
-                outStream.write(buf, 0, len);
+            while ((bytesRead = inputStream.read(buf)) != -1) {
+                outStream.write(buf, 0, bytesRead);
+                downloaded += bytesRead;
+
+                double progressValue = (100 * downloaded / fileLength);
+                downloadCallback.onDownload(downloaded, fileLength, progressValue);
+
+                if (bytesRead == -1) {
+                    break;
+                }
             }
+
             // Stream 객체를 모두 닫는다.
             outStream.close();
             inputStream.close();
@@ -223,7 +238,14 @@ public class RetrofitDownloadData {
             e.printStackTrace();
         }
 
-        return file;
+        downloadCallback.onComplete();
+    }
+
+    /** Copy To String in Clipboard */
+    private void stringToClipboard(String s) {
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("text", s);
+        cm.setPrimaryClip(clip);
     }
 
     /** Save Bitmap Image To File in Gallery */

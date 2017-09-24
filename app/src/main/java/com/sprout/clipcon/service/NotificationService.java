@@ -39,14 +39,13 @@ public class NotificationService extends Service {
     }
 
     //서비스가 종료될 때 할 작업
-
     public void onDestroy() {
         Log.d("delf", "[SYSTEM] NotificationService: onDestroyed()");
     }
 
     class myServiceHandler extends Handler {
 
-        int id = 1;
+        final int id = 1;
         @Override
         public void handleMessage(android.os.Message msg) {
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

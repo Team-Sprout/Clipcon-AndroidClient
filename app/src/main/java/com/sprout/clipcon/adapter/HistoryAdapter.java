@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
@@ -87,31 +88,20 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             @Override
             public void onClick(View v) {
                 Contents contents = contentsList.get(position);
-
                 Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
+                new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                 switch (contents.getContentsType()) {
-
                     case Contents.TYPE_STRING:
-                        String copiedString = contents.getContentsValue();
-                        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("text", copiedString);
-                        cm.setPrimaryClip(clip);
                         Toast.makeText(context, R.string.stringAlert, Toast.LENGTH_SHORT).show();
-
                         break;
                     case Contents.TYPE_IMAGE:
-                        new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
-
-                        downloadProgressNoti();
                         break;
                     case Contents.TYPE_FILE:
-                        new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
                         Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
-
-                        downloadProgressNoti();
                         break;
                 }
+                showDownloadProgressNoti();
             }
         });
     }
@@ -145,44 +135,57 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
     }
 
-    private void downloadProgressNoti() {
-
-        final int id = 2;
+    public void showDownloadProgressNoti() {
+        final int id = 1;
         final NotificationManager mNotifyManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+
         mBuilder.setContentTitle("Data Download")
                 .setContentText("Download in progress")
-                .setSmallIcon(R.drawable.icon_logo);
+                .setSmallIcon(R.drawable.icon_logo)
+                .setProgress(0, 0, true);
 
-        new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                            mBuilder.setProgress(0, 0, true);
-                            mNotifyManager.notify(id, mBuilder.build());
+        mNotifyManager.notify(id, mBuilder.build());
 
-                        RetrofitDownloadData.DownloadCallback downloadCallback = new RetrofitDownloadData.DownloadCallback() {
-                            @Override
-                            public void onSuccess() {
-                                Intent intent = new Intent(context, GroupActivity.class);
-                                intent.putExtra("History", "test");
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        RetrofitDownloadData.DownloadCallback downloadCallback = new RetrofitDownloadData.DownloadCallback() {
+            @Override
+            public void onDownload(long onGoing, long fileLength, double progressValue) {
+                double onGoingMB = ((onGoing / 1024.0) / 1024.0);
+                double fileLengthMB = ((fileLength / 1024.0) / 1024.0);
 
-                                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-                                mBuilder.setProgress(0,0,false);
-                                mBuilder.setContentText("Download complete");
-                                mBuilder.setAutoCancel(true);
-                                mBuilder.setContentIntent(pendingIntent);
+                DecimalFormat dec = new DecimalFormat("0.0");
 
-                                mNotifyManager.notify(id, mBuilder.build());
-                            }
-                        };
-                        Endpoint.getDownloader().setDownloadCallback(downloadCallback);
+                String progress = (int) progressValue + "% (" + dec.format(onGoingMB) + " / " + dec.format(fileLengthMB) + " MB)";
 
-                    }
-                }
-        ).start();
+                mBuilder.setProgress(100, (int)progressValue, false);
+                mBuilder.setContentText("Downloading...  " + progress);
+                mBuilder.setAutoCancel(true);
+
+                mNotifyManager.notify(id, mBuilder.build());
+            }
+
+            @Override
+            public void onComplete() {
+                mNotifyManager.cancel(id);
+
+                Intent intent = new Intent(context, GroupActivity.class);
+                intent.putExtra("History", "test");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                mBuilder.setProgress(100, 100, false);
+                mBuilder.setContentText("Download complete");
+                mBuilder.setAutoCancel(true);
+                mBuilder.setContentIntent(pendingIntent);
+
+                mNotifyManager.notify(id, mBuilder.build());
+            }
+        };
+
+        Endpoint.getDownloader().setDownloadCallback(downloadCallback);
     }
 
     public String convertContentsSize(long size) {
