@@ -2,13 +2,13 @@ package com.sprout.clipcon.adapter;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,8 +29,11 @@ import com.sprout.clipcon.server.Endpoint;
 import com.sprout.clipcon.server.EndpointInBackGround;
 import com.sprout.clipcon.transfer.RetrofitDownloadData;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import static android.R.attr.path;
 
 /**
  * Created by Yongwon on 2017. 4. 30..
@@ -176,6 +180,26 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                mBuilder.setProgress(100, 100, false);
+                mBuilder.setContentText("Download complete");
+                mBuilder.setAutoCancel(true);
+                mBuilder.setContentIntent(pendingIntent);
+
+                mNotifyManager.notify(id, mBuilder.build());
+            }
+
+            @Override
+            public void onComplete(File file) {
+                mNotifyManager.cancel(id);
+
+                Uri uri = FileProvider.getUriForFile(context, "com.sprout.clipcon.provider", file);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+
+                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
                 mBuilder.setProgress(100, 100, false);
                 mBuilder.setContentText("Download complete");
                 mBuilder.setAutoCancel(true);

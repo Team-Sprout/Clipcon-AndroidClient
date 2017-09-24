@@ -61,6 +61,7 @@ public class RetrofitDownloadData {
     public interface DownloadCallback {
         void onDownload(long fileSizeDownloaded, long fileSize, double progressValue);
         void onComplete();
+        void onComplete(File file);
     }
 
     /** Constructor
@@ -197,7 +198,7 @@ public class RetrofitDownloadData {
 
         imageToGallery(imageBitmapData);
 
-        downloadCallback.onComplete();
+//        downloadCallback.onComplete();
     }
 
     /** Download File Data to Temporary folder */
@@ -238,7 +239,7 @@ public class RetrofitDownloadData {
             e.printStackTrace();
         }
 
-        downloadCallback.onComplete();
+        downloadCallback.onComplete(file);
     }
 
     /** Copy To String in Clipboard */
@@ -283,6 +284,9 @@ public class RetrofitDownloadData {
 
         ContentResolver cr = context.getContentResolver();
         cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+
+          downloadCallback.onComplete(file);
     }
 
     /** create image file name */
