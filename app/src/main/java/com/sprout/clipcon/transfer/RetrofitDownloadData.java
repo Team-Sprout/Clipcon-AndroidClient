@@ -197,8 +197,6 @@ public class RetrofitDownloadData {
         Bitmap imageBitmapData = BitmapFactory.decodeStream(bufferedInputStream);
 
         imageToGallery(imageBitmapData);
-
-//        downloadCallback.onComplete();
     }
 
     /** Download File Data to Temporary folder */
@@ -285,8 +283,7 @@ public class RetrofitDownloadData {
         ContentResolver cr = context.getContentResolver();
         cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
-
-          downloadCallback.onComplete(file);
+        downloadCallback.onComplete(file);
     }
 
     /** create image file name */
