@@ -4,6 +4,7 @@ public class Contents {
 	public final static String TYPE_STRING = "STRING";
 	public final static String TYPE_IMAGE = "IMAGE";
 	public final static String TYPE_FILE = "FILE";
+	public final static String TYPE_MULTIPLE_FILE = "MULTIPLE_FILE";
 
 	private String contentsType;
 	private long contentsSize;

@@ -172,10 +172,10 @@ public class Endpoint {
 
                 case Message.NOTI_UPLOAD_DATA:
 
-                    if(message.get("contentsType").equals(Message.MULTIPLE_CONTENTS_INFO)) {
-                        Log.d("Choi", "type is multi");
-                        break;
-                    }
+//                    if(message.get("contentsType").equals(Message.MULTIPLE_CONTENTS_INFO)) {
+//                        Log.d("Choi", "type is multi");
+//                        break;
+//                    }
                     Log.d("delf", "[CLIENT] \"" + message.get("uploadUserName") + "\" is upload the data");
                     lastContentsPK  = message.get("contentsPKName");
                     Contents contents = MessageParser.getContentsbyMessage(message);
