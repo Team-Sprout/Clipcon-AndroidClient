@@ -21,7 +21,8 @@
         <activity android:name=".activity.MainActivity" />
         <activity
             android:name=".activity.GroupActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.TransparentActivity"
             android:theme="@style/Theme.Transparent">

@@ -132,6 +132,7 @@ public class RetrofitDownloadData {
                             break;
 
                         case Contents.TYPE_FILE:
+                        case Contents.TYPE_MULTIPLE_FILE:
                             // Save Real File(filename: fileOriginName) to Clipcon Folder Get Image Object in Response Body
                             new Thread() {
                                 public void run() {

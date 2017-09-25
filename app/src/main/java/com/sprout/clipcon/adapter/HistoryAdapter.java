@@ -83,27 +83,33 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 holder.thumbnail.setImageResource(R.drawable.file_icon);
                 holder.size.setText(convertContentsSize(contents.getContentsSize()));
                 break;
+            case Contents.TYPE_MULTIPLE_FILE:
+                holder.description.setText(contents.getContentsValue()+"\n");
+                holder.thumbnail.setImageResource(R.drawable.zip_icon);
+                holder.size.setText(convertContentsSize(contents.getContentsSize()));
+                break;
 
             default:
                 break;
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Contents contents = contentsList.get(position);
-                Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
-                new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
-                switch (contents.getContentsType()) {
-                    case Contents.TYPE_STRING:
-                        Toast.makeText(context, R.string.stringAlert, Toast.LENGTH_SHORT).show();
-                        break;
-                    case Contents.TYPE_IMAGE:
-                        Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
-                        break;
-                    case Contents.TYPE_FILE:
-                        Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
-                        break;
+                            @Override
+                            public void onClick(View v) {
+                                Contents contents = contentsList.get(position);
+                                Log.d("delf", "[SYSTEM] type is " + contents.getContentsType());
+                                new EndpointInBackGround().execute(Message.DOWNLOAD, contents.getContentsPKName());
+                                switch (contents.getContentsType()) {
+                                    case Contents.TYPE_STRING:
+                                        Toast.makeText(context, R.string.stringAlert, Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case Contents.TYPE_IMAGE:
+                                        Toast.makeText(context, R.string.imageAlert, Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case Contents.TYPE_FILE:
+                                    case Contents.TYPE_MULTIPLE_FILE:
+                                        Toast.makeText(context, R.string.fileAlert, Toast.LENGTH_SHORT).show();
+                                        break;
                 }
                 showDownloadProgressNoti();
             }
