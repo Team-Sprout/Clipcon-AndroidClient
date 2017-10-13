@@ -1,5 +1,5 @@
 # ClipCon
-ClipCon은 [Global Clipboard]()에서 사용할 수 있는 클라이언트 어플리케이션의 이름입니다. 현재 본 프로젝트에서는 윈도우와 안드로이드에서 구동되는 어플리케이션을 개발하였습니다. <u>이 repository는 안드로이드 버전의 ClipCon에 대한 내용입니다.</u> 윈도우 버전의 ClipCon에 대해서는 다음을 참고하여 주시가 바랍니다.
+ClipCon은 [Global Clipboard](https://github.com/Team-Sprout/Clipcon-AndroidClient/tree/master#global-clipboard)에서 사용할 수 있는 클라이언트 어플리케이션의 이름입니다. 현재 본 프로젝트에서는 윈도우와 안드로이드에서 구동되는 어플리케이션을 개발하였습니다. <u>이 repository는 안드로이드 버전의 ClipCon에 대한 내용입니다.</u> 윈도우 버전의 ClipCon에 대해서는 다음을 참고하여 주시가 바랍니다.
 * 안드로이드: [Windows ClipCon GitHub repository](https://github.com/team-sprout/clipcon-Client)
 
 ## 사용 방법
